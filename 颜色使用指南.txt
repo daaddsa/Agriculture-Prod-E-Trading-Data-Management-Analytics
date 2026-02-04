@@ -1,0 +1,74 @@
+颜色替换方案（适用于 pages/ 目录下子页面）
+
+一、配色规则（比例与场景）
+1) 主色（Primary，约 60%）：青色系，用于页面“品牌感”与主要强调区域
+   - 场景：顶部 Header 背景、关键分割线（标题左侧竖条）、主要色块（teal）
+2) 辅色（Secondary，约 30%）：蓝色系，用于与主色协同的第二层信息分区
+   - 场景：次级色块（orange 类卡片/按钮/菜单项）、对比但不抢主视觉
+3) 点缀色（Accent，约 10%）：琥珀系，用于提示与轻量强调（不用于大面积底色）
+   - 场景：提示、高亮、需要“暖一点”的强调（procurement-dashboard 的 green 类色块）
+4) 中性色（Neutral）：用于文字、边框、背景、阴影等“承载层”
+   - 场景：页面背景、卡片底色、表格头、分割线、正文/弱化文字
+
+二、色板系统（HEX 值）
+Primary（青色）
+- primary-700: #0F6C7A
+- primary-600: #137F90
+- primary-500: #1F8A98
+- primary-300: #56C6D6
+
+Secondary（蓝色）
+- secondary-700: #1D4ED8
+- secondary-600: #2563EB
+- secondary-400: #60A5FA
+
+Accent（琥珀）
+- accent-700: #B45309
+- accent-600: #D97706
+- accent-400: #FBBF24
+
+Neutral（蓝灰中性）
+- neutral-900: #0F172A
+- neutral-700: #334155
+- neutral-600: #475569
+- neutral-400: #94A3B8
+
+Surface / Background / Border / Text
+- bg: #F3F6F9
+- surface: #FFFFFF
+- surface-2: #F8FAFC
+- border: #E2E8F0
+- text: #0F172A
+- text-muted: #64748B
+
+三、使用规范（映射到色块）
+1) 大面积底色
+- 页面背景用 bg（避免纯白刺眼）
+- 卡片用 surface，卡片内次级块用 surface-2
+
+2) 色块（统计卡片/菜单项）
+- teal 类：使用 Primary 渐变（primary-600 -> primary-300）
+- orange 类：使用 Secondary 渐变（secondary-600 -> secondary-400）
+- green 类：使用 Accent 渐变（accent-600 -> accent-400）
+- gray 类：使用 Neutral 渐变（neutral-600 -> neutral-400）
+
+3) 标题强调（竖条）
+- 统一使用 primary-500
+
+4) 表格
+- 表头：surface-2 + text-muted
+- 行分隔：border
+- hover：使用主色透明叠加（例如 rgba(15,118,122,0.06)）
+
+四、搭配禁忌
+1) 禁止同时出现三种以上高饱和大面积色块（会显“杂”）
+2) 点缀色（Accent）禁止大面积铺底（仅用于强调与提示）
+3) 同一屏内，主色优先级高于辅色；辅色不应在 Header 与主标题区域使用
+4) 灰色只用于中性承载层，不用于抢视觉的“强调信息”
+
+五、落地方式（本项目）
+1) 已在以下样式文件内用 CSS 变量落地色板系统，并替换硬编码颜色：
+- pages/baitiao-pig-system/styles.css
+- pages/procurement-dashboard/styles.css
+
+2) 后续新增页面建议复用同一套变量命名，避免再次出现多套颜色体系并存。

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>批发市场白条猪系统</title>
+    <link rel="icon" href="../../index/index/logoicon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  </head>
+  <body data-stat-skin="a" data-pattern="on">
+    <div id="app">
+      <header class="header">
+        <h1>批发市场子系统—白条猪</h1>
+        <nav class="nav-tabs" aria-label="顶部导航">
+          <a href="#" class="nav-tab">首页</a>
+          <a href="#" class="nav-tab">实时交易</a>
+          <a href="#" class="nav-tab">历史查询</a>
+          <a href="#" class="nav-tab">分析报告</a>
+        </nav>
+      </header>
+
+      <div class="main-content">
+        <div class="top-section">
+          <div class="price-card">
+            <h3 class="card-title">出厂价/批发价</h3>
+            <table class="price-table">
+              <thead>
+                <tr>
+                  <th>地区</th>
+                  <th>出厂均价</th>
+                  <th>批发均价</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in priceData" :key="item.region">
+                  <td>{{ item.region }}</td>
+                  <td>{{ item.factory }}</td>
+                  <td>{{ item.wholesale }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card teal">
+              <div class="stat-label">❶ 日交易量</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">❷ 日交易额</div>
+            </div>
+            <div class="stat-card teal">
+              <div class="stat-label">❸ 日交易均价</div>
+              <div class="stat-value">18.25元/公斤</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">❹ LOS单价差（不含母猪平均数）</div>
+            </div>
+            <div class="stat-card gray">
+              <div class="stat-label">❺ 交易统计查询</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">❻ 价格统计查询</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">🏷️ 母猪标签查询</div>
+            </div>
+            <div class="stat-card orange">
+              <div class="stat-label">🎯 货批数统计查询</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <div class="chart-card">
+            <h3 class="card-title">母猪交易占比</h3>
+            <div id="pieChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <h3 class="card-title">日交易信息查询</h3>
+            <table class="query-table">
+              <thead>
+                <tr>
+                  <th>交易时间</th>
+                  <th>交易量</th>
+                  <th>交易额</th>
+                  <th>交易均价</th>
+                  <th>产地</th>
+                  <th>销地</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in transactionData" :key="item.id">
+                  <td>{{ item.time }}</td>
+                  <td>{{ item.volume }}</td>
+                  <td>{{ item.amount }}</td>
+                  <td>{{ item.price }}</td>
+                  <td>{{ item.origin }}</td>
+                  <td>{{ item.destination }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>批发市场采购分析仪表板</title>
+    <link rel="icon" href="../../index/index/logoicon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  </head>
+  <body data-pattern="on">
+    <div id="app">
+      <header class="header">
+        <h1>批发市场子系统---白条猪</h1>
+        <nav class="nav-tabs" aria-label="顶部导航">
+          <a href="#" class="nav-tab">首页</a>
+          <a href="#" class="nav-tab">实时交易</a>
+          <a href="#" class="nav-tab">历史查询</a>
+          <a href="#" class="nav-tab active">分析报告</a>
+        </nav>
+      </header>
+
+      <div class="container">
+        <aside class="sidebar" aria-label="左侧菜单">
+          <div class="menu-item teal">❶ 交易量走势</div>
+          <div class="menu-item orange">❷ 交易额走势</div>
+          <div class="menu-item green">❸ 交易均价走势</div>
+          <div class="menu-item orange">❹ 交易额金额排行</div>
+          <div class="menu-item gray">❺ 16省猪平均出厂价与批发市场交易价走势</div>
+          <div class="menu-item orange">❻ 交易额金额排行</div>
+          <div class="menu-item teal">❼ 定制报告</div>
+        </aside>
+
+        <main class="content">
+          <div class="chart-card">
+            <h3 class="chart-title">交易量趋势图</h3>
+            <div id="trendChart"></div>
+          </div>
+
+          <div class="chart-card">
+            <h3 class="chart-title">解读</h3>
+            <div class="insights">暂无解读</div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
