@@ -36,6 +36,11 @@
         ],
         minDate: "",
         maxDate: "",
+        reports: [],
+        pageSize: 8,
+        currentPage: 1,
+        showPreview: false,
+        previewReport: null,
       };
     },
     mounted() {
@@ -49,6 +54,9 @@
       this.maxDate = future7.toISOString().split("T")[0];
 
       this.initChart();
+      this.initReports();
+      this.calcPageSize();
+      window.addEventListener("resize", this.calcPageSize);
     },
     methods: {
       handleMarketChange() {
@@ -148,6 +156,95 @@
         chart.setOption(option);
 
         window.addEventListener("resize", () => chart.resize());
+      },
+      initReports() {
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, "0");
+        const dateStr = (d) =>
+          `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(
+            d.getHours()
+          )}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+        const samples = [
+          "交易量与交易额相关性分析",
+          "交易均价走势周期性分析",
+          "佣金费率变动影响研究",
+          "异常交易识别与校验报告",
+          "供需结构对价格的影响",
+          "区域间价格传导效应",
+          "节假日前后交易活跃度",
+          "周度行情综述与预测",
+          "批发市场品类结构分析",
+          "价格波动的风险提示",
+          "流向地区分布特征分析",
+          "月度交易综合分析",
+        ];
+        this.reports = samples.map((name, i) => {
+          const d = new Date(now);
+          d.setDate(now.getDate() - i);
+          return {
+            id: i + 1,
+            name,
+            uploadedAt: dateStr(d),
+            summary:
+              "该报告从交易量、交易额、交易均价、佣金费率等维度进行统计分析，并对趋势进行解读，提供策略建议与风险提示。",
+            fileUrl: null,
+          };
+        });
+      },
+      calcPageSize() {
+        this.pageSize = 8;
+        const maxPage = Math.max(1, Math.ceil(this.reports.length / this.pageSize));
+        this.currentPage = Math.min(this.currentPage, maxPage);
+      },
+      nextPage() {
+        const maxPage = Math.ceil(this.reports.length / this.pageSize);
+        if (this.currentPage < maxPage) this.currentPage++;
+      },
+      prevPage() {
+        if (this.currentPage > 1) this.currentPage--;
+      },
+      preview(r) {
+        this.previewReport = r;
+        this.showPreview = true;
+      },
+      closePreview() {
+        this.showPreview = false;
+        this.previewReport = null;
+      },
+      download(r) {
+        const blob = new Blob(
+          [
+            `报告名称: ${r.name}\n上传时间: ${r.uploadedAt}\n\n摘要:\n${r.summary}\n`,
+          ],
+          { type: "text/plain;charset=utf-8" }
+        );
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${r.name.replace(/\\s+/g, "_")}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      },
+    },
+    computed: {
+      totalPages() {
+        return Math.max(1, Math.ceil(this.reports.length / this.pageSize));
+      },
+      pageReports() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        const page = this.reports.slice(start, start + this.pageSize);
+        if (page.length < this.pageSize) {
+          const need = this.pageSize - page.length;
+          for (let i = 0; i < need; i++) {
+            page.push({
+              id: `ph-${start + i + 1}`,
+              placeholder: true,
+            });
+          }
+        }
+        return page;
       },
     },
   }).mount("#app");
