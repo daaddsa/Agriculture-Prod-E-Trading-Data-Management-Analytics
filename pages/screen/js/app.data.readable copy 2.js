@@ -1,0 +1,5300 @@
+/**
+ * 大屏配置文件（可读格式）
+ * 
+ * 直接编辑此文件，刷新浏览器即可看到效果
+ * 
+ * 生成时间: 2026/2/5 17:47:35
+ */
+
+// ==================== 配置对象（可直接编辑）====================
+const DS_CONFIG = {
+  "bg": {
+    "type": "bg",
+    "name": "大屏背景",
+    "creater": "Editer",
+    "render": "bg",
+    "resolutionRatio": 0,
+    "zindex": 0,
+    "locked": false,
+    "lockAspectRatio": false,
+    "resolutionRatioArr": [
+      {
+        "h": 1080,
+        "w": 1920
+      },
+      {
+        "h": 1080,
+        "w": 1920
+      }
+    ],
+    "deviceType": "pc",
+    "id": 1706599151210,
+    "style": {
+      "color": "#fff",
+      "backgroundColor": "#090F27",
+      "backgroundImage": "./images/6mRlbKkkwlrai46c9HNjd.png"
+    },
+    "_key": "bg",
+    "active": false
+  },
+  "cpm5znQAaRPBgPONPpN0ce87": {
+    "x": 1488,
+    "y": 508,
+    "isWarning": false,
+    "_key": "cpm5znQAaRPBgPONPpN0ce87",
+    "creater": "HighChartElement",
+    "render": "HighChart",
+    "width": 398,
+    "height": 358,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 15,
+    "visibility": true,
+    "id": 1706689018517,
+    "type": "type",
+    "contentType": "scrollBoard",
+    "name": "商品表",
+    "style": {
+      "width": "500",
+      "height": "500",
+      "headerBGC": "rgba(0, 186, 255, 0)",
+      "oddRowBGC": "rgba(0, 39, 81, 0.3)",
+      "evenRowBGC": "rgba(10, 39, 50,0.3)",
+      "backgroundColor": "rgba(40, 44, 52,0)",
+      "rotateX": 0,
+      "rotateZ": 0,
+      "rotateY": 0
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "{}",
+        "method": "get",
+        "params": "{}",
+        "interval": 10,
+        "dataFormatter": {
+          "data": {
+            "body": [],
+            "header": []
+          }
+        }
+      },
+      "mqtt": [],
+      "excel": {
+        "key": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g"
+        ],
+        "data": [
+          {
+            "a": 111,
+            "b": 111,
+            "c": 111,
+            "d": 111,
+            "e": 111,
+            "f": 111,
+            "g": 111
+          }
+        ],
+        "title": [
+          "标题一",
+          "标题二",
+          "标题三",
+          "标题四",
+          "标题五",
+          "标题六",
+          "标题七"
+        ],
+        "filename": "柱状图数据模板"
+      },
+      "types": [
+        {
+          "label": "手动输入",
+          "value": 1,
+          "disabled": false
+        },
+        {
+          "label": "excel导入",
+          "value": 2,
+          "disabled": true
+        },
+        {
+          "label": "api接口",
+          "value": 3,
+          "disabled": false
+        },
+        {
+          "label": "mqtt",
+          "value": 4,
+          "disabled": true
+        }
+      ],
+      "value": "{\n  \"body\": [\n    [\n      \"北京\",\n      \"23.13\",\n      \"湖北\",\n      \"23.49\"\n    ],\n    [\n      \"天津\",\n      \"22.26\",\n      \"湖南\",\n      \"22.53\"\n    ],\n    [\n      \"河北\",\n      \"23.46\",\n      \"广东\",\n      \"24.13\"\n    ],\n    [\n      \"辽宁\",\n      \"23.32\",\n      \"四川\",\n      \"23.58\"\n    ],\n    [\n      \"吉林\",\n      \"24.90\",\n      \"安徽\",\n      \"23.44\"\n    ],\n    [\n      \"黑龙江\",\n      \"23.23\",\n      \"福建\",\n      \"23.23\"\n    ],\n    [\n      \"江苏\",\n      \"23.56\",\n      \"山东\",\n      \"23.31\"\n    ],\n    [\n      \"浙江\",\n      \"23.40\",\n      \"河南\",\n      \"23.46\"\n    ]\n  ]\n}",
+      "default": {
+        "body": [
+          [
+            "北京",
+            "23.13",
+            "湖北",
+            "23.49"
+          ],
+          [
+            "天津",
+            "22.26",
+            "湖南",
+            "22.53"
+          ],
+          [
+            "河北",
+            "23.46",
+            "广东",
+            "24.13"
+          ],
+          [
+            "辽宁",
+            "23.32",
+            "四川",
+            "23.58"
+          ],
+          [
+            "吉林",
+            "24.90",
+            "安徽",
+            "23.44"
+          ],
+          [
+            "黑龙江",
+            "23.23",
+            "福建",
+            "23.23"
+          ],
+          [
+            "江苏",
+            "23.56",
+            "山东",
+            "23.31"
+          ],
+          [
+            "浙江",
+            "23.40",
+            "河南",
+            "23.46"
+          ]
+        ]
+      },
+      "getType": 1,
+      "dataSetName": "商品销售排行"
+    },
+    "option": {
+      "uuid": "MlAzRnZiZsyJX91Myq1_9tQW",
+      "content": "scrollBoard",
+      "attrs": {
+        "rowNum": 5,
+        "waitTime": 2000,
+        "indexShow": false,
+        "columnWidth": []
+      },
+      "styles": {
+        "headerBGC": "rgba(0, 186, 255,0.25)",
+        "oddRowBGC": "rgba(0, 59, 81,0.3)",
+        "evenRowBGC": "rgba(10, 39, 50,0.3)"
+      },
+      "config": null,
+      "setConfig": null,
+      "data": {
+        "api": {
+          "url": "",
+          "header": "{}",
+          "method": "get",
+          "params": "{}",
+          "interval": 10,
+          "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
+        },
+        "mqtt": [],
+        "excel": {
+          "key": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g"
+          ],
+          "data": [
+            {
+              "a": 111,
+              "b": 111,
+              "c": 111,
+              "d": 111,
+              "e": 111,
+              "f": 111,
+              "g": 111
+            }
+          ],
+          "title": [
+            "标题一",
+            "标题二",
+            "标题三",
+            "标题四",
+            "标题五",
+            "标题六",
+            "标题七"
+          ],
+          "filename": "柱状图数据模板"
+        },
+        "types": [
+          {
+            "label": "手动输入",
+            "value": 1,
+            "disabled": false
+          },
+          {
+            "label": "excel导入",
+            "value": 2,
+            "disabled": true
+          },
+          {
+            "label": "api接口",
+            "value": 3,
+            "disabled": false
+          },
+          {
+            "label": "mqtt",
+            "value": 4,
+            "disabled": true
+          }
+        ],
+        "value": "{}",
+        "default": {
+          "body": [
+            [
+              "改进消息",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "一些八卦",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "小道消息",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "朝九晚五",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "打工皇帝",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "日进斗金，白日做梦",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "人总要有一些梦想",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "万一实现了呢",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "词穷了喔",
+              "2023年4月20日 12:00:00"
+            ],
+            [
+              "哈哈哈哈哈哈哈哈哈",
+              "2023年4月20日 12:00:00"
+            ]
+          ],
+          "header": [
+            "消息",
+            "时间"
+          ]
+        },
+        "getType": 1
+      },
+      "option": {
+        "data": [],
+        "index": true,
+        "rowNum": 5,
+        "waitTime": 2,
+        "headerBGC": "#00BAFF",
+        "oddRowBGC": "#003B51",
+        "evenRowBGC": "#0A2732",
+        "columnWidth": [
+          50
+        ]
+      },
+      "setOption": {
+        "data": "data.default.body",
+        "index": "indexShow",
+        "header": "data.default.header",
+        "rowNum": "rowNum",
+        "waitTime": "waitTime",
+        "headerBGC": "style.headerBGC",
+        "oddRowBGC": "style.oddRowBGC",
+        "evenRowBGC": "style.evenRowBGC",
+        "columnWidth": "data.default.columnWidth"
+      },
+      "styleConfig": [
+        {
+          "key": "headerBGC",
+          "name": "表头背景",
+          "span": 24,
+          "type": "string",
+          "inputType": "color"
+        },
+        {
+          "key": "oddRowBGC",
+          "name": "奇数行背景",
+          "span": 24,
+          "type": "string",
+          "inputType": "color"
+        },
+        {
+          "key": "evenRowBGC",
+          "name": "偶数行背景",
+          "span": 24,
+          "type": "string",
+          "inputType": "color"
+        }
+      ],
+      "baseConfig": [
+        {
+          "key": "indexShow",
+          "name": "显示行号",
+          "span": 24,
+          "type": "boolean",
+          "inputType": "switch"
+        },
+        {
+          "key": "rowNum",
+          "max": 100,
+          "min": 1,
+          "name": "表行数",
+          "span": 24,
+          "step": 1,
+          "type": "number",
+          "inputType": "input"
+        },
+        {
+          "key": "waitTime",
+          "max": 10000,
+          "min": 1000,
+          "name": "轮播间隔(ms)",
+          "span": 24,
+          "step": 1000,
+          "type": "number",
+          "inputType": "input"
+        }
+      ]
+    },
+    "rowNum": 8,
+    "waitTime": 2000,
+    "indexShow": false,
+    "columnWidth": []
+  },
+  "cpmlDsMI4He4gF4eeuuZXi_y": {
+    "x": -19,
+    "y": -32,
+    "isWarning": false,
+    "_key": "cpmlDsMI4He4gF4eeuuZXi_y",
+    "creater": "ImgElement",
+    "render": "ImgEl",
+    "width": 1956,
+    "height": 155,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 1,
+    "visibility": true,
+    "id": 1706599412712,
+    "type": "type",
+    "contentType": "img",
+    "name": "边框",
+    "isLocal": false,
+    "src": null,
+    "style": {
+      "src": "./images/r7pSQnoHYYCpWh0QAVzpO.png",
+      "width": "300",
+      "height": 155,
+      "opacity": 1,
+      "lineHeight": 153,
+      "userSelect": "none",
+      "hue": 0,
+      "saturate": 0,
+      "brightness": 0,
+      "blur": 0,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "contrast": 0,
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowR": 0
+    }
+  },
+  "cpm765f30d9-315b-43b1-8a32-d6ff5f6b260a": {
+    "x": 1384,
+    "y": 21,
+    "isWarning": false,
+    "_key": "cpm765f30d9-315b-43b1-8a32-d6ff5f6b260a",
+    "creater": "TimeElement",
+    "render": "TimeEl",
+    "width": 483,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 16,
+    "visibility": true,
+    "id": 1769960067666,
+    "type": "type",
+    "contentType": "time",
+    "name": "日期时间",
+    "style": {
+      "showDate": true,
+      "showTime": true,
+      "showWeek": true,
+      "fontSize": 25,
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "fontWeight": "normal",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "height": 50
+    }
+  },
+  "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a": {
+    "x": 63,
+    "y": 174,
+    "isWarning": false,
+    "_key": "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 17,
+    "visibility": true,
+    "id": 1769960218606,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "交易总量",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29": {
+    "x": 72,
+    "y": 217,
+    "isWarning": false,
+    "_key": "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 143,
+    "height": 59,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 18,
+    "visibility": true,
+    "id": 1769960264639,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值",
+    "data": {
+      "dataType": "number",
+      "value": "18756.98",
+      "default": 18756.98,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "lineHeight": 57,
+      "height": 59
+    }
+  },
+  "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535": {
+    "x": 242,
+    "y": 222,
+    "isWarning": false,
+    "_key": "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 19,
+    "visibility": true,
+    "id": 1769960322753,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "公斤",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm46a6db0a-dae1-42f4-a476-e5be47b52121": {
+    "x": 51,
+    "y": 940,//产地图表y位置
+    "isWarning": false,
+    "_key": "cpm46a6db0a-dae1-42f4-a476-e5be47b52121",
+    "creater": "EChartElement",
+    "render": "EChart",
+    "width": 571,
+    "height": 180,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 20,
+    "visibility": true,
+    "id": 1769960766486,
+    "type": "getChartDataType1",
+    "contentType": "eBarxColor",
+    "name": "多色横行柱状图",
+    "chartTitle": null,
+    "style": {
+      "width": 500,
+      "height": 500,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "null",
+        "method": "get",
+        "params": "null",
+        "interval": 10,
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
+      },
+      "value": "{\n  \"titles\": [\n    \"河南\",\n    \"山东\",\n    \"浙江\",\n    \"江苏\",\n    \"安徽\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1872,\n        2011,\n        2598,\n        3025,\n        3832\n      ],\n      \"name\": \"产地销售量排名\"\n    }\n  ]\n}",
+      "default": {
+        "titles": [
+          "河南",
+          "山东",
+          "浙江",
+          "江苏",
+          "安徽"
+        ],
+        "values": [
+          {
+            "data": [
+              1872,
+              2011,
+              2598,
+              3025,
+              3832
+            ],
+            "name": "产地销售量排名"
+          }
+        ]
+      },
+      "getType": 1,
+      "dataSetName": "产地销售量排名"
+    },
+    "option": {
+      "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
+      "content": "eBarxColor",
+      "attrs": null,
+      "styles": null,
+      "config": {
+        "gridB": 10,
+        "gridL": 10,
+        "gridR": 10,
+        "gridT": 10,
+        "title": "横向柱状图",
+        "colors": [
+          "rgba(0, 247, 255, 1)",
+          "rgba(6, 193, 255, 1)",
+          "#fac858",
+          "#ee6666",
+          "#73c0de",
+          "#3ba272",
+          "#fc8452",
+          "#9a60b4",
+          "#ea7ccc"
+        ],
+        "colorBy": "data",
+        "legendB": 0,
+        "areaShow": true,
+        "barWidth": 30,
+        "labelSize": 12,
+        "showLabel": false,
+        "titleShow": true,
+        "titleSize": 18,
+        "xAxisShow": true,
+        "yAxisShow": true,
+        "labelColor": "#fff",
+        "legendShow": false,
+        "legendSize": 12,
+        "showSymbol": true,
+        "symbolSize": 4,
+        "titleColor": "#eee",
+        "areaOpacity": 1,
+        "labelRotate": 0,
+        "legendColor": "#eee",
+        "legendWidth": 25,
+        "legendHeight": 14,
+        "labelDistance": 12,
+        "labelPosition": "top",
+        "xAxisTickShow": true,
+        "yAxisTickShow": false,
+        "showBackground": false,
+        "xAxisLabelShow": true,
+        "xAxisLabelSize": 12,
+        "xAxisLineColor": "rgba(238, 238, 238, 0.5)",
+        "xAxisLineWidth": 1,
+        "xAxisTickColor": "#eee",
+        "xAxisTickWidth": 1,
+        "yAxisLabelShow": true,
+        "yAxisLabelSize": 12,
+        "yAxisLineColor": "rgba(238, 238, 238, 0.5)",
+        "yAxisLineWidth": 1,
+        "yAxisTickColor": "#eee",
+        "yAxisTickWidth": 1,
+        "barBorderRadius": 10,
+        "xAxisLabelColor": "#eee",
+        "xAxisTickLength": 5,
+        "yAxisLabelColor": "#eee",
+        "yAxisTickLength": 5,
+        "xAxisSplitLineShow": false,
+        "yAxisSplitLineShow": false,
+        "xAxisSplitLineColor": "#eee",
+        "xAxisSplitLineWidth": 1,
+        "yAxisSplitLineColor": "#eee",
+        "yAxisSplitLineWidth": 1
+      },
+      "setConfig": [
+        {
+          "key": 1,
+          "groupName": "标题",
+          "groupConfigs": [
+            {
+              "key": "titleShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "title",
+              "name": "标题",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "titleColor",
+              "name": "标题颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "titleSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标题字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 2,
+          "groupName": "定位",
+          "groupConfigs": [
+            {
+              "key": "gridT",
+              "max": 25,
+              "min": 0,
+              "name": "上",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridB",
+              "max": 25,
+              "min": 0,
+              "name": "下",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridL",
+              "max": 25,
+              "min": 0,
+              "name": "左",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridR",
+              "max": 25,
+              "min": 0,
+              "name": "右",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 3,
+          "groupName": "图例",
+          "groupConfigs": [
+            {
+              "key": "legendShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "legendWidth",
+              "max": 200,
+              "min": 25,
+              "name": "图形宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendHeight",
+              "max": 200,
+              "min": 14,
+              "name": "图形高",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendB",
+              "max": 100,
+              "min": 0,
+              "name": "边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendColor",
+              "name": "文字颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "legendSize",
+              "max": 9999,
+              "min": 12,
+              "name": "文字大小",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 4,
+          "groupName": "图表样式",
+          "groupConfigs": [
+            {
+              "key": "barWidth",
+              "max": 200,
+              "min": 2,
+              "name": "柱宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "barBorderRadius",
+              "max": 100,
+              "min": 0,
+              "name": "柱子圆角",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "showBackground",
+              "name": "背景柱",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "colors",
+              "name": "颜色配置",
+              "span": 24,
+              "type": "string",
+              "inputType": "colors"
+            },
+            {
+              "key": "colorBy",
+              "name": "取色策略",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "系列",
+                  "value": "series"
+                },
+                {
+                  "label": "数据",
+                  "value": "data"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "showLabel",
+              "name": "显示数值",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "labelColor",
+              "name": "数值颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "数值字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "labelDistance",
+              "max": 100,
+              "min": 0,
+              "name": "数值距离",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelRotate",
+              "max": 90,
+              "min": -90,
+              "name": "数值角度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelPosition",
+              "name": "数值位置",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "上",
+                  "value": "top"
+                },
+                {
+                  "label": "下",
+                  "value": "bottom"
+                },
+                {
+                  "label": "左",
+                  "value": "left"
+                },
+                {
+                  "label": "右",
+                  "value": "right"
+                },
+                {
+                  "label": "内部",
+                  "value": "inside"
+                }
+              ],
+              "inputType": "select"
+            }
+          ]
+        },
+        {
+          "key": 5,
+          "groupName": "X轴",
+          "groupConfigs": [
+            {
+              "key": "xAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "xAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 6,
+          "groupName": "Y轴",
+          "groupConfigs": [
+            {
+              "key": "yAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "yAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        }
+      ],
+      "data": {
+        "api": {
+          "url": "",
+          "header": "null",
+          "method": "get",
+          "params": "null",
+          "interval": 10,
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
+        },
+        "value": "{}",
+        "default": {
+          "titles": [
+            "周一",
+            "周二",
+            "周三",
+            "周四",
+            "周五",
+            "周六",
+            "周日"
+          ],
+          "values": [
+            {
+              "data": [
+                2339,
+                1899,
+                2118,
+                1790,
+                3265,
+                4465,
+                3996
+              ],
+              "name": "销量"
+            }
+          ]
+        },
+        "getType": 1
+      },
+      "option": {
+        "grid": {
+          "left": "5%",
+          "right": "5%",
+          "bottom": "10%",
+          "containLabel": false
+        },
+        "title": {
+          "show": true,
+          "text": "Stacked Line",
+          "textStyle": {
+            "color": "#eee",
+            "fontSize": 18
+          }
+        },
+        "xAxis": {
+          "show": true,
+          "type": "value",
+          "axisLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          }
+        },
+        "yAxis": {
+          "show": true,
+          "type": "category",
+          "axisLine": {
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          }
+        },
+        "legend": {
+          "data": [
+            "Email",
+            "Union Ads",
+            "Video Ads",
+            "Direct",
+            "Search Engine"
+          ],
+          "show": true,
+          "bottom": 0,
+          "itemWidth": 25,
+          "textStyle": {
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "itemHeight": 14
+        },
+        "series": [],
+        "tooltip": {
+          "trigger": "axis",
+          "axisPointer": {
+            "type": "shadow"
+          }
+        }
+      },
+      "setOption": {
+        "grid.top": "config.gridT+%",
+        "grid.left": "config.gridL+%",
+        "grid.right": "config.gridR+%",
+        "title.show": "config.titleShow",
+        "title.text": "config.title",
+        "xAxis.show": "config.xAxisShow",
+        "yAxis.data": "data.default.titles",
+        "yAxis.show": "config.yAxisShow",
+        "grid.bottom": "config.gridB+%",
+        "legend.show": "config.legendShow",
+        "legend.bottom": "config.legendB+%",
+        "series[x].data": "data.default.values[x].data",
+        "series[x].name": "data.default.values[x].name",
+        "series[x].type": "data.default.values[x].type={bar}",
+        "series[x].label": "data.default.values[x].label={Object}",
+        "legend.itemWidth": "config.legendWidth",
+        "legend.itemHeight": "config.legendHeight",
+        "series[x].colorBy": "FUN:this.element.config.colorBy?this.element.config.colorBy:'series'",
+        "series[x].barWidth": "data.default.values[x].barWidth=config.barWidth",
+        "series[x].itemStyle": "data.default.values[x].itemStyle={Object}",
+        "xAxis.axisTick.show": "config.xAxisTickShow",
+        "yAxis.axisTick.show": "config.yAxisTickShow",
+        "series[x].label.show": "data.default.values[x].label.show=config.showLabel",
+        "xAxis.axisLabel.show": "config.xAxisLabelShow",
+        "xAxis.splitLine.show": "config.xAxisSplitLineShow",
+        "yAxis.axisLabel.show": "config.yAxisLabelShow",
+        "yAxis.splitLine.show": "config.yAxisSplitLineShow",
+        "series[x].label.color": "data.default.values[x].label.show=config.labelColor",
+        "title.textStyle.color": "config.titleColor",
+        "xAxis.axisLabel.color": "config.xAxisLabelColor",
+        "xAxis.axisTick.length": "config.xAxisTickLength",
+        "yAxis.axisLabel.color": "config.yAxisLabelColor",
+        "yAxis.axisTick.length": "config.yAxisTickLength",
+        "legend.textStyle.color": "config.legendColor",
+        "series[x].label.rotate": "data.default.values[x].label.show=config.labelRotate",
+        "series[x].label.distance": "data.default.values[x].label.show=config.labelDistance",
+        "series[x].label.fontSize": "data.default.values[x].label.show=config.labelSize",
+        "series[x].label.position": "data.default.values[x].label.show=config.labelPosition",
+        "series[x].showBackground": "data.default.values[x].barWidth=config.showBackground",
+        "title.textStyle.fontSize": "config.titleSize",
+        "xAxis.axisLabel.fontSize": "config.xAxisLabelSize",
+        "yAxis.axisLabel.fontSize": "config.yAxisLabelSize",
+        "legend.textStyle.fontSize": "config.legendSize",
+        "series[x].backgroundStyle": "data.default.values[x].backgroundStyle={Object}",
+        "series[x].itemStyle.normal": "data.default.values[x].itemStyle.normal={Object}",
+        "xAxis.axisLine.lineStyle.color": "config.xAxisLineColor",
+        "xAxis.axisLine.lineStyle.width": "config.xAxisLineWidth",
+        "xAxis.axisTick.lineStyle.color": "config.xAxisTickColor",
+        "xAxis.axisTick.lineStyle.width": "config.xAxisTickWidth",
+        "yAxis.axisLine.lineStyle.color": "config.yAxisLineColor",
+        "yAxis.axisLine.lineStyle.width": "config.yAxisLineWidth",
+        "yAxis.axisTick.lineStyle.color": "config.yAxisTickColor",
+        "yAxis.axisTick.lineStyle.width": "config.yAxisTickWidth",
+        "xAxis.splitLine.lineStyle.color": "config.xAxisSplitLineColor",
+        "xAxis.splitLine.lineStyle.width": "config.xAxisSplitLineWidth",
+        "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
+        "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
+        "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
+        "series[x].barCategoryGap": "config.barCategoryGap"
+      },
+      "styleConfig": null,
+      "baseConfig": null
+    },
+    "config": {
+      "gridB": 25,
+      "gridL": 10,
+      "gridR": 10,
+      "gridT": 12,
+      "barCategoryGap": "4%",
+      "title": "产地销售量排名TOP5",
+      "colors": [
+        "rgba(0, 247, 255, 1)",
+        "rgba(6, 193, 255, 1)",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "colorBy": "data",
+      "legendB": 0,
+      "areaShow": true,
+      "barWidth": 12,
+      "labelSize": 12,
+      "showLabel": true,
+      "titleShow": false,
+      "titleSize": 25,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "labelColor": "#fff",
+      "legendShow": false,
+      "legendSize": 12,
+      "showSymbol": true,
+      "symbolSize": 4,
+      "titleColor": "rgba(50, 187, 255, 1)",
+      "areaOpacity": 1,
+      "labelRotate": 1,
+      "legendColor": "rgba(238, 238, 238, 1)",
+      "legendWidth": 25,
+      "legendHeight": 14,
+      "labelDistance": 12,
+      "labelPosition": "right",
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "showBackground": true,
+      "xAxisLabelShow": true,
+      "xAxisLabelSize": 15,
+      "xAxisLineColor": "rgba(238, 238, 238, 0.5)",
+      "xAxisLineWidth": 1,
+      "xAxisTickColor": "#eee",
+      "xAxisTickWidth": 1,
+      "yAxisLabelShow": true,
+      "yAxisLabelSize": 15,
+      "yAxisLineColor": "rgba(238, 238, 238, 0.5)",
+      "yAxisLineWidth": 1,
+      "yAxisTickColor": "#eee",
+      "yAxisTickWidth": 1,
+      "barBorderRadius": 0,
+      "xAxisLabelColor": "#eee",
+      "xAxisTickLength": 5,
+      "yAxisLabelColor": "#eee",
+      "yAxisTickLength": 1,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": false,
+      "xAxisSplitLineColor": "rgba(251, 250, 250, 1)",
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineColor": "#eee",
+      "yAxisSplitLineWidth": 1,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm392223cb-81f8-4803-8377-3d3661ebf467": {
+    "x": 683,
+    "y": 940,//销地图y位置
+    "isWarning": false,
+    "_key": "cpm392223cb-81f8-4803-8377-3d3661ebf467",
+    "creater": "EChartElement",
+    "render": "EChart",
+    "width": 571,
+    "height": 180,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 21,
+    "visibility": true,
+    "id": 1769961340336,
+    "type": "getChartDataType1",
+    "contentType": "eBarxColor",
+    "name": "多色横行柱状图 Copy",
+    "chartTitle": null,
+    "style": {
+      "width": 500,
+      "height": 500,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "null",
+        "method": "get",
+        "params": "null",
+        "interval": 10,
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
+      },
+      "value": "{\n  \"titles\": [\n    \"虹虹区\",\n    \"静安区\",\n    \"黄埔区\",\n    \"普陀区\",\n    \"徐汇区\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1530,\n        1880,\n        2330,\n        2870,\n        3210\n      ],\n      \"name\": \"销地采购量排名11\"\n    }\n  ]\n}",
+      "default": {
+        "titles": [
+          "虹口区",
+          "静安区",
+          "黄埔区",
+          "普陀区",
+          "徐汇区"
+        ],
+        "values": [
+          {
+            "data": [
+              1530,
+              1880,
+              2330,
+              2870,
+              3210
+            ],
+            "name": "销地采购量排名11"
+          }
+        ]
+      },
+      "getType": 1,
+      "dataSetName": "销地采购量排名"
+    },
+    "option": {
+      "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
+      "content": "eBarxColor",
+      "attrs": null,
+      "styles": null,
+      "config": {
+        "gridB": 10,
+        "gridL": 10,
+        "gridR": 10,
+        "gridT": 10,
+        "title": "横向柱状图",
+        "colors": [
+          "rgba(0, 247, 255, 1)",
+          "rgba(6, 193, 255, 1)",
+          "#fac858",
+          "#ee6666",
+          "#73c0de",
+          "#3ba272",
+          "#fc8452",
+          "#9a60b4",
+          "#ea7ccc"
+        ],
+        "colorBy": "data",
+        "legendB": 0,
+        "areaShow": true,
+        "barWidth": 30,
+        "labelSize": 12,
+        "showLabel": false,
+        "titleShow": true,
+        "titleSize": 18,
+        "xAxisShow": true,
+        "yAxisShow": true,
+        "labelColor": "#fff",
+        "legendShow": false,
+        "legendSize": 12,
+        "showSymbol": true,
+        "symbolSize": 4,
+        "titleColor": "#eee",
+        "areaOpacity": 1,
+        "labelRotate": 0,
+        "legendColor": "#eee",
+        "legendWidth": 25,
+        "legendHeight": 14,
+        "labelDistance": 12,
+        "labelPosition": "top",
+        "xAxisTickShow": true,
+        "yAxisTickShow": false,
+        "showBackground": false,
+        "xAxisLabelShow": true,
+        "xAxisLabelSize": 12,
+        "xAxisLineColor": "rgba(238, 238, 238, 0.5)",
+        "xAxisLineWidth": 1,
+        "xAxisTickColor": "#eee",
+        "xAxisTickWidth": 1,
+        "yAxisLabelShow": true,
+        "yAxisLabelSize": 12,
+        "yAxisLineColor": "rgba(238, 238, 238, 0.5)",
+        "yAxisLineWidth": 1,
+        "yAxisTickColor": "#eee",
+        "yAxisTickWidth": 1,
+        "barBorderRadius": 10,
+        "xAxisLabelColor": "#eee",
+        "xAxisTickLength": 5,
+        "yAxisLabelColor": "#eee",
+        "yAxisTickLength": 5,
+        "xAxisSplitLineShow": false,
+        "yAxisSplitLineShow": false,
+        "xAxisSplitLineColor": "#eee",
+        "xAxisSplitLineWidth": 1,
+        "yAxisSplitLineColor": "#eee",
+        "yAxisSplitLineWidth": 1
+      },
+      "setConfig": [
+        {
+          "key": 1,
+          "groupName": "标题",
+          "groupConfigs": [
+            {
+              "key": "titleShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "title",
+              "name": "标题",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "titleColor",
+              "name": "标题颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "titleSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标题字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 2,
+          "groupName": "定位",
+          "groupConfigs": [
+            {
+              "key": "gridT",
+              "max": 25,
+              "min": 0,
+              "name": "上",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridB",
+              "max": 25,
+              "min": 0,
+              "name": "下",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridL",
+              "max": 25,
+              "min": 0,
+              "name": "左",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridR",
+              "max": 25,
+              "min": 0,
+              "name": "右",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 3,
+          "groupName": "图例",
+          "groupConfigs": [
+            {
+              "key": "legendShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "legendWidth",
+              "max": 200,
+              "min": 25,
+              "name": "图形宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendHeight",
+              "max": 200,
+              "min": 14,
+              "name": "图形高",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendB",
+              "max": 100,
+              "min": 0,
+              "name": "边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendColor",
+              "name": "文字颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "legendSize",
+              "max": 9999,
+              "min": 12,
+              "name": "文字大小",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 4,
+          "groupName": "图表样式",
+          "groupConfigs": [
+            {
+              "key": "barWidth",
+              "max": 200,
+              "min": 2,
+              "name": "柱宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "barBorderRadius",
+              "max": 100,
+              "min": 0,
+              "name": "柱子圆角",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "showBackground",
+              "name": "背景柱",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "colors",
+              "name": "颜色配置",
+              "span": 24,
+              "type": "string",
+              "inputType": "colors"
+            },
+            {
+              "key": "colorBy",
+              "name": "取色策略",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "系列",
+                  "value": "series"
+                },
+                {
+                  "label": "数据",
+                  "value": "data"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "showLabel",
+              "name": "显示数值",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "labelColor",
+              "name": "数值颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "数值字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "labelDistance",
+              "max": 100,
+              "min": 0,
+              "name": "数值距离",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelRotate",
+              "max": 90,
+              "min": -90,
+              "name": "数值角度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelPosition",
+              "name": "数值位置",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "上",
+                  "value": "top"
+                },
+                {
+                  "label": "下",
+                  "value": "bottom"
+                },
+                {
+                  "label": "左",
+                  "value": "left"
+                },
+                {
+                  "label": "右",
+                  "value": "right"
+                },
+                {
+                  "label": "内部",
+                  "value": "inside"
+                }
+              ],
+              "inputType": "select"
+            }
+          ]
+        },
+        {
+          "key": 5,
+          "groupName": "X轴",
+          "groupConfigs": [
+            {
+              "key": "xAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "xAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 6,
+          "groupName": "Y轴",
+          "groupConfigs": [
+            {
+              "key": "yAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "yAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        }
+      ],
+      "data": {
+        "api": {
+          "url": "",
+          "header": "null",
+          "method": "get",
+          "params": "null",
+          "interval": 10,
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
+        },
+        "value": "{}",
+        "default": {
+          "titles": [
+            "周一",
+            "周二",
+            "周三",
+            "周四",
+            "周五",
+            "周六",
+            "周日"
+          ],
+          "values": [
+            {
+              "data": [
+                2339,
+                1899,
+                2118,
+                1790,
+                3265,
+                4465,
+                3996
+              ],
+              "name": "销量"
+            }
+          ]
+        },
+        "getType": 1
+      },
+      "option": {
+        "grid": {
+          "left": "5%",
+          "right": "5%",
+          "bottom": "10%",
+          "containLabel": false
+        },
+        "title": {
+          "show": true,
+          "text": "Stacked Line",
+          "textStyle": {
+            "color": "#eee",
+            "fontSize": 18
+          }
+        },
+        "xAxis": {
+          "show": true,
+          "type": "value",
+          "axisLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          }
+        },
+        "yAxis": {
+          "show": true,
+          "type": "category",
+          "axisLine": {
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          }
+        },
+        "legend": {
+          "data": [
+            "Email",
+            "Union Ads",
+            "Video Ads",
+            "Direct",
+            "Search Engine"
+          ],
+          "show": true,
+          "bottom": 0,
+          "itemWidth": 25,
+          "textStyle": {
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "itemHeight": 14
+        },
+        "series": [],
+        "tooltip": {
+          "trigger": "axis",
+          "axisPointer": {
+            "type": "shadow"
+          }
+        }
+      },
+      "setOption": {
+        "grid.top": "config.gridT+%",
+        "grid.left": "config.gridL+%",
+        "grid.right": "config.gridR+%",
+        "title.show": "config.titleShow",
+        "title.text": "config.title",
+        "xAxis.show": "config.xAxisShow",
+        "yAxis.data": "data.default.titles",
+        "yAxis.show": "config.yAxisShow",
+        "grid.bottom": "config.gridB+%",
+        "legend.show": "config.legendShow",
+        "legend.bottom": "config.legendB+%",
+        "series[x].data": "data.default.values[x].data",
+        "series[x].name": "data.default.values[x].name",
+        "series[x].type": "data.default.values[x].type={bar}",
+        "series[x].label": "data.default.values[x].label={Object}",
+        "legend.itemWidth": "config.legendWidth",
+        "legend.itemHeight": "config.legendHeight",
+        "series[x].colorBy": "FUN:this.element.config.colorBy?this.element.config.colorBy:'series'",
+        "series[x].barWidth": "data.default.values[x].barWidth=config.barWidth",
+        "series[x].itemStyle": "data.default.values[x].itemStyle={Object}",
+        "xAxis.axisTick.show": "config.xAxisTickShow",
+        "yAxis.axisTick.show": "config.yAxisTickShow",
+        "series[x].label.show": "data.default.values[x].label.show=config.showLabel",
+        "xAxis.axisLabel.show": "config.xAxisLabelShow",
+        "xAxis.splitLine.show": "config.xAxisSplitLineShow",
+        "yAxis.axisLabel.show": "config.yAxisLabelShow",
+        "yAxis.splitLine.show": "config.yAxisSplitLineShow",
+        "series[x].label.color": "data.default.values[x].label.show=config.labelColor",
+        "title.textStyle.color": "config.titleColor",
+        "xAxis.axisLabel.color": "config.xAxisLabelColor",
+        "xAxis.axisTick.length": "config.xAxisTickLength",
+        "yAxis.axisLabel.color": "config.yAxisLabelColor",
+        "yAxis.axisTick.length": "config.yAxisTickLength",
+        "legend.textStyle.color": "config.legendColor",
+        "series[x].label.rotate": "data.default.values[x].label.show=config.labelRotate",
+        "series[x].label.distance": "data.default.values[x].label.show=config.labelDistance",
+        "series[x].label.fontSize": "data.default.values[x].label.show=config.labelSize",
+        "series[x].label.position": "data.default.values[x].label.show=config.labelPosition",
+        "series[x].showBackground": "data.default.values[x].barWidth=config.showBackground",
+        "title.textStyle.fontSize": "config.titleSize",
+        "xAxis.axisLabel.fontSize": "config.xAxisLabelSize",
+        "yAxis.axisLabel.fontSize": "config.yAxisLabelSize",
+        "legend.textStyle.fontSize": "config.legendSize",
+        "series[x].backgroundStyle": "data.default.values[x].backgroundStyle={Object}",
+        "series[x].itemStyle.normal": "data.default.values[x].itemStyle.normal={Object}",
+        "xAxis.axisLine.lineStyle.color": "config.xAxisLineColor",
+        "xAxis.axisLine.lineStyle.width": "config.xAxisLineWidth",
+        "xAxis.axisTick.lineStyle.color": "config.xAxisTickColor",
+        "xAxis.axisTick.lineStyle.width": "config.xAxisTickWidth",
+        "yAxis.axisLine.lineStyle.color": "config.yAxisLineColor",
+        "yAxis.axisLine.lineStyle.width": "config.yAxisLineWidth",
+        "yAxis.axisTick.lineStyle.color": "config.yAxisTickColor",
+        "yAxis.axisTick.lineStyle.width": "config.yAxisTickWidth",
+        "xAxis.splitLine.lineStyle.color": "config.xAxisSplitLineColor",
+        "xAxis.splitLine.lineStyle.width": "config.xAxisSplitLineWidth",
+        "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
+        "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
+        "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
+        "series[x].barCategoryGap": "config.barCategoryGap"
+      },
+      "styleConfig": null,
+      "baseConfig": null
+    },
+    "config": {
+      "gridB": 24,
+      "gridL": 10,
+      "gridR": 10,
+      "gridT": 12,
+      "barCategoryGap": "4%",
+      "title": "销地采购量排名TOP5",
+      "colors": [
+        "rgba(0, 247, 255, 1)",
+        "rgba(6, 193, 255, 1)",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "colorBy": "data",
+      "legendB": 0,
+      "areaShow": true,
+      "barWidth": 12,
+      "labelSize": 12,
+      "showLabel": true,
+      "titleShow": false,
+      "titleSize": 25,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "labelColor": "#fff",
+      "legendShow": false,
+      "legendSize": 12,
+      "showSymbol": true,
+      "symbolSize": 4,
+      "titleColor": "rgba(50, 187, 255, 1)",
+      "areaOpacity": 1,
+      "labelRotate": 0,
+      "legendColor": "#eee",
+      "legendWidth": 25,
+      "legendHeight": 14,
+      "labelDistance": 12,
+      "labelPosition": "right",
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "showBackground": true,
+      "xAxisLabelShow": true,
+      "xAxisLabelSize": 15,
+      "xAxisLineColor": "rgba(238, 238, 238, 0.5)",
+      "xAxisLineWidth": 1,
+      "xAxisTickColor": "#eee",
+      "xAxisTickWidth": 1,
+      "yAxisLabelShow": true,
+      "yAxisLabelSize": 15,
+      "yAxisLineColor": "rgba(238, 238, 238, 0.5)",
+      "yAxisLineWidth": 1,
+      "yAxisTickColor": "#eee",
+      "yAxisTickWidth": 1,
+      "barBorderRadius": 0,
+      "xAxisLabelColor": "#eee",
+      "xAxisTickLength": 5,
+      "yAxisLabelColor": "#eee",
+      "yAxisTickLength": 5,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": false,
+      "xAxisSplitLineColor": "rgba(251, 250, 250, 1)",
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineColor": "#eee",
+      "yAxisSplitLineWidth": 1,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm027c0b66-a434-4fc9-8343-f76ce8afdc09": {
+    "x": 33,
+    "y": 890,
+    "isWarning": false,
+    "_key": "cpm027c0b66-a434-4fc9-8343-f76ce8afdc09",
+    "creater": "BorderElement",
+    "render": "BorderEl",
+    "width": 593,
+    "height": 240,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 22,
+    "visibility": true,
+    "id": 1769961607754,
+    "type": "type",
+    "name": "边框10",
+    "contentType": "border-10",
+    "dur": 3,
+    "reverse": false,
+    "title": null,
+    "borderType": "10",
+    "style": {
+      "width": 500,
+      "height": 500,
+      "colors": [],
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "backgroundColor": "rgba(73, 194, 255, 0)"
+    }
+  },
+  "cpm4f49fbea-c692-4178-b8c6-f698a829612e": {
+    "x": 1472,
+    "y": 478,
+    "isWarning": false,
+    "_key": "cpm4f49fbea-c692-4178-b8c6-f698a829612e",
+    "creater": "BorderElement",
+    "render": "BorderEl",
+    "width": 395,
+    "height": 388,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 23,
+    "visibility": true,
+    "id": 1769964392280,
+    "type": "type",
+    "name": "边框10",
+    "contentType": "border-10",
+    "dur": 3,
+    "reverse": false,
+    "title": null,
+    "borderType": "10",
+    "style": {
+      "width": 500,
+      "height": 500,
+      "colors": [],
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    }
+  },
+  "cpm7b3a596e-6e36-4b7e-8e75-ac33b464e646": {
+    "x": 1274,
+    "y": 890,
+    "isWarning": false,
+    "_key": "cpm7b3a596e-6e36-4b7e-8e75-ac33b464e646",
+    "creater": "BorderElement",
+    "render": "BorderEl",
+    "width": 593,
+    "height": 240,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 24,
+    "visibility": true,
+    "id": 1769964414181,
+    "type": "type",
+    "name": "边框10 Copy",
+    "contentType": "border-10",
+    "dur": 3,
+    "reverse": false,
+    "title": null,
+    "borderType": "10",
+    "style": {
+      "width": 500,
+      "height": 500,
+      "colors": [],
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    }
+  },
+  "cpmf3591fa9-ff54-48f7-bdd4-7d3bf5fab755": {
+    "x": 1491,
+    "y": 475,
+    "isWarning": false,
+    "_key": "cpmf3591fa9-ff54-48f7-bdd4-7d3bf5fab755",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 25,
+    "visibility": true,
+    "id": 1769964533339,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "屠宰场平均出厂价",
+      "fontSize": 18,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": true,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmdf32aab5-1afb-455c-ac76-848a0b6fb189": {
+    "x": 1738,
+    "y": 475,
+    "isWarning": false,
+    "_key": "cpmdf32aab5-1afb-455c-ac76-848a0b6fb189",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 26,
+    "visibility": true,
+    "id": 1769964578634,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "2026年1月20日",
+      "fontSize": 18,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": true,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmfaf24b6b-642d-4c12-80a3-f3f1009eb5d5": {
+    "x": 1302,
+    "y": 906,
+    "isWarning": false,
+    "_key": "cpmfaf24b6b-642d-4c12-80a3-f3f1009eb5d5",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 27,
+    "visibility": true,
+    "id": 1769965372975,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "疑似异常交易检测",
+      "fontSize": 26,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": true,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmaf7bcca6-333a-470e-9054-2ecbde4be86e": {
+    "x": 613,
+    "y": 33,
+    "isWarning": false,
+    "_key": "cpmaf7bcca6-333a-470e-9054-2ecbde4be86e",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 717,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 28,
+    "visibility": true,
+    "id": 1769965504035,
+    "type": "text",
+    "contentType": "text",
+    "name": "直播大厅数据可视化 Copy",
+    "isLocal": false,
+    "style": {
+      "text": "批发市场子系统『白条猪』",
+      "color": "#fff",
+      "height": 50,
+      "fontSize": 41,
+      "textAlign": "center",
+      "background": "rgba(40, 44, 52,0)",
+      "fontFamily": "AlimamaShuHeiTi-Bold",
+      "fontWeight": "normal",
+      "lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "_lineHeight": 0,
+      "textShadowOffsetY": 0,
+      "textStrokeBlur": 0,
+      "isGradient": false,
+      "textShadowOffsetX": 0,
+      "textShadowBlur": 0,
+      "gradientAngle": 0
+    }
+  },
+  "cpme55a84fd-cf3a-483b-adf8-301d6a611f22": {
+    "x": 47,
+    "y": 308,
+    "isWarning": false,
+    "_key": "cpme55a84fd-cf3a-483b-adf8-301d6a611f22",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 130,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 29,
+    "visibility": true,
+    "id": 1770010648929,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值 Copy",
+    "data": {
+      "dataType": "number",
+      "value": "35.04",
+      "default": 35.04,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0": {
+    "x": 44,
+    "y": 402,
+    "isWarning": false,
+    "_key": "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 130,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 30,
+    "visibility": true,
+    "id": 1770010696076,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值 Copy",
+    "data": {
+      "dataType": "number",
+      "value": "18.68",
+      "default": 18.68,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a": {
+    "x": 45,
+    "y": 500,
+    "isWarning": false,
+    "_key": "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 130,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 31,
+    "visibility": true,
+    "id": 1770010720957,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值 Copy",
+    "data": {
+      "dataType": "number",
+      "value": "18.65",
+      "default": 18.65,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm18e89d42-8641-40e8-8884-db5ce5da24dc": {
+    "x": 19,
+    "y": 593,
+    "isWarning": false,
+    "_key": "cpm18e89d42-8641-40e8-8884-db5ce5da24dc",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 130,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 32,
+    "visibility": true,
+    "id": 1770010758002,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值 Copy",
+    "data": {
+      "dataType": "number",
+      "value": "10",
+      "default": 10,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm9ce068f3-90b3-4556-a306-58c47635d1a2": {
+    "x": 20,
+    "y": 684,
+    "isWarning": false,
+    "_key": "cpm9ce068f3-90b3-4556-a306-58c47635d1a2",
+    "creater": "NumElement",
+    "render": "NumEl",
+    "width": 130,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 33,
+    "visibility": true,
+    "id": 1770010794123,
+    "type": "type",
+    "contentType": "num",
+    "name": "数值 Copy",
+    "data": {
+      "dataType": "number",
+      "value": "40",
+      "default": 40,
+      "getType": 1,
+      "api": {
+        "url": "",
+        "header": "{}",
+        "params": "{}",
+        "method": "get",
+        "interval": 10,
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
+      },
+      "dataSetName": ""
+    },
+    "style": {
+      "fontSize": 40,
+      "fontWeight": "bold",
+      "color": "rgba(97, 223, 255, 1)",
+      "fontFamily": "DouyinSansBold",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f": {
+    "x": 1466,
+    "y": 194,
+    "isWarning": false,
+    "_key": "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f",
+    "creater": "EChartElement",
+    "render": "EChart",
+    "width": 420,
+    "height": 260,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 34,
+    "visibility": true,
+    "id": 1770048783701,
+    "type": "getChartDataType1",
+    "contentType": "stackedLine",
+    "name": "堆叠折线图",
+    "chartTitle": null,
+    "style": {
+      "width": 500,
+      "height": 500,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "null",
+        "method": "get",
+        "params": "null",
+        "interval": 10,
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"},{\"data\":[300,500],\"name\":\"支出\"}]}}"
+      },
+      "value": "{\n  \"titles\": [\n    \"202303\",\n    \"202305\",\n    \"202307\",\n    \"202309\",\n    \"202311\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        82,\n        60,\n        70,\n        72,\n        85,\n        100,\n        70,\n        80,\n        100,\n        102\n      ],\n      \"name\": \"销量1\"\n    }\n  ]\n}",
+      "default": {
+        "titles": [
+          "202303",
+          "202305",
+          "202307",
+          "202309",
+          "202311"
+        ],
+        "values": [
+          {
+            "data": [
+              82,
+              60,
+              70,
+              72,
+              85,
+              100,
+              70,
+              80,
+              100,
+              102
+            ],
+            "name": "销量1"
+          }
+        ]
+      },
+      "getType": 1,
+      "dataSetName": "堆叠折线图"
+    },
+    "option": {
+      "uuid": "oAYJsQ-DadAcBYmKyHGvHA2u",
+      "content": "stackedLine",
+      "attrs": null,
+      "styles": null,
+      "config": {
+        "gridB": 10,
+        "gridL": 10,
+        "gridR": 5,
+        "gridT": 10,
+        "title": "堆叠折线图",
+        "colors": [
+          "rgba(0, 206, 209, 1)",
+          "rgba(250, 250, 0, 1)",
+          "#fac858",
+          "#ee6666",
+          "#73c0de",
+          "#3ba272",
+          "#fc8452",
+          "#9a60b4",
+          "#ea7ccc"
+        ],
+        "smooth": true,
+        "legendB": 0,
+        "areaShow": true,
+        "labelSize": 12,
+        "lineWidth": 3,
+        "showLabel": false,
+        "titleShow": true,
+        "titleSize": 18,
+        "xAxisShow": true,
+        "yAxisShow": true,
+        "labelColor": "#fff",
+        "legendShow": false,
+        "legendSize": 12,
+        "showSymbol": true,
+        "symbolSize": 4,
+        "titleColor": "#eee",
+        "areaOpacity": 0.3,
+        "legendColor": "#eee",
+        "legendWidth": 25,
+        "legendHeight": 14,
+        "xAxisTickShow": true,
+        "yAxisTickShow": false,
+        "xAxisLabelShow": true,
+        "xAxisLabelSize": 12,
+        "xAxisLineColor": "#eee",
+        "xAxisLineWidth": 1,
+        "xAxisTickColor": "#eee",
+        "xAxisTickWidth": 1,
+        "yAxisLabelShow": true,
+        "yAxisLabelSize": 12,
+        "yAxisLineColor": "#eee",
+        "yAxisLineWidth": 1,
+        "yAxisTickColor": "#eee",
+        "yAxisTickWidth": 1,
+        "xAxisLabelColor": "#eee",
+        "xAxisTickLength": 5,
+        "yAxisLabelColor": "#eee",
+        "yAxisTickLength": 5,
+        "xAxisSplitLineShow": false,
+        "yAxisSplitLineShow": false,
+        "xAxisSplitLineColor": "#eee",
+        "xAxisSplitLineWidth": 1,
+        "yAxisSplitLineColor": "#eee",
+        "yAxisSplitLineWidth": 1
+      },
+      "setConfig": [
+        {
+          "key": 1,
+          "groupName": "标题",
+          "groupConfigs": [
+            {
+              "key": "titleShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "title",
+              "name": "标题",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "titleColor",
+              "name": "标题颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "titleSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标题字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 2,
+          "groupName": "定位",
+          "groupConfigs": [
+            {
+              "key": "gridT",
+              "max": 25,
+              "min": 0,
+              "name": "上",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridB",
+              "max": 25,
+              "min": 0,
+              "name": "下",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridL",
+              "max": 25,
+              "min": 0,
+              "name": "左",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "gridR",
+              "max": 25,
+              "min": 0,
+              "name": "右",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 3,
+          "groupName": "图例",
+          "groupConfigs": [
+            {
+              "key": "legendShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "legendWidth",
+              "max": 200,
+              "min": 25,
+              "name": "图形宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendHeight",
+              "max": 200,
+              "min": 14,
+              "name": "图形高",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendB",
+              "max": 100,
+              "min": 0,
+              "name": "边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "legendColor",
+              "name": "文字颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "legendSize",
+              "max": 9999,
+              "min": 12,
+              "name": "文字大小",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 4,
+          "groupName": "图表样式",
+          "groupConfigs": [
+            {
+              "key": "lineWidth",
+              "max": 20,
+              "min": 2,
+              "name": "线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "smooth",
+              "name": "平滑曲线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "showSymbol",
+              "name": "折线点",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "symbolSize",
+              "max": 20,
+              "min": 4,
+              "name": "折线点大小",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "showLabel",
+              "name": "显示数值",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "labelColor",
+              "name": "数值颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "数值字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "areaShow",
+              "name": "显示区域",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "areaOpacity",
+              "max": 1,
+              "min": 0,
+              "name": "区域透明度",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "colors",
+              "name": "颜色配置",
+              "span": 24,
+              "type": "string",
+              "inputType": "colors"
+            }
+          ]
+        },
+        {
+          "key": 5,
+          "groupName": "X轴",
+          "groupConfigs": [
+            {
+              "key": "xAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "xAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "xAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "xAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "xAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 6,
+          "groupName": "Y轴",
+          "groupConfigs": [
+            {
+              "key": "yAxisShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLineColor",
+              "name": "轴线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "轴线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisLabelShow",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisLabelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisLabelSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "yAxisTickShow",
+              "name": "显示刻度",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisTickColor",
+              "name": "刻度颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisTickLength",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisTickWidth",
+              "max": 10,
+              "min": 1,
+              "name": "刻度线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "yAxisSplitLineShow",
+              "name": "显示分割线",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "yAxisSplitLineColor",
+              "name": "分割线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "yAxisSplitLineWidth",
+              "max": 10,
+              "min": 1,
+              "name": "分割线宽",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        }
+      ],
+      "data": {
+        "api": {
+          "url": "",
+          "header": "null",
+          "method": "get",
+          "params": "null",
+          "interval": 10,
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"},{\"data\":[300,500],\"name\":\"支出\"}]}}"
+        },
+        "value": "{}",
+        "default": {
+          "titles": [
+            "周一",
+            "周二",
+            "周三",
+            "周四",
+            "周五",
+            "周六",
+            "周日"
+          ],
+          "values": [
+            {
+              "data": [
+                2339,
+                1899,
+                2118,
+                1790,
+                3265,
+                4465,
+                3996
+              ],
+              "name": "销量1"
+            },
+            {
+              "data": [
+                1339,
+                2899,
+                1118,
+                2790,
+                1265,
+                2465,
+                1996
+              ],
+              "name": "销量2"
+            }
+          ]
+        },
+        "getType": 1
+      },
+      "option": {
+        "grid": {
+          "left": "5%",
+          "right": "5%",
+          "bottom": "10%",
+          "containLabel": false
+        },
+        "title": {
+          "show": true,
+          "text": "Stacked Line",
+          "textStyle": {
+            "color": "#eee",
+            "fontSize": 18
+          }
+        },
+        "xAxis": {
+          "data": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+          ],
+          "show": true,
+          "type": "category",
+          "axisLine": {
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "boundaryGap": false
+        },
+        "yAxis": {
+          "show": true,
+          "type": "value",
+          "axisLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          },
+          "axisTick": {
+            "show": true,
+            "length": 10,
+            "lineStyle": {
+              "color": "#0f0",
+              "width": 1
+            }
+          },
+          "axisLabel": {
+            "show": true,
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "splitLine": {
+            "show": true,
+            "lineStyle": {
+              "color": "#f00",
+              "width": 1
+            }
+          }
+        },
+        "legend": {
+          "data": [
+            "Email",
+            "Union Ads",
+            "Video Ads",
+            "Direct",
+            "Search Engine"
+          ],
+          "show": true,
+          "bottom": 0,
+          "itemWidth": 25,
+          "textStyle": {
+            "color": "#0f0",
+            "fontSize": 12
+          },
+          "itemHeight": 14
+        },
+        "series": [],
+        "tooltip": {
+          "trigger": "axis"
+        }
+      },
+      "setOption": {
+        "grid.top": "config.gridT+%",
+        "grid.left": "config.gridL+%",
+        "grid.right": "config.gridR+%",
+        "title.show": "config.titleShow",
+        "title.text": "config.title",
+        "xAxis.data": "data.default.titles",
+        "xAxis.show": "config.xAxisShow",
+        "yAxis.show": "config.yAxisShow",
+        "grid.bottom": "config.gridB+%",
+        "legend.show": "config.legendShow",
+        "legend.bottom": "config.legendB+%",
+        "series[x].data": "data.default.values[x].data",
+        "series[x].name": "data.default.values[x].name",
+        "series[x].type": "data.default.values[x].type={line}",
+        "series[x].label": "data.default.values[x].label={Object}",
+        "series[x].stack": "data.default.values[x].stack={Total}",
+        "legend.itemWidth": "config.legendWidth",
+        "series[x].smooth": "data.default.values[x].smooth=config.smooth",
+        "legend.itemHeight": "config.legendHeight",
+        "xAxis.axisTick.show": "config.xAxisTickShow",
+        "yAxis.axisTick.show": "config.yAxisTickShow",
+        "series[x].label.show": "data.default.values[x].label.show=config.showLabel",
+        "series[x].showSymbol": "data.default.values[x].showSymbol=config.showSymbol",
+        "series[x].symbolSize": "data.default.values[x].symbolSize=config.symbolSize",
+        "xAxis.axisLabel.show": "config.xAxisLabelShow",
+        "xAxis.splitLine.show": "config.xAxisSplitLineShow",
+        "yAxis.axisLabel.show": "config.yAxisLabelShow",
+        "yAxis.splitLine.show": "config.yAxisSplitLineShow",
+        "series[x].label.color": "data.default.values[x].label.show=config.labelColor",
+        "title.textStyle.color": "config.titleColor",
+        "xAxis.axisLabel.color": "config.xAxisLabelColor",
+        "xAxis.axisTick.length": "config.xAxisTickLength",
+        "yAxis.axisLabel.color": "config.yAxisLabelColor",
+        "yAxis.axisTick.length": "config.yAxisTickLength",
+        "legend.textStyle.color": "config.legendColor",
+        "series[x].label.fontSize": "data.default.values[x].label.show=config.labelSize",
+        "title.textStyle.fontSize": "config.titleSize",
+        "xAxis.axisLabel.fontSize": "config.xAxisLabelSize",
+        "yAxis.axisLabel.fontSize": "config.yAxisLabelSize",
+        "legend.textStyle.fontSize": "config.legendSize",
+        "xAxis.axisLine.lineStyle.color": "config.xAxisLineColor",
+        "xAxis.axisLine.lineStyle.width": "config.xAxisLineWidth",
+        "xAxis.axisTick.lineStyle.color": "config.xAxisTickColor",
+        "xAxis.axisTick.lineStyle.width": "config.xAxisTickWidth",
+        "yAxis.axisLine.lineStyle.color": "config.yAxisLineColor",
+        "yAxis.axisLine.lineStyle.width": "config.yAxisLineWidth",
+        "yAxis.axisTick.lineStyle.color": "config.yAxisTickColor",
+        "yAxis.axisTick.lineStyle.width": "config.yAxisTickWidth",
+        "xAxis.splitLine.lineStyle.color": "config.xAxisSplitLineColor",
+        "xAxis.splitLine.lineStyle.width": "config.xAxisSplitLineWidth",
+        "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
+        "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth"
+      },
+      "styleConfig": null,
+      "baseConfig": null
+    },
+    "config": {
+      "gridB": 10,
+      "gridL": 20,
+      "gridR": 5,
+      "gridT": 10,
+      "title": "                                   实时交易活跃度",
+      "colors": [
+        "rgba(0, 206, 209, 1)",
+        "rgba(250, 250, 0, 1)",
+        "#fac858",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc"
+      ],
+      "smooth": false,
+      "legendB": 0,
+      "areaShow": true,
+      "labelSize": 12,
+      "lineWidth": 3,
+      "showLabel": false,
+      "titleShow": true,
+      "titleSize": 15,
+      "xAxisShow": true,
+      "yAxisShow": true,
+      "labelColor": "#fff",
+      "legendShow": false,
+      "legendSize": 12,
+      "showSymbol": true,
+      "symbolSize": 4,
+      "titleColor": "#eee",
+      "areaOpacity": 0.3,
+      "legendColor": "#eee",
+      "legendWidth": 25,
+      "legendHeight": 14,
+      "xAxisTickShow": true,
+      "yAxisTickShow": false,
+      "xAxisLabelShow": true,
+      "xAxisLabelSize": 12,
+      "xAxisLineColor": "#eee",
+      "xAxisLineWidth": 1,
+      "xAxisTickColor": "#eee",
+      "xAxisTickWidth": 1,
+      "yAxisLabelShow": true,
+      "yAxisLabelSize": 11,
+      "yAxisLineColor": "#eee",
+      "yAxisLineWidth": 1,
+      "yAxisTickColor": "#eee",
+      "yAxisTickWidth": 1,
+      "xAxisLabelColor": "#eee",
+      "xAxisTickLength": 5,
+      "yAxisLabelColor": "#eee",
+      "yAxisTickLength": 5,
+      "xAxisSplitLineShow": false,
+      "yAxisSplitLineShow": false,
+      "xAxisSplitLineColor": "#eee",
+      "xAxisSplitLineWidth": 1,
+      "yAxisSplitLineColor": "#eee",
+      "yAxisSplitLineWidth": 1,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpmbc0fd62d-37d6-437b-a33a-70a768ddffaa": {
+    "x": 74,
+    "y": 14,
+    "isWarning": false,
+    "_key": "cpmbc0fd62d-37d6-437b-a33a-70a768ddffaa",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 453,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 35,
+    "visibility": true,
+    "id": 1770050422068,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "农产品电子交易数据管理分析交互平台",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1,
+      "lineHeight": 48,
+      "height": 50
+    }
+  },
+  "cpm766b8712-ea0a-4c91-b37a-1c967bca28d6": {
+    "x": 1,
+    "y": 3,
+    "isWarning": false,
+    "_key": "cpm766b8712-ea0a-4c91-b37a-1c967bca28d6",
+    "creater": "ImgElement",
+    "render": "ImgEl",
+    "width": 79,
+    "height": 78,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 36,
+    "visibility": true,
+    "id": 1770050457036,
+    "type": "type",
+    "contentType": "img",
+    "name": "图片",
+    "isLocal": true,
+    "src": null,
+    "style": {
+      "width": "300",
+      "height": 78,
+      "opacity": 1,
+      "userSelect": "none",
+      "href": "",
+      "path": "",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "hue": 0,
+      "saturate": 1.3,
+      "brightness": 1.3,
+      "contrast": 1,
+      "blur": 0,
+      "invert": false,
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowR": 0,
+      "shadowColor": "rgba(0,0,0,0)",
+      "aniType": "none",
+      "aniAlternate": false,
+      "aniLoop": "once",
+      "aniTime": 1,
+      "src": "./images/c832fffc-c101-465d-9c29-fa788894115b.png",
+      "lineHeight": 76
+    }
+  },
+  "cpmfc4352cb-c37f-4678-a100-780f588d4890": {
+    "x": 80,
+    "y": 37,
+    "isWarning": false,
+    "_key": "cpmfc4352cb-c37f-4678-a100-780f588d4890",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 1009,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 37,
+    "visibility": true,
+    "id": 1770050587214,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本",
+    "isLocal": true,
+    "style": {
+      "text": "Agriculture-Prod E-Trading Data Management & Analytics",
+      "fontSize": 12,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "YiPing",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1,
+      "lineHeight": 48,
+      "height": 50
+    }
+  },
+  "cpme41cb160-0568-4114-90c8-c847a9d8aa0b": {
+    "x": 58,
+    "y": 126,
+    "isWarning": false,
+    "_key": "cpme41cb160-0568-4114-90c8-c847a9d8aa0b",
+    "creater": "SelectElement",
+    "render": "SelectEl",
+    "width": 164,
+    "height": 38,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 38,
+    "visibility": true,
+    "id": 1770109544871,
+    "type": "type",
+    "contentType": "selectLink",
+    "name": "下拉链接 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "市场 A",
+      "options": [
+        {
+          "label": "市场 B",
+          "value": "",
+          "path": "",
+          "isLocal": true
+        },
+        {
+          "label": "市场 C",
+          "value": "",
+          "path": "",
+          "isLocal": true
+        },
+        {
+          "label": "市场 D",
+          "value": "",
+          "path": "",
+          "isLocal": true
+        }
+      ],
+      "fontSize": 16,
+      "url": "",
+      "fontWeight": "bold",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "rgba(255, 255, 255, 1)",
+      "background": "rgba(31, 147, 255, 0)",
+      "textAlign": "left",
+      "lineHeight": 36,
+      "borderWidth": 2,
+      "borderColor": "rgba(0, 61, 174, 1)",
+      "borderStyle": "solid",
+      "borderRadius": 0,
+      "arrowSize": 10,
+      "arrowColor": "rgba(0, 129, 255, 1)",
+      "arrowRight": 20,
+      "arrowTop": 12,
+      "optionBorderWidth": 0,
+      "optionBgColor": "rgba(31, 147, 255, 0.96)",
+      "optionBorderColor": "#fff",
+      "optionBorderStyle": "none",
+      "optionBorderRadius": 0,
+      "optionTextColor": "rgba(255, 255, 255, 1)",
+      "optionTextSize": 16,
+      "optionTextLineHeight": 40,
+      "optionItemBorderWidth": 1,
+      "optionItemBorderColor": "rgba(255, 255, 255, 0.2)",
+      "optionItemBorderStyle": "dotted",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "height": 38
+    }
+  },
+  "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52": {
+    "x": 175,
+    "y": 313,
+    "isWarning": false,
+    "_key": "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 39,
+    "visibility": true,
+    "id": 1770109714251,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "万元",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55": {
+    "x": 170,
+    "y": 408,
+    "isWarning": false,
+    "_key": "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 40,
+    "visibility": true,
+    "id": 1770109735834,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "元/公斤",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm0b291d93-9e3c-417d-9377-81d5b6486b83": {
+    "x": 166,
+    "y": 505,
+    "isWarning": false,
+    "_key": "cpm0b291d93-9e3c-417d-9377-81d5b6486b83",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 41,
+    "visibility": true,
+    "id": 1770109779585,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "元/公斤",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9": {
+    "x": 119,
+    "y": 598,
+    "isWarning": false,
+    "_key": "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 42,
+    "visibility": true,
+    "id": 1770109789021,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "家",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmbc5cfb60-ce8d-4806-856b-064496971855": {
+    "x": 121,
+    "y": 689,
+    "isWarning": false,
+    "_key": "cpmbc5cfb60-ce8d-4806-856b-064496971855",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 43,
+    "visibility": true,
+    "id": 1770109798793,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "家",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e": {
+    "x": 63,
+    "y": 267,
+    "isWarning": false,
+    "_key": "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 44,
+    "visibility": true,
+    "id": 1770110057505,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "交易金额",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmd8dea03a-c8c2-4a18-9258-138454296f1e": {
+    "x": 63,
+    "y": 359,
+    "isWarning": false,
+    "_key": "cpmd8dea03a-c8c2-4a18-9258-138454296f1e",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 45,
+    "visibility": true,
+    "id": 1770110072355,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "交易均价",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8": {
+    "x": 64,
+    "y": 455,
+    "isWarning": false,
+    "_key": "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 46,
+    "visibility": true,
+    "id": 1770110103065,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "交易均价（不含异常交易）",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47": {
+    "x": 63,
+    "y": 550,
+    "isWarning": false,
+    "_key": "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 47,
+    "visibility": true,
+    "id": 1770110124756,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "屠宰场数量",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3": {
+    "x": 63,
+    "y": 641,
+    "isWarning": false,
+    "_key": "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 48,
+    "visibility": true,
+    "id": 1770110143413,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "采购商数量",
+      "fontSize": 20,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "bold",
+      "fontFamily": "digital",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpmbd3a7549-e208-42e1-a158-fa080262956e": {
+    "x": 317,
+    "y": 18,
+    "isWarning": false,
+    "_key": "cpmbd3a7549-e208-42e1-a158-fa080262956e",
+    "creater": "ImgElement",
+    "render": "ImgEl",
+    "width": 1252,
+    "height": 930,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 14,
+    "visibility": true,
+    "id": 1770110536420,
+    "type": "type",
+    "contentType": "img",
+    "name": "地图图片",
+    "isLocal": true,
+    "src": null,
+    "style": {
+      "width": "1252",
+      "height": 930,
+      "opacity": 1,
+      "userSelect": "none",
+      "href": "",
+      "path": "",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "hue": 0,
+      "saturate": 1,
+      "brightness": 1,
+      "contrast": 1,
+      "blur": 0,
+      "invert": false,
+      "shadowX": 0,
+      "shadowY": 0,
+      "shadowR": 0,
+      "shadowColor": "rgba(0,0,0,0)",
+      "aniType": "none",
+      "aniAlternate": false,
+      "aniLoop": "once",
+      "aniTime": 1,
+      "src": "/shared/image/map.png",
+      "lineHeight": 928
+    }
+  },
+  "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a": {
+    "x": 657,
+    "y": 890,//边框y位置
+    "isWarning": false,
+    "_key": "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a",
+    "creater": "BorderElement",
+    "render": "BorderEl",
+    "width": 593,
+    "height": 240,//边框高度
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 50,
+    "visibility": true,
+    "id": 1770111328145,
+    "type": "type",
+    "name": "边框10 Copy",
+    "contentType": "border-10",
+    "dur": 3,
+    "reverse": false,
+    "title": null,
+    "borderType": "10",
+    "style": {
+      "width": 500,
+      "height": 500,
+      "colors": [],
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "backgroundColor": "rgba(73, 194, 255, 0)"
+    }
+  },
+  "cpme7612333-ba11-4dc7-8cb8-e82dfb629692": {
+    "x": 692,
+    "y": 906,//标题位置
+    "isWarning": false,
+    "_key": "cpme7612333-ba11-4dc7-8cb8-e82dfb629692",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 51,
+    "visibility": true,
+    "id": 1770111373198,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "销地采购量排名TOP5",
+      "fontSize": 26,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": true,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm17b89f9f-94ab-436f-acd1-12ea189ace09": {
+    "x": 73,
+    "y": 906, //产地表头y位置
+    "isWarning": false,
+    "_key": "cpm17b89f9f-94ab-436f-acd1-12ea189ace09",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 52,
+    "visibility": true,
+    "id": 1770111420166,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "产地销售量排名TOP5",
+      "fontSize": 26,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": true,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm817f187b-80cb-47eb-b250-a6a559a3cc8d": {
+    "x": 1298,
+    "y": 945,
+    "isWarning": false,
+    "_key": "cpm817f187b-80cb-47eb-b250-a6a559a3cc8d",
+    "creater": "DynamicElement",
+    "render": "Dynamic",
+    "width": 550,
+    "height": 165,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 53,
+    "visibility": true,
+    "id": 1770111618017,
+    "type": "getChartDataType6",
+    "contentType": "AutoScrollLoopTable",
+    "name": "高级轮播表",
+    "chartTitle": null,
+    "style": {
+      "width": 670,
+      "height": 460,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "null",
+        "method": "get",
+        "params": "null",
+        "interval": 10,
+        "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
+      },
+      "value": "{\n  \"body\": [\n    [\n      \"2023-03-05 01:13:00\",\n      \"河南省\",\n      \"普陀区\",\n      \"8.97元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:44:00\",\n      \"江苏省\",\n      \"虹口区\",\n      \"8.67元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:55:00\",\n      \"安徽省\",\n      \"徐汇区\",\n      \"9.27元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:13:00\",\n      \"山东省\",\n      \"嘉定区\",\n      \"8.81元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:43:00\",\n      \"浙江省\",\n      \"黄浦区\",\n      \"8.83元/公斤\"\n    ]\n  ],\n  \"header\": [\n    \"交易时间\",\n    \"货源省份\",\n    \"流向地区\",\n    \"交易单价\"\n  ]\n}",
+      "default": {
+        "body": [
+          [
+            "2023-03-05 01:13:00",
+            "河南省",
+            "普陀区",
+            "8.97元/公斤"
+          ],
+          [
+            "2023-03-05 01:44:00",
+            "江苏省",
+            "虹口区",
+            "8.67元/公斤"
+          ],
+          [
+            "2023-03-05 01:55:00",
+            "安徽省",
+            "徐汇区",
+            "9.27元/公斤"
+          ],
+          [
+            "2023-03-05 02:13:00",
+            "山东省",
+            "嘉定区",
+            "8.81元/公斤"
+          ],
+          [
+            "2023-03-05 02:43:00",
+            "浙江省",
+            "黄浦区",
+            "8.83元/公斤"
+          ]
+        ],
+        "header": [
+          "交易时间",
+          "货源省份",
+          "流向地区",
+          "交易单价"
+        ]
+      },
+      "getType": 1,
+      "dataSetName": ""
+    },
+    "config": {
+      "duration": 10,
+      "fontSize": 13,
+      "paddingX": 2,
+      "paddingY": 3,
+      "showRank": false,
+      "rowHeight": 32,
+      "textAlign": "center",
+      "textColor": "#fff",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "fontWeight": "normal",
+      "headerHeight": 26,
+      "headerBgColor": "rgba(30, 144, 255, 0.14)",
+      "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
+      "evenRowBgColor": "rgba(30, 144, 255, 0.18)"
+    },
+    "option": {
+      "uuid": "LiAAJQArXmobte7OjxkJJder",
+      "content": "AutoScrollLoopTable",
+      "attrs": null,
+      "styles": null,
+      "config": {
+        "duration": 10,
+        "fontSize": 14,
+        "paddingX": 2,
+        "paddingY": 4,
+        "showRank": false,
+        "rowHeight": 36,
+        "textAlign": "center",
+        "textColor": "#fff",
+        "fontFamily": "AlimamaAgileVF-Thin",
+        "fontWeight": "normal",
+        "componentUrl": "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/sys/common/dynamicComponents/AutoScrollLoopTable.js",
+        "headerHeight": 28,
+        "headerBgColor": "rgba(30, 144, 255, 0.14)",
+        "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
+        "evenRowBgColor": "rgba(30, 144, 255, 0.18)"
+      },
+      "setConfig": [
+        {
+          "key": 4,
+          "groupName": "配置",
+          "groupConfigs": [
+            {
+              "key": "duration",
+              "max": 100,
+              "min": 1,
+              "name": "运动时长",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "showRank",
+              "name": "显示序号",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "textColor",
+              "name": "文本颜色",
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "fontSize",
+              "max": 100,
+              "min": 12,
+              "name": "字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "headerHeight",
+              "max": 100,
+              "min": 1,
+              "name": "表头行高",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "rowHeight",
+              "max": 100,
+              "min": 1,
+              "name": "内容行高",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "headerBgColor",
+              "name": "表头背景",
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "oddRowBgColor",
+              "name": "奇数行背景",
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "evenRowBgColor",
+              "name": "偶数行背景",
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "textAlign",
+              "name": "对齐",
+              "type": "string",
+              "options": [
+                {
+                  "label": "左",
+                  "value": "left"
+                },
+                {
+                  "label": "中",
+                  "value": "center"
+                },
+                {
+                  "label": "右",
+                  "value": "right"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "paddingX",
+              "max": 100,
+              "min": 1,
+              "name": "左右边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "paddingY",
+              "max": 100,
+              "min": 1,
+              "name": "上下边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "fontFamily",
+              "name": "字体",
+              "type": "string",
+              "options": [
+                {
+                  "label": "AlimamaShuHeiTi-Bold",
+                  "value": "AlimamaShuHeiTi-Bold"
+                },
+                {
+                  "label": "AlimamaAgileVF-Thin",
+                  "value": "AlimamaAgileVF-Thin"
+                },
+                {
+                  "label": "抖音美好体(在线)",
+                  "value": "DouyinSansBold"
+                },
+                {
+                  "label": "一品创享体(在线)",
+                  "value": "YiPing"
+                },
+                {
+                  "label": "庞门正道标题体(在线)",
+                  "value": "PangMenZhengDao"
+                },
+                {
+                  "label": "站酷仓耳渔阳体(在线)",
+                  "value": "CangErYuYang"
+                }
+              ],
+              "inputType": "select"
+            }
+          ]
+        }
+      ],
+      "data": {
+        "api": {
+          "url": "",
+          "header": "null",
+          "method": "get",
+          "params": "null",
+          "interval": 10,
+          "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
+        },
+        "value": "{}",
+        "default": {
+          "body": [
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ],
+            [
+              "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/publicPic/a9t0wEArODwZHzusVGJ_1.png",
+              "水滴图表",
+              "⭐️⭐️⭐️⭐️",
+              "2025年11月11日"
+            ]
+          ],
+          "header": [
+            "图片",
+            "名称",
+            "评分",
+            "时间"
+          ]
+        },
+        "getType": 1
+      },
+      "option": null,
+      "setOption": null,
+      "styleConfig": null,
+      "baseConfig": null
+    },
+    "config": {
+      "duration": 44,
+      "fontSize": 16,
+      "paddingX": 2,
+      "paddingY": 10,
+      "showRank": false,
+      "rowHeight": 21,
+      "textAlign": "center",
+      "textColor": "#fff",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "fontWeight": "normal",
+      "componentUrl": "./scripts/AutoScrollLoopTable.js",
+      "headerHeight": 40,
+      "headerBgColor": "rgba(30, 144, 255, 0.14)",
+      "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
+      "evenRowBgColor": "rgba(30, 144, 255, 0.18)",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    }
+  },
+  "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9": {
+    "x": 1475,
+    "y": 184 ,
+    "isWarning": false,
+    "_key": "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9",
+    "creater": "BorderElement",
+    "render": "BorderEl",
+    "width": 395,
+    "height": 272,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 54,
+    "visibility": true,
+    "id": 1770111865411,
+    "type": "type",
+    "name": "边框10 Copy",
+    "contentType": "border-10",
+    "dur": 3,
+    "reverse": false,
+    "title": null,
+    "borderType": "10",
+    "style": {
+      "width": 500,
+      "height": 500,
+      "colors": [],
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    }
+  },
+  "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f": {
+    "x": 1572,
+    "y": 103,
+    "isWarning": false,
+    "_key": "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f",
+    "creater": "DecorationElement",
+    "render": "DecorationEl",
+    "width": 167,
+    "height": 64,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 55,
+    "visibility": true,
+    "id": 1770111948456,
+    "type": "type",
+    "contentType": "decoration-11",
+    "name": "装饰11",
+    "dur": 3,
+    "scanDur": 3,
+    "haloDur": 2,
+    "reverse": false,
+    "title": null,
+    "decorationType": "11",
+    "style": {
+      "width": 200,
+      "height": 60,
+      "colors": [],
+      "fontSize": 16,
+      "color": "#fff",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "bold": false
+    }
+  },
+  "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7": {
+    "x": 1606,
+    "y": 112,
+    "isWarning": false,
+    "_key": "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 116,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 56,
+    "visibility": true,
+    "id": 1770111992747,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "历史查询",
+      "fontSize": 24,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "rgba(250, 251, 252, 1)",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1,
+      "lineHeight": 48,
+      "height": 50
+    }
+  },
+  "cpm366b3d38-0dff-487b-9cde-b962629f6466": {
+    "x": 1739,
+    "y": 102,
+    "isWarning": false,
+    "_key": "cpm366b3d38-0dff-487b-9cde-b962629f6466",
+    "creater": "DecorationElement",
+    "render": "DecorationEl",
+    "width": 167,
+    "height": 64,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 57,
+    "visibility": true,
+    "id": 1770112042279,
+    "type": "type",
+    "contentType": "decoration-11",
+    "name": "装饰11 Copy",
+    "dur": 3,
+    "scanDur": 3,
+    "haloDur": 2,
+    "reverse": false,
+    "title": null,
+    "decorationType": "11",
+    "style": {
+      "width": 200,
+      "height": 60,
+      "colors": [],
+      "fontSize": 16,
+      "color": "#fff",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "bold": false
+    }
+  },
+  "cpm72cfdd7d-6978-415a-8a20-caa827a7d277": {
+    "x": 1406,
+    "y": 103,
+    "isWarning": false,
+    "_key": "cpm72cfdd7d-6978-415a-8a20-caa827a7d277",
+    "creater": "DecorationElement",
+    "render": "DecorationEl",
+    "width": 167,
+    "height": 64,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 58,
+    "visibility": true,
+    "id": 1770112046238,
+    "type": "type",
+    "contentType": "decoration-11",
+    "name": "装饰11 Copy",
+    "dur": 3,
+    "scanDur": 3,
+    "haloDur": 2,
+    "reverse": false,
+    "title": null,
+    "decorationType": "11",
+    "style": {
+      "width": 200,
+      "height": 60,
+      "colors": [],
+      "fontSize": 16,
+      "color": "#fff",
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "bold": false
+    }
+  },
+  "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20": {
+    "x": 1775,
+    "y": 111,
+    "isWarning": false,
+    "_key": "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 300,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 59,
+    "visibility": true,
+    "id": 1770112061061,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "分析报告",
+      "fontSize": 24,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "rgba(250, 251, 252, 1)",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1
+    }
+  },
+  "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f": {
+    "x": 1442,
+    "y": 112,
+    "isWarning": false,
+    "_key": "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 148,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 60,
+    "visibility": true,
+    "id": 1770112073856,
+    "type": "text",
+    "contentType": "text",
+    "name": "文本 Copy",
+    "isLocal": true,
+    "style": {
+      "text": "实时交易",
+      "fontSize": 24,
+      "url": "",
+      "localFilePath": "",
+      "fontWeight": "normal",
+      "fontFamily": "DouyinSansBold",
+      "color": "rgba(250, 251, 252, 1)",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0,
+      "isGradient": false,
+      "color1": "#fff",
+      "color2": "#60a7ffff",
+      "gradientAngle": 0,
+      "isTextShadow": false,
+      "textShadowColor": "#7bc6ffff",
+      "textShadowBlur": 0,
+      "textShadowOffsetX": 2,
+      "textShadowOffsetY": 2,
+      "isTextStroke": false,
+      "textStrokeColor": "#ff0000ff",
+      "textStrokeBlur": 1,
+      "lineHeight": 48,
+      "height": 50
+    }
+  }
+};
+
+// ==================== 导出数据（请勿修改此部分）====================
+window.DS_DATA = {
+  "config": JSON.stringify(DS_CONFIG),
+  "device_type": "pc",
+  "title": "大屏1769965626129"
+};
