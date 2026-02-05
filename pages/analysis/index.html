@@ -12,11 +12,24 @@
   <body data-pattern="on">
     <div id="app">
       <header class="header">
-        <h1>批发市场子系统---白条猪</h1>
+        <h1>批发市场子系统—白条猪</h1>
+        <div class="nav-filters">
+          <div class="filter-group">
+            <span class="filter-label">市场</span>
+            <select class="nav-select-header" v-model="market" @change="handleMarketChange">
+              <option v-for="m in markets" :key="m.value" :value="m.value">{{ m.label }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <span class="filter-label">日期</span>
+            <input type="date" class="nav-datepicker-header" v-model="date" @change="handleDateChange" :min="minDate" :max="maxDate" />
+          </div>
+        </div>
         <nav class="nav-tabs" aria-label="顶部导航">
           <a href="#" class="nav-tab">首页</a>
           <a href="#" class="nav-tab">实时交易</a>
-          <a href="#" class="nav-tab">历史查询</a>
+          <a href="../history/index.html" class="nav-tab">历史查询</a>
           <a href="#" class="nav-tab active">分析报告</a>
         </nav>
       </header>
@@ -26,9 +39,9 @@
           <div class="menu-item teal">❶ 交易量走势</div>
           <div class="menu-item orange">❷ 交易额走势</div>
           <div class="menu-item green">❸ 交易均价走势</div>
-          <div class="menu-item orange">❹ 交易额金额排行</div>
+          <div class="menu-item orange">❹ 交易佣金费率走势</div>
           <div class="menu-item gray">❺ 16省猪平均出厂价与批发市场交易价走势</div>
-          <div class="menu-item orange">❻ 交易额金额排行</div>
+          <div class="menu-item orange">❻ 交易佣金费走势</div>
           <div class="menu-item teal">❼ 定制报告</div>
         </aside>
 

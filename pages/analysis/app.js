@@ -25,10 +25,40 @@
   }
 
   createApp({
+    data() {
+      return {
+        market: "A",
+        date: new Date().toISOString().split("T")[0],
+        markets: [
+          { value: "A", label: "市场A" },
+          { value: "B", label: "市场B" },
+          { value: "C", label: "市场C" },
+        ],
+        minDate: "",
+        maxDate: "",
+      };
+    },
     mounted() {
+      const today = new Date();
+      const past30 = new Date(today);
+      past30.setDate(today.getDate() - 30);
+      const future7 = new Date(today);
+      future7.setDate(today.getDate() + 7);
+
+      this.minDate = past30.toISOString().split("T")[0];
+      this.maxDate = future7.toISOString().split("T")[0];
+
       this.initChart();
     },
     methods: {
+      handleMarketChange() {
+        console.log("Market changed to:", this.market);
+        // Add data refresh logic here if needed
+      },
+      handleDateChange() {
+        console.log("Date changed to:", this.date);
+        // Add data refresh logic here if needed
+      },
       initChart() {
         const el = document.getElementById("trendChart");
         if (!el) return;
