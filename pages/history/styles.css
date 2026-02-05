@@ -218,7 +218,7 @@ body[data-pattern="off"] {
 .card-tabs {
   display: flex;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 0px;
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 10px;
   justify-content: center;
@@ -267,7 +267,7 @@ body[data-pattern="off"] {
 .price-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 6px;
+  border-spacing: 0 2px;
 }
 
 .price-table th {
@@ -275,20 +275,21 @@ body[data-pattern="off"] {
   color: var(--color-text-muted);
   font-weight: 500;
   font-size: 13px;
-  padding: 12px 8px;
+  padding: 8px 8px;
   border-bottom: 1px solid var(--color-border);
   letter-spacing: 0.5px;
 }
 
 .price-table td {
   text-align: center;
-  padding: 12px 8px;
+  padding: 8px 8px;
   font-size: 14px;
   background: var(--color-surface-2);
   color: var(--color-text);
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   transition: all 0.2s;
+  line-height: 1.2;
 }
 
 .price-table tr:hover td {
@@ -312,8 +313,9 @@ body[data-pattern="off"] {
 }
 
 .small-tabs {
-  margin-bottom: 10px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 2px;
+  padding-top: 2px;
   justify-content: center;
 }
 
@@ -607,27 +609,87 @@ body[data-pattern="off"] {
   height: 300px;
 }
 
+/* Fixed Table Layout for Daily Transaction Query */
+.query-card {
+  display: flex;
+  flex-direction: column;
+  height: 420px; /* Reduced height for 5 rows compact view */
+  min-height: 420px;
+  padding-bottom: 16px;
+}
+
+.query-card .card-header {
+  margin-bottom: 10px; /* Tight margin */
+}
+
+.query-table-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .query-table {
   width: 100%;
   font-size: 13px;
   border-collapse: collapse;
+  table-layout: fixed; /* Fixed layout for consistent column widths */
+  height: 100%; /* Fill container */
+}
+
+.query-table thead {
+  display: table-header-group;
+}
+
+.query-table tbody {
+  display: table-row-group;
 }
 
 .query-table th {
   background: var(--color-surface-2);
-  padding: 12px 8px;
+  padding: 0 12px;
+  height: 40px; /* Fixed header height */
   text-align: left;
   color: var(--color-text-muted);
   font-weight: 500;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.query-table tr {
+  height: 45px; /* Reduced from 50px for compact look */
 }
 
 .query-table td {
-  padding: 12px 8px;
+  padding: 4px 8px; /* Reduced padding for more space */
   border-bottom: 1px solid var(--color-border);
+  white-space: normal; /* Allow text wrapping */
+  overflow: visible; /* Ensure content is seen */
+  text-overflow: clip; /* Remove ellipsis */
+  vertical-align: middle;
+  line-height: 1.2; /* Compact line spacing */
+  word-break: break-all; /* Break long words if necessary */
 }
 
-.query-table tr:hover {
+/* Empty row placeholder styling */
+.empty-row td {
+  border-bottom: none;
+}
+
+.query-table tr:hover:not(.empty-row) {
   background: rgba(15, 118, 122, 0.06);
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  height: 50px;
 }
 
 body[data-stat-skin="b"] .stat-card {
@@ -682,6 +744,14 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 32px; /* Ensure uniform width for numbers */
+}
+
+.page-btn.active {
+  background: var(--color-primary-600);
+  color: #fff;
+  border-color: var(--color-primary-600);
+  font-weight: 600;
 }
 
 .page-btn:hover:not(:disabled) {

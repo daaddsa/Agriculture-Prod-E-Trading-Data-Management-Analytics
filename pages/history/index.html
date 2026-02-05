@@ -31,7 +31,7 @@
         <nav class="nav-tabs" aria-label="顶部导航">
           <a href="#" class="nav-tab">实时交易</a>
           <a href="#" class="nav-tab active">历史查询</a>
-          <a href="../analysis/index.html" class="nav-tab">分析报告</a>
+          <a href="../analysis/index.html" class="nav-tab">数据分析</a>
         </nav>
       </header>
 
@@ -60,8 +60,8 @@
                 <thead>
                   <tr>
                     <th>地区</th>
-                    <th>屠宰场平均出厂价</th>
-                    <th>批发市场交易均价</th>
+                    <th>屠宰场平均出厂价 (t-1日)</th>
+                    <th>批发市场交易均价 (t日)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,7 +170,7 @@
             </div>
           </div>
 
-          <div class="chart-card">
+          <div class="chart-card query-card">
             <div class="card-header">
               <h3 class="card-title">日交易信息查询</h3>
               <div class="query-filters">
@@ -191,34 +191,59 @@
                 <button class="reset-btn" @click="resetQuery">重置</button>
               </div>
             </div>
-            <table class="query-table">
-              <thead>
-                <tr>
-                  <th>交易时间</th>
-                  <th>交易单价</th>
-                  <th>交易量</th>
-                  <th>交易额</th>
-                  <th>产地</th>
-                  <th>销地</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in filteredTransactions" :key="item.id">
-                  <td>{{ item.time }}</td>
-                  <td>{{ item.price }}</td>
-                  <td>{{ item.volume }}</td>
-                  <td>{{ item.amount }}</td>
-                  <td>{{ item.origin }}</td>
-                  <td>{{ item.destination }}</td>
-                </tr>
-                <tr v-if="filteredTransactions.length === 0">
-                  <td colspan="6" class="no-data">暂无数据</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="query-table-container">
+              <table class="query-table">
+                <thead>
+                  <tr>
+                    <th style="width: 18%">交易时间</th>
+                    <th style="width: 12%">交易单价</th>
+                    <th style="width: 12%">交易量</th>
+                    <th style="width: 12%">交易额</th>
+                    <th style="width: 23%">产地</th>
+                    <th style="width: 23%">销地</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr 
+                    v-for="item in displayTransactions" 
+                    :key="item.id" 
+                    :class="{ 'empty-row': item.isEmpty }"
+                  >
+                    <template v-if="!item.isEmpty">
+                      <td>{{ item.time }}</td>
+                      <td>{{ item.price }}</td>
+                      <td>{{ item.volume }}</td>
+                      <td>{{ item.amount }}</td>
+                      <td :title="item.origin">{{ item.origin }}</td>
+                      <td :title="item.destination">{{ item.destination }}</td>
+                    </template>
+                    <template v-else>
+                      <td>&nbsp;</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="card-footer pagination">
               <button class="page-btn" :disabled="query.page === 1" @click="changePage(-1)">上一页</button>
-              <span class="page-info">{{ query.page }} / {{ totalPages }}</span>
+              
+              <!-- Numbered Pagination Buttons -->
+              <button 
+                v-for="p in totalPages" 
+                :key="p"
+                class="page-btn"
+                :class="{ active: query.page === p }"
+                @click="query.page = p"
+                v-show="totalPages <= 7 || (p === 1 || p === totalPages || (p >= query.page - 1 && p <= query.page + 1))"
+              >
+                {{ p }}
+              </button>
+              
               <button class="page-btn" :disabled="query.page === totalPages" @click="changePage(1)">下一页</button>
             </div>
           </div>
