@@ -9,17 +9,25 @@
   }
 
   function generateTransactionData(count) {
-    const base = {
-      time: "2023-12-31 21:11:55",
-      volume: "18.85",
-      amount: "618",
-      price: "11649.3",
-      origin: "山东省聊城市东平县",
-      destination: "河南...平顶山888号金华猪肉铺117号",
-    };
     const arr = [];
+    const origins = ["山东省聊城市东平县", "河北省石家庄市正定县", "河南省郑州市中牟县", "安徽省合肥市长丰县", "江苏省徐州市铜山区"];
+    const destinations = ["河南...平顶山888号金华猪肉铺117号", "北京...新发地市场A区102号", "上海...曹安市场B区55号", "浙江...杭州农批C区22号"];
+    
     for (let i = 1; i <= count; i++) {
-      arr.push({ id: i, ...base });
+      const m = (11 + i) % 60;
+      const s = (55 + i * 3) % 60;
+      const mStr = m.toString().padStart(2, '0');
+      const sStr = s.toString().padStart(2, '0');
+      
+      arr.push({ 
+        id: i, 
+        time: `2023-12-31 21:${mStr}:${sStr}`,
+        volume: (18.85 + (i % 5) * 1.2).toFixed(2),
+        amount: (618 + (i % 5) * 45).toString(),
+        price: (11649.3 + (i % 3) * 50 - 25).toFixed(1),
+        origin: origins[(i - 1) % origins.length],
+        destination: destinations[(i - 1) % destinations.length]
+      });
     }
     return arr;
   }
@@ -62,7 +70,7 @@
     data() {
       const qa = parseQaLevel();
       const qaMap = {
-        0: { price: 8, rows: 4 },
+        0: { price: 8, rows: 6 },
         1: { price: 8, rows: 20 },
         2: { price: 16, rows: 80 },
         3: { price: 24, rows: 200 },
@@ -101,12 +109,12 @@
           loading: false,
           error: null,
           data: [
-            { id: 1, label: "日交易量", value: 0, unit: "斤", color: "primary" },
-            { id: 2, label: "日交易额", value: 0, unit: "元", color: "primary" },
-            { id: 3, label: "日交易均价", value: 0, unit: "元/公斤", color: "primary" },
-            { id: 4, label: "日交易均价（不含异常数据）", value: 0, unit: "元/公斤", color: "primary" },
-            { id: 5, label: "交易佣金费率", value: 0, unit: "%", color: "primary" },
-            { id: 6, label: "交易佣金费", value: 0, unit: "元", color: "primary" },
+            { id: 1, label: "日交易量", value: 0, unit: "公斤", color: "primary" },
+            { id: 2, label: "日交易额", value: 0, unit: "万元", color: "primary" },
+            { id: 3, label: "日交易均价", value: 0, unit: "元 / 公斤", color: "primary" },
+            { id: 4, label: "日交易均价（不含异常数据）", value: 0, unit: "元 / 公斤", color: "primary" },
+            { id: 5, label: "交易佣金费率", value: 0, unit: "‰", color: "primary" },
+            { id: 6, label: "交易佣金费", value: 0, unit: "万元", color: "primary" },
             { id: 7, label: "货源企业数量", value: 0, unit: "家", color: "primary" },
             { id: 8, label: "采购商数量", value: 0, unit: "家", color: "primary" },
           ],
@@ -115,7 +123,7 @@
           origin: "",
           dest: "",
           page: 1,
-          limit: 6,
+          limit: 5, // Fixed to 5 rows per page
         },
         viewMode: "price", // 'price' | 'activity'
         activityChart: null,
@@ -165,6 +173,19 @@
       },
       totalPiePages() {
         return Math.ceil(this.processedPieData.length / this.piePageSize) || 1;
+      },
+      // Computed property to pad empty rows
+      displayTransactions() {
+        const list = this.filteredTransactions;
+        const totalRows = this.query.limit;
+        const paddedList = [...list];
+        
+        // Pad with empty objects if fewer than limit
+        while (paddedList.length < totalRows) {
+          paddedList.push({ id: `empty-${paddedList.length}`, isEmpty: true });
+        }
+        
+        return paddedList;
       },
       filteredTransactions() {
         let list = this.transactionData.filter(item => {
@@ -296,42 +317,64 @@
         // Simulate async load
         setTimeout(() => {
             try {
-                let data = [];
+                let rawData = [];
                 let name = "";
-                const colors = ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de", "#3ba272", "#fc8452", "#9a60b4", "#ea7ccc", "#1f8a98"];
-
-                // Generate more mock data for pagination
+                
+                // 1. Generate Raw Data
                 if (this.pieViewMode === 'volume') {
                   name = "货源交易量占比";
                   const provinces = ["山东", "河南", "湖北", "安徽", "河北", "江苏", "四川", "湖南", "黑龙江", "辽宁"];
-                  data = provinces.map((p, i) => ({
+                  rawData = provinces.map(p => ({
                     name: p,
                     value: Math.floor(Math.random() * 500) + 50,
-                    count: Math.floor(Math.random() * 50) + 5,
-                    itemStyle: { color: colors[i % colors.length] }
+                    count: Math.floor(Math.random() * 50) + 5
                   }));
                 } else {
                   name = "货源流向占比";
                   const cities = ["上海", "北京", "南京", "杭州", "苏州", "宁波", "合肥", "武汉", "长沙", "广州"];
-                  data = cities.map((c, i) => ({
+                  rawData = cities.map(c => ({
                     name: c,
                     value: Math.floor(Math.random() * 600) + 60,
-                    count: Math.floor(Math.random() * 150) + 10,
-                    itemStyle: { color: colors[i % colors.length] }
+                    count: Math.floor(Math.random() * 150) + 10
                   }));
                 }
 
-                // Calculate percents
-                const total = data.reduce((sum, item) => sum + item.value, 0);
-                data.forEach(item => {
-                    item.percent = ((item.value / total) * 100).toFixed(1);
-                });
-                
-                // Sort by value desc initially
-                data.sort((a, b) => b.value - a.value);
+                // 2. Sort by value desc
+                rawData.sort((a, b) => b.value - a.value);
 
-                this.fullPieData = data;
-                this.pieDetailsData = data; // Keep for legacy if needed, but we use computed now
+                // 3. Aggregate Top 5 + Others
+                let finalData = [];
+                if (rawData.length > 5) {
+                    const top5 = rawData.slice(0, 5);
+                    const others = rawData.slice(5);
+                    
+                    const otherValue = others.reduce((sum, item) => sum + item.value, 0);
+                    const otherCount = others.reduce((sum, item) => sum + item.count, 0);
+                    
+                    finalData = [...top5, {
+                        name: "其他",
+                        value: otherValue,
+                        count: otherCount
+                    }];
+                } else {
+                    finalData = rawData;
+                }
+
+                // 4. Assign Colors & Calculate Percents
+                const colors = ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de", "#3ba272", "#fc8452", "#9a60b4", "#ea7ccc", "#1f8a98"];
+                const total = finalData.reduce((sum, item) => sum + item.value, 0);
+                
+                finalData.forEach((item, index) => {
+                    item.percent = ((item.value / total) * 100).toFixed(1);
+                    if (item.name === "其他") {
+                        item.itemStyle = { color: "#94a3b8" }; // Neutral grey for 'Other'
+                    } else {
+                        item.itemStyle = { color: colors[index % colors.length] };
+                    }
+                });
+
+                this.fullPieData = finalData;
+                this.pieDetailsData = finalData;
 
                 const option = {
                   title: {
@@ -339,7 +382,7 @@
                     left: 'center',
                     top: '5%',
                     textStyle: { fontSize: 16, color: '#333' },
-                    show: false // Hidden as per design, controlled by external tabs
+                    show: false 
                   },
                   legend: {
                     show: false,
@@ -353,7 +396,7 @@
                   series: [
                     {
                       name: name,
-                      data: data,
+                      data: finalData,
                       label: {
                         show: true,
                         formatter: '{b}: {d}%',

@@ -3,10 +3,7 @@
  * 
  * 直接编辑此文件，刷新浏览器即可看到效果
  * 
- * 注意：data.value 字段现在是对象格式，方便编辑
- *       导出时会自动转回字符串格式
- * 
- * 生成时间: 2026/2/5 18:44:41
+ * 生成时间: 2026/2/5 17:47:35
  */
 
 // ==================== 配置对象（可直接编辑）====================
@@ -138,59 +135,7 @@ const DS_CONFIG = {
           "disabled": true
         }
       ],
-      "value": {
-        "body": [
-          [
-            "北京",
-            "23.13",
-            "湖北",
-            "23.49"
-          ],
-          [
-            "天津",
-            "22.26",
-            "湖南",
-            "22.53"
-          ],
-          [
-            "河北",
-            "23.46",
-            "广东",
-            "24.13"
-          ],
-          [
-            "辽宁",
-            "23.32",
-            "四川",
-            "23.58"
-          ],
-          [
-            "吉林",
-            "24.90",
-            "安徽",
-            "23.44"
-          ],
-          [
-            "黑龙江",
-            "23.23",
-            "福建",
-            "23.23"
-          ],
-          [
-            "江苏",
-            "23.56",
-            "山东",
-            "23.31"
-          ],
-          [
-            "浙江",
-            "23.40",
-            "河南",
-            "23.46"
-          ]
-        ]
-      },
-      "__value_was_string__": true,
+      "value": "{\n  \"body\": [\n    [\n      \"北京\",\n      \"23.13\",\n      \"湖北\",\n      \"23.49\"\n    ],\n    [\n      \"天津\",\n      \"22.26\",\n      \"湖南\",\n      \"22.53\"\n    ],\n    [\n      \"河北\",\n      \"23.46\",\n      \"广东\",\n      \"24.13\"\n    ],\n    [\n      \"辽宁\",\n      \"23.32\",\n      \"四川\",\n      \"23.58\"\n    ],\n    [\n      \"吉林\",\n      \"24.90\",\n      \"安徽\",\n      \"23.44\"\n    ],\n    [\n      \"黑龙江\",\n      \"23.23\",\n      \"福建\",\n      \"23.23\"\n    ],\n    [\n      \"江苏\",\n      \"23.56\",\n      \"山东\",\n      \"23.31\"\n    ],\n    [\n      \"浙江\",\n      \"23.40\",\n      \"河南\",\n      \"23.46\"\n    ]\n  ]\n}",
       "default": {
         "body": [
           [
@@ -269,21 +214,7 @@ const DS_CONFIG = {
           "method": "get",
           "params": "{}",
           "interval": 10,
-          "dataFormatter": {
-            "data": {
-              "body": [
-                [
-                  "改进消息",
-                  "2023年4月20日 12:00:00"
-                ]
-              ],
-              "header": [
-                "消息",
-                "时间"
-              ]
-            }
-          },
-          "__dataFormatter_was_string__": true
+          "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
         },
         "mqtt": [],
         "excel": {
@@ -340,8 +271,7 @@ const DS_CONFIG = {
             "disabled": true
           }
         ],
-        "value": {},
-        "__value_was_string__": true,
+        "value": "{}",
         "default": {
           "body": [
             [
@@ -615,8 +545,7 @@ const DS_CONFIG = {
     "name": "数值",
     "data": {
       "dataType": "number",
-      "value": 18756.98,
-      "__value_was_string__": true,
+      "value": "18756.98",
       "default": 18756.98,
       "getType": 1,
       "api": {
@@ -625,12 +554,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -724,47 +648,9 @@ const DS_CONFIG = {
         "method": "get",
         "params": "null",
         "interval": 10,
-        "dataFormatter": {
-          "data": {
-            "titles": [
-              "周一",
-              "周二"
-            ],
-            "values": [
-              {
-                "data": [
-                  1000,
-                  1500
-                ],
-                "name": "收入"
-              }
-            ]
-          }
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
       },
-      "value": {
-        "titles": [
-          "河南",
-          "山东",
-          "浙江",
-          "江苏",
-          "安徽"
-        ],
-        "values": [
-          {
-            "data": [
-              1872,
-              2011,
-              2598,
-              3025,
-              3832
-            ],
-            "name": "产地销售量排名"
-          }
-        ]
-      },
-      "__value_was_string__": true,
+      "value": "{\n  \"titles\": [\n    \"河南\",\n    \"山东\",\n    \"浙江\",\n    \"江苏\",\n    \"安徽\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1872,\n        2011,\n        2598,\n        3025,\n        3832\n      ],\n      \"name\": \"产地销售量排名\"\n    }\n  ]\n}",
       "default": {
         "titles": [
           "河南",
@@ -787,8 +673,7 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": "产地销售量排名\n",
-      "updateType": "none"
+      "dataSetName": "产地销售量排名"
     },
     "option": {
       "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
@@ -1368,27 +1253,9 @@ const DS_CONFIG = {
           "method": "get",
           "params": "null",
           "interval": 10,
-          "dataFormatter": {
-            "data": {
-              "titles": [
-                "周一",
-                "周二"
-              ],
-              "values": [
-                {
-                  "data": [
-                    1000,
-                    1500
-                  ],
-                  "name": "收入"
-                }
-              ]
-            }
-          },
-          "__dataFormatter_was_string__": true
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
         },
-        "value": {},
-        "__value_was_string__": true,
+        "value": "{}",
         "default": {
           "titles": [
             "周一",
@@ -1685,47 +1552,9 @@ const DS_CONFIG = {
         "method": "get",
         "params": "null",
         "interval": 10,
-        "dataFormatter": {
-          "data": {
-            "titles": [
-              "周一",
-              "周二"
-            ],
-            "values": [
-              {
-                "data": [
-                  1000,
-                  1500
-                ],
-                "name": "收入"
-              }
-            ]
-          }
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
       },
-      "value": {
-        "titles": [
-          "虹口区",
-          "静安区",
-          "黄埔区",
-          "普陀区",
-          "徐汇区"
-        ],
-        "values": [
-          {
-            "data": [
-              1530,
-              1880,
-              2330,
-              2870,
-              3210
-            ],
-            "name": "销地采购量排名"
-          }
-        ]
-      },
-      "__value_was_string__": true,
+      "value": "{\n  \"titles\": [\n    \"虹虹区\",\n    \"静安区\",\n    \"黄埔区\",\n    \"普陀区\",\n    \"徐汇区\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1530,\n        1880,\n        2330,\n        2870,\n        3210\n      ],\n      \"name\": \"销地采购量排名11\"\n    }\n  ]\n}",
       "default": {
         "titles": [
           "虹口区",
@@ -1743,13 +1572,12 @@ const DS_CONFIG = {
               2870,
               3210
             ],
-            "name": "销地采购量排名"
+            "name": "销地采购量排名11"
           }
         ]
       },
       "getType": 1,
-      "dataSetName": "产地销售量排名\n",
-      "updateType": "none"
+      "dataSetName": "销地采购量排名"
     },
     "option": {
       "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
@@ -2329,27 +2157,9 @@ const DS_CONFIG = {
           "method": "get",
           "params": "null",
           "interval": 10,
-          "dataFormatter": {
-            "data": {
-              "titles": [
-                "周一",
-                "周二"
-              ],
-              "values": [
-                {
-                  "data": [
-                    1000,
-                    1500
-                  ],
-                  "name": "收入"
-                }
-              ]
-            }
-          },
-          "__dataFormatter_was_string__": true
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
         },
-        "value": {},
-        "__value_was_string__": true,
+        "value": "{}",
         "default": {
           "titles": [
             "周一",
@@ -2913,8 +2723,7 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": 35.04,
-      "__value_was_string__": true,
+      "value": "35.04",
       "default": 35.04,
       "getType": 1,
       "api": {
@@ -2923,12 +2732,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -2962,8 +2766,7 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": 18.68,
-      "__value_was_string__": true,
+      "value": "18.68",
       "default": 18.68,
       "getType": 1,
       "api": {
@@ -2972,12 +2775,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -3011,8 +2809,7 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": 18.65,
-      "__value_was_string__": true,
+      "value": "18.65",
       "default": 18.65,
       "getType": 1,
       "api": {
@@ -3021,12 +2818,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -3060,8 +2852,7 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": 10,
-      "__value_was_string__": true,
+      "value": "10",
       "default": 10,
       "getType": 1,
       "api": {
@@ -3070,12 +2861,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -3109,8 +2895,7 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": 40,
-      "__value_was_string__": true,
+      "value": "40",
       "default": 40,
       "getType": 1,
       "api": {
@@ -3119,12 +2904,7 @@ const DS_CONFIG = {
         "params": "{}",
         "method": "get",
         "interval": 10,
-        "dataFormatter": {
-          "code": 200,
-          "data": 9999,
-          "message": "成功"
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
       "dataSetName": ""
     },
@@ -3169,59 +2949,9 @@ const DS_CONFIG = {
         "method": "get",
         "params": "null",
         "interval": 10,
-        "dataFormatter": {
-          "data": {
-            "titles": [
-              "周一",
-              "周二"
-            ],
-            "values": [
-              {
-                "data": [
-                  1000,
-                  1500
-                ],
-                "name": "收入"
-              },
-              {
-                "data": [
-                  300,
-                  500
-                ],
-                "name": "支出"
-              }
-            ]
-          }
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"},{\"data\":[300,500],\"name\":\"支出\"}]}}"
       },
-      "value": {
-        "titles": [
-          "202303",
-          "202305",
-          "202307",
-          "202309",
-          "202311"
-        ],
-        "values": [
-          {
-            "data": [
-              82,
-              60,
-              70,
-              72,
-              85,
-              100,
-              70,
-              80,
-              100,
-              102
-            ],
-            "name": "销量1"
-          }
-        ]
-      },
-      "__value_was_string__": true,
+      "value": "{\n  \"titles\": [\n    \"202303\",\n    \"202305\",\n    \"202307\",\n    \"202309\",\n    \"202311\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        82,\n        60,\n        70,\n        72,\n        85,\n        100,\n        70,\n        80,\n        100,\n        102\n      ],\n      \"name\": \"销量1\"\n    }\n  ]\n}",
       "default": {
         "titles": [
           "202303",
@@ -3782,34 +3512,9 @@ const DS_CONFIG = {
           "method": "get",
           "params": "null",
           "interval": 10,
-          "dataFormatter": {
-            "data": {
-              "titles": [
-                "周一",
-                "周二"
-              ],
-              "values": [
-                {
-                  "data": [
-                    1000,
-                    1500
-                  ],
-                  "name": "收入"
-                },
-                {
-                  "data": [
-                    300,
-                    500
-                  ],
-                  "name": "支出"
-                }
-              ]
-            }
-          },
-          "__dataFormatter_was_string__": true
+          "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"},{\"data\":[300,500],\"name\":\"支出\"}]}}"
         },
-        "value": {},
-        "__value_was_string__": true,
+        "value": "{}",
         "default": {
           "titles": [
             "周一",
@@ -4975,63 +4680,9 @@ const DS_CONFIG = {
         "method": "get",
         "params": "null",
         "interval": 10,
-        "dataFormatter": {
-          "data": {
-            "body": [
-              [
-                "改进消息",
-                "2023年4月20日 12:00:00"
-              ]
-            ],
-            "header": [
-              "消息",
-              "时间"
-            ]
-          }
-        },
-        "__dataFormatter_was_string__": true
+        "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
       },
-      "value": {
-        "body": [
-          [
-            "2023-03-05 01:13:00",
-            "河南省",
-            "普陀区",
-            "8.97元/公斤"
-          ],
-          [
-            "2023-03-05 01:44:00",
-            "江苏省",
-            "虹口区",
-            "8.67元/公斤"
-          ],
-          [
-            "2023-03-05 01:55:00",
-            "安徽省",
-            "徐汇区",
-            "9.27元/公斤"
-          ],
-          [
-            "2023-03-05 02:13:00",
-            "山东省",
-            "嘉定区",
-            "8.81元/公斤"
-          ],
-          [
-            "2023-03-05 02:43:00",
-            "浙江省",
-            "黄浦区",
-            "8.83元/公斤"
-          ]
-        ],
-        "header": [
-          "交易时间",
-          "货源省份",
-          "流向地区",
-          "交易单价"
-        ]
-      },
-      "__value_was_string__": true,
+      "value": "{\n  \"body\": [\n    [\n      \"2023-03-05 01:13:00\",\n      \"河南省\",\n      \"普陀区\",\n      \"8.97元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:44:00\",\n      \"江苏省\",\n      \"虹口区\",\n      \"8.67元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:55:00\",\n      \"安徽省\",\n      \"徐汇区\",\n      \"9.27元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:13:00\",\n      \"山东省\",\n      \"嘉定区\",\n      \"8.81元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:43:00\",\n      \"浙江省\",\n      \"黄浦区\",\n      \"8.83元/公斤\"\n    ]\n  ],\n  \"header\": [\n    \"交易时间\",\n    \"货源省份\",\n    \"流向地区\",\n    \"交易单价\"\n  ]\n}",
       "default": {
         "body": [
           [
@@ -5271,24 +4922,9 @@ const DS_CONFIG = {
           "method": "get",
           "params": "null",
           "interval": 10,
-          "dataFormatter": {
-            "data": {
-              "body": [
-                [
-                  "改进消息",
-                  "2023年4月20日 12:00:00"
-                ]
-              ],
-              "header": [
-                "消息",
-                "时间"
-              ]
-            }
-          },
-          "__dataFormatter_was_string__": true
+          "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
         },
-        "value": {},
-        "__value_was_string__": true,
+        "value": "{}",
         "default": {
           "body": [
             [
@@ -5656,35 +5292,9 @@ const DS_CONFIG = {
   }
 };
 
-// ==================== 辅助函数（请勿修改）====================
-/**
- * 将 value 对象转回字符串格式（应用程序需要字符串格式）
- */
-function stringifyValues(obj) {
-    if (typeof obj !== 'object' || obj === null) return obj;
-    if (Array.isArray(obj)) return obj.map(item => stringifyValues(item));
-    
-    const result = {};
-    for (const [key, val] of Object.entries(obj)) {
-        if (key === '__value_was_string__' || key === '__dataFormatter_was_string__') {
-            continue; // 跳过标记字段
-        }
-        if (key === 'value' && typeof val === 'object' && obj['__value_was_string__']) {
-            result[key] = JSON.stringify(val);
-        } else if (key === 'dataFormatter' && typeof val === 'object' && obj['__dataFormatter_was_string__']) {
-            result[key] = JSON.stringify(val);
-        } else if (typeof val === 'object') {
-            result[key] = stringifyValues(val);
-        } else {
-            result[key] = val;
-        }
-    }
-    return result;
-}
-
 // ==================== 导出数据（请勿修改此部分）====================
 window.DS_DATA = {
-  "config": JSON.stringify(stringifyValues(DS_CONFIG)),
+  "config": JSON.stringify(DS_CONFIG),
   "device_type": "pc",
   "title": "大屏1769965626129"
 };
