@@ -29,7 +29,6 @@
         </div>
 
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a href="#" class="nav-tab">首页</a>
           <a href="#" class="nav-tab">实时交易</a>
           <a href="#" class="nav-tab active">历史查询</a>
           <a href="../analysis/index.html" class="nav-tab">分析报告</a>
@@ -75,8 +74,14 @@
               </table>
             </div>
 
-            <div v-show="viewMode === 'activity'" class="chart-container">
-              <div id="activityChart" style="width: 100%; height: 100%;"></div>
+            <div v-show="viewMode === 'activity'" class="chart-container-wrapper">
+              <div id="activityChart" style="width: 100%; height: 85%;"></div>
+              <div class="activity-info">
+                <span class="info-label">交易最活跃时段：</span>
+                <span class="info-value">{{ maxActivityPeriod }}</span>
+                <span class="info-label ml-4">交易量：</span>
+                <span class="info-value">{{ maxActivityVolume }} 公斤</span>
+              </div>
             </div>
           </div>
 
@@ -108,6 +113,7 @@
                   <th>货源省份</th>
                   <th>流向地区</th>
                   <th>交易单价</th>
+                  <th>复核情况</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,6 +122,11 @@
                   <td>{{ item.origin }}</td>
                   <td>{{ item.dest }}</td>
                   <td>{{ item.price }}</td>
+                  <td>
+                    <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
+                      {{ item.reviewStatus }}
+                    </span>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -141,8 +152,21 @@
               </button>
             </div>
             
-            <div class="pie-container">
-              <div id="pieChart"></div>
+            <div class="pie-container" role="region" aria-label="货源数据分析">
+              <!-- Loading State -->
+              <div v-if="pieLoading" class="pie-overlay loading">
+                <div class="spinner"></div>
+                <span>数据加载中...</span>
+              </div>
+              
+              <!-- Error State -->
+              <div v-if="pieError" class="pie-overlay error">
+                <span>{{ pieError }}</span>
+                <button @click="updatePieChart" class="retry-btn">重试</button>
+              </div>
+
+              <!-- Content (Always Rendered) -->
+              <div id="pieChart" class="pie-chart-section" role="img" aria-label="货源占比饼图"></div>
             </div>
           </div>
 
@@ -151,12 +175,18 @@
               <h3 class="card-title">日交易信息查询</h3>
               <div class="query-filters">
                 <div class="filter-item">
-                  <label for="origin-input">产地：</label>
-                  <input id="origin-input" v-model="query.origin" class="nav-select" placeholder="输入产地搜索">
+                  <label for="origin-select">产地：</label>
+                  <select id="origin-select" v-model="query.origin" class="nav-select">
+                    <option value="">全部</option>
+                    <option v-for="origin in uniqueOrigins" :key="origin" :value="origin">{{ origin }}</option>
+                  </select>
                 </div>
                 <div class="filter-item">
-                  <label for="dest-input">销地：</label>
-                  <input id="dest-input" v-model="query.dest" class="nav-select" placeholder="输入销地搜索">
+                  <label for="dest-select">销地：</label>
+                  <select id="dest-select" v-model="query.dest" class="nav-select">
+                    <option value="">全部</option>
+                    <option v-for="dest in uniqueDestinations" :key="dest" :value="dest">{{ dest }}</option>
+                  </select>
                 </div>
                 <button class="reset-btn" @click="resetQuery">重置</button>
               </div>
@@ -165,9 +195,9 @@
               <thead>
                 <tr>
                   <th>交易时间</th>
+                  <th>交易单价</th>
                   <th>交易量</th>
                   <th>交易额</th>
-                  <th>交易均价</th>
                   <th>产地</th>
                   <th>销地</th>
                 </tr>
@@ -175,9 +205,9 @@
               <tbody>
                 <tr v-for="item in filteredTransactions" :key="item.id">
                   <td>{{ item.time }}</td>
+                  <td>{{ item.price }}</td>
                   <td>{{ item.volume }}</td>
                   <td>{{ item.amount }}</td>
-                  <td>{{ item.price }}</td>
                   <td>{{ item.origin }}</td>
                   <td>{{ item.destination }}</td>
                 </tr>
