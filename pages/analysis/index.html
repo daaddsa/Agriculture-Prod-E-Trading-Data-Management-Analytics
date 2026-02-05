@@ -30,7 +30,7 @@
           <a href="#" class="nav-tab">首页</a>
           <a href="#" class="nav-tab">实时交易</a>
           <a href="../history/index.html" class="nav-tab">历史查询</a>
-          <a href="#" class="nav-tab active">分析报告</a>
+          <a href="#" class="nav-tab active">数据分析</a>
         </nav>
       </header>
 
@@ -42,7 +42,7 @@
           <div class="menu-item orange">❹ 交易佣金费率走势</div>
           <div class="menu-item gray">❺ 16省猪平均出厂价与批发市场交易价走势</div>
           <div class="menu-item orange">❻ 交易佣金费走势</div>
-          <div class="menu-item teal">❼ 定制报告</div>
+          <div class="menu-item teal">❼ 分析报告</div>
         </aside>
 
         <main class="content">
@@ -55,7 +55,52 @@
             <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
+          
+          <div class="chart-card">
+            <h3 class="chart-title">分析报告</h3>
+            <div class="reports-controls">
+              <div class="page-info">第 {{ currentPage }} / {{ totalPages }} 页 · 每页 {{ pageSize }} 条</div>
+              <div class="pager">
+                <button class="pager-btn" @click="prevPage" :disabled="currentPage===1">上一页</button>
+                <button class="pager-btn" @click="nextPage" :disabled="currentPage===totalPages">下一页</button>
+              </div>
+            </div>
+            <div class="reports-grid">
+              <div class="report-card" :class="{placeholder: r.placeholder}" v-for="r in pageReports" :key="r.id">
+                <template v-if="!r.placeholder">
+                  <div class="report-header">
+                    <div class="report-name">{{ r.name }}</div>
+                    <div class="report-time">{{ r.uploadedAt }}</div>
+                  </div>
+                  <div class="report-summary">{{ r.summary }}</div>
+                  <div class="report-actions">
+                    <button class="btn" @click="preview(r)">预览</button>
+                    <button class="btn outline" @click="download(r)">下载</button>
+                  </div>
+                </template>
+                <div class="placeholder-body" v-else>
+                  <div class="placeholder-title">空位</div>
+                  <div class="placeholder-note">暂无报告</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </main>
+      </div>
+      
+      <div class="modal-mask" v-show="showPreview" @click.self="closePreview">
+        <div class="modal">
+          <div class="modal-header">
+            <div class="modal-title">{{ previewReport && previewReport.name }}</div>
+            <button class="modal-close" @click="closePreview">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-meta">上传时间：{{ previewReport && previewReport.uploadedAt }}</div>
+            <div class="modal-summary">{{ previewReport && previewReport.summary }}</div>
+            <iframe v-if="previewReport && previewReport.fileUrl" :src="previewReport.fileUrl" class="modal-iframe"></iframe>
+            <div v-else class="modal-placeholder">暂无文件，已展示摘要内容。</div>
+          </div>
+        </div>
       </div>
     </div>
 
