@@ -701,7 +701,7 @@ const DS_CONFIG = {
     "creater": "EChartElement",
     "render": "EChart",
     "width": 571,
-    "height": 321,
+    "height": 260,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -1576,7 +1576,8 @@ const DS_CONFIG = {
         "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
         "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
         "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
-        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius"
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
+        "series[x].barCategoryGap": "config.barCategoryGap"
       },
       "styleConfig": null,
       "baseConfig": null
@@ -1586,6 +1587,7 @@ const DS_CONFIG = {
       "gridL": 10,
       "gridR": 10,
       "gridT": 12,
+      "barCategoryGap": "8%",
       "title": "产地销售量排名TOP5",
       "colors": [
         "rgba(0, 247, 255, 1)",
@@ -1601,7 +1603,7 @@ const DS_CONFIG = {
       "colorBy": "data",
       "legendB": 0,
       "areaShow": true,
-      "barWidth": 17,
+      "barWidth": 12,
       "labelSize": 12,
       "showLabel": true,
       "titleShow": false,
@@ -1660,7 +1662,7 @@ const DS_CONFIG = {
     "creater": "EChartElement",
     "render": "EChart",
     "width": 571,
-    "height": 321,
+    "height": 260,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -2535,7 +2537,8 @@ const DS_CONFIG = {
         "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
         "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
         "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
-        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius"
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
+        "series[x].barCategoryGap": "config.barCategoryGap"
       },
       "styleConfig": null,
       "baseConfig": null
@@ -2545,6 +2548,7 @@ const DS_CONFIG = {
       "gridL": 10,
       "gridR": 10,
       "gridT": 12,
+      "barCategoryGap": "8%",
       "title": "销地采购量排名TOP5",
       "colors": [
         "rgba(0, 247, 255, 1)",
@@ -2560,7 +2564,7 @@ const DS_CONFIG = {
       "colorBy": "data",
       "legendB": 0,
       "areaShow": true,
-      "barWidth": 17,
+      "barWidth": 12,
       "labelSize": 12,
       "showLabel": true,
       "titleShow": false,
