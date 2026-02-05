@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 // 文件路径
 const inputFile = path.join(__dirname, '..', 'app.data.readable.js');
@@ -33,15 +34,16 @@ try {
     // 读取可读文件
     const content = fs.readFileSync(inputFile, 'utf-8');
     
-    // 提取 window.DS_DATA = {...} 中的内容
-    const match = content.match(/window\.DS_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+    // 使用 vm 执行代码以获取 window.DS_DATA
+    const sandbox = { window: {} };
+    vm.createContext(sandbox);
+    vm.runInContext(content, sandbox);
     
-    if (!match) {
-        throw new Error('无法解析 app.data.readable.js 文件格式');
+    const dsData = sandbox.window.DS_DATA;
+    
+    if (!dsData) {
+        throw new Error('无法解析 app.data.readable.js: window.DS_DATA 未定义');
     }
-    
-    // 解析 JSON
-    const dsData = JSON.parse(match[1]);
     
     // 将 config 对象转换为字符串
     if (typeof dsData.config === 'object') {
