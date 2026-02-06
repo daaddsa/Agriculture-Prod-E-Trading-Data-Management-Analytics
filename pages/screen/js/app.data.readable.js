@@ -4731,7 +4731,7 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": ""
+      "dataSetName": "异常交易数据"
     },
     "config": {
       "duration": 10,

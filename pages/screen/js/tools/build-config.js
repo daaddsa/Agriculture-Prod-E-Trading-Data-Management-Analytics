@@ -35,7 +35,16 @@ try {
     const content = fs.readFileSync(inputFile, 'utf-8');
     
     // 使用 vm 执行代码以获取 window.DS_DATA
-    const sandbox = { window: {} };
+    const sandbox = { 
+        window: {},
+        localStorage: {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {},
+            clear: () => {}
+        },
+        console: console // 允许在构建时打印日志
+    };
     vm.createContext(sandbox);
     vm.runInContext(content, sandbox);
     
