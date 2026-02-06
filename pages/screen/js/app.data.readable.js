@@ -7,7 +7,14 @@
  */
 
 // ==================== 配置对象（可直接编辑）====================
+
+// 读取 localStorage 中的地图模式设置（如果存在），默认为 dynamic
+const _savedMapMode = localStorage.getItem('DS_MAP_MODE') || 'dynamic';
+const _isDynamicMap = _savedMapMode === 'dynamic';
+
 const DS_CONFIG = {
+  // --- 新增：动态地图组件 (ECharts Map) ---
+  // "dynamic-map-component-001": { ... },
   "bg": {
     "type": "bg",
     "name": "大屏背景",
