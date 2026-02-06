@@ -2,7 +2,8 @@
  * 构建工具 - 将可读的 app.data.readable.js 转换回压缩格式
  * 
  * 使用方法：
- *   node build-config.js
+ *   node build-config.js                     # 构建 pages/screen/js/app.data.js
+ *   node build-config.js map/js              # 构建指定目录下的 app.data.js
  * 
  * 输出：
  *   覆盖 app.data.js（压缩格式，用于生产环境）
@@ -12,12 +13,18 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-// 文件路径
-const inputFile = path.join(__dirname, '..', 'app.data.readable.js');
-const outputFile = path.join(__dirname, '..', 'app.data.js');
-const backupFile = path.join(__dirname, '..', 'app.data.backup.js');
+// 支持指定目标目录，默认为 tools 的上一级（pages/screen/js）
+const targetDir = process.argv[2]
+    ? path.resolve(process.cwd(), process.argv[2])
+    : path.join(__dirname, '..');
 
-console.log('🔄 开始构建 app.data.js ...\n');
+// 文件路径
+const inputFile = path.join(targetDir, 'app.data.readable.js');
+const outputFile = path.join(targetDir, 'app.data.js');
+const backupFile = path.join(targetDir, 'app.data.backup.js');
+
+console.log('🔄 开始构建 app.data.js ...');
+console.log(`   目录: ${targetDir}\n`);
 
 try {
     // 检查可读文件是否存在

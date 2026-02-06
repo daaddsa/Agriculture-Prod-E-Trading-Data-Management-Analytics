@@ -2,7 +2,8 @@
  * 格式化工具 - 将 app.data.js 转换为可读的 JSON 格式
  * 
  * 使用方法：
- *   node format-config.js
+ *   node format-config.js                    # 格式化 pages/screen/js/app.data.js
+ *   node format-config.js map/js             # 格式化指定目录下的 app.data.js
  * 
  * 输出：
  *   生成 app.data.readable.js（可读格式，value 字段也转为可读对象）
@@ -11,11 +12,17 @@
 const fs = require('fs');
 const path = require('path');
 
-// 文件路径
-const inputFile = path.join(__dirname, '..', 'app.data.js');
-const outputFile = path.join(__dirname, '..', 'app.data.readable.js');
+// 支持指定目标目录，默认为 tools 的上一级（pages/screen/js）
+const targetDir = process.argv[2]
+    ? path.resolve(process.cwd(), process.argv[2])
+    : path.join(__dirname, '..');
 
-console.log('🔄 开始格式化 app.data.js ...\n');
+// 文件路径
+const inputFile = path.join(targetDir, 'app.data.js');
+const outputFile = path.join(targetDir, 'app.data.readable.js');
+
+console.log('🔄 开始格式化 app.data.js ...');
+console.log(`   输入: ${inputFile}\n`);
 
 /**
  * 递归解析对象中的 JSON 字符串字段
@@ -59,19 +66,64 @@ function parseJsonStrings(obj) {
     return result;
 }
 
+/**
+ * 从 JS 源码中提取 window.DS_DATA = {...} 的赋值对象（按括号匹配，避免正则贪婪截断）
+ */
+function extractDsDataObject(content) {
+    const prefix = 'window.DS_DATA';
+    const idx = content.indexOf(prefix);
+    if (idx === -1) return null;
+    const start = content.indexOf('{', idx + prefix.length);
+    if (start === -1) return null;
+    let depth = 0;
+    let inString = false;
+    let escape = false;
+    let quote = null;
+    for (let i = start; i < content.length; i++) {
+        const c = content[i];
+        if (escape) {
+            escape = false;
+            continue;
+        }
+        if (c === '\\' && inString) {
+            escape = true;
+            continue;
+        }
+        if (!inString) {
+            if (c === '"' || c === "'") {
+                inString = true;
+                quote = c;
+                continue;
+            }
+            if (c === '{') {
+                depth++;
+                continue;
+            }
+            if (c === '}') {
+                depth--;
+                if (depth === 0) return content.slice(start, i + 1);
+                continue;
+            }
+            continue;
+        }
+        if (c === quote) inString = false;
+    }
+    return null;
+}
+
 try {
     // 读取原始文件
     const content = fs.readFileSync(inputFile, 'utf-8');
     
-    // 提取 window.DS_DATA = {...} 中的内容
-    const match = content.match(/window\.DS_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+    // 提取 window.DS_DATA = {...} 中的内容（括号匹配，支持长字符串内的 } {）
+    const jsonStr = extractDsDataObject(content);
     
-    if (!match) {
-        throw new Error('无法解析 app.data.js 文件格式');
+    if (!jsonStr) {
+        throw new Error('无法解析 app.data.js 文件格式（未找到有效的 window.DS_DATA 对象）');
     }
     
     // 解析 JSON
-    const dsData = JSON.parse(match[1]);
+    const dsData = JSON.parse(jsonStr);
     
     // 解析 config 字符串为对象
     let configObj = null;
