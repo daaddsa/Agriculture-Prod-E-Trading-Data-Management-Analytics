@@ -55,10 +55,6 @@
       type: Array,
       default: () => [],
     },
-  });
-  watch(
-    () => props.data,
-    (newVal) => {
       if (newVal && newVal.length) {
         cateData.value = newVal;
         cateDataLevel2.value = [
@@ -76,22 +72,6 @@
   const { setOptions } = useECharts(chartRef);
   const width = ref('100%');
   const height = ref('500px');
-  const mapOption = ref({});
-  const chartData = ref([]);
-  const cateData = ref<any>([]);
-  const cateDataLevel2 = ref<any>([]);
-  const cateSelect = ref(''); // 选择的种类
-  onMounted(async () => {
-    const json = (await (await import('./china.json')).default) as any;
-    registerMap('china', json);
-    setMapOptions();
-    cateData.value = props.data;
-    cateDataLevel2.value = [{ id: '', name: '全部' }, ...cateData.value];
-  });
-  function goRouter() {
-    emit('router', { path: 'frontCalc', configId: 1 });
-  }
-
   function handleMenuClick(e) {
     cateSelect.value = cateDataLevel2.value.filter((item) => item.id === e.key)[0]?.name || '';
     setMapOptions(e.key);
@@ -102,13 +82,9 @@
     chartData.value = await bizIndexQueryRegionList({ cateId });
 
     mapOption.value = {
-      visualMap: [
-        {
-          min: 0,
-          max: 10,
-          left: 'left',
-          top: 'bottom',
-          text: ['高', '低'],
+    const json = (await (await import('./china.json')).default) as any;
+    registerMap('china', json);
+    setMapOptions();
           calculable: false,
           orient: 'horizontal',
           inRange: {
@@ -177,7 +153,7 @@
               data: item.data,
             };
           }),
-        },
+          map: 'china',
       ],
     };
     setOptions(mapOption.value);

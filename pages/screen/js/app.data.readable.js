@@ -7,14 +7,7 @@
  */
 
 // ==================== 配置对象（可直接编辑）====================
-
-// 读取 localStorage 中的地图模式设置（如果存在），默认为 dynamic
-const _savedMapMode = localStorage.getItem('DS_MAP_MODE') || 'dynamic';
-const _isDynamicMap = _savedMapMode === 'dynamic';
-
 const DS_CONFIG = {
-  // --- 新增：动态地图组件 (ECharts Map) ---
-  // "dynamic-map-component-001": { ... },
   "bg": {
     "type": "bg",
     "name": "大屏背景",
@@ -45,14 +38,14 @@ const DS_CONFIG = {
     "active": false
   },
   "cpm5znQAaRPBgPONPpN0ce87": {
-    "x": 1488,
-    "y": 508,
+    "x": 1468,
+    "y": 522,
     "isWarning": false,
     "_key": "cpm5znQAaRPBgPONPpN0ce87",
     "creater": "HighChartElement",
     "render": "HighChart",
-    "width": 398,
-    "height": 358,
+    "width": 376,
+    "height": 272,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -451,7 +444,7 @@ const DS_CONFIG = {
     }
   },
   "cpm765f30d9-315b-43b1-8a32-d6ff5f6b260a": {
-    "x": 1384,
+    "x": 1516,
     "y": 21,
     "isWarning": false,
     "_key": "cpm765f30d9-315b-43b1-8a32-d6ff5f6b260a",
@@ -487,7 +480,7 @@ const DS_CONFIG = {
   },
   "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a": {
     "x": 63,
-    "y": 174,
+    "y": 146,
     "isWarning": false,
     "_key": "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a",
     "creater": "TextElement",
@@ -534,7 +527,7 @@ const DS_CONFIG = {
   },
   "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29": {
     "x": 72,
-    "y": 217,
+    "y": 189,
     "isWarning": false,
     "_key": "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29",
     "creater": "NumElement",
@@ -579,7 +572,7 @@ const DS_CONFIG = {
   },
   "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535": {
     "x": 242,
-    "y": 222,
+    "y": 194,
     "isWarning": false,
     "_key": "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535",
     "creater": "TextElement",
@@ -626,13 +619,13 @@ const DS_CONFIG = {
   },
   "cpm46a6db0a-dae1-42f4-a476-e5be47b52121": {
     "x": 51,
-    "y": 940,//产地图表y位置
+    "y": 853,
     "isWarning": false,
     "_key": "cpm46a6db0a-dae1-42f4-a476-e5be47b52121",
     "creater": "EChartElement",
     "render": "EChart",
     "width": 571,
-    "height": 180,
+    "height": 321,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -680,7 +673,8 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": "产地销售量排名"
+      "dataSetName": "产地销售量排名\n",
+      "updateType": "none"
     },
     "option": {
       "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
@@ -1450,8 +1444,7 @@ const DS_CONFIG = {
         "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
         "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
         "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
-        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
-        "series[x].barCategoryGap": "config.barCategoryGap"
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius"
       },
       "styleConfig": null,
       "baseConfig": null
@@ -1461,7 +1454,6 @@ const DS_CONFIG = {
       "gridL": 10,
       "gridR": 10,
       "gridT": 12,
-      "barCategoryGap": "4%",
       "title": "产地销售量排名TOP5",
       "colors": [
         "rgba(0, 247, 255, 1)",
@@ -1477,7 +1469,7 @@ const DS_CONFIG = {
       "colorBy": "data",
       "legendB": 0,
       "areaShow": true,
-      "barWidth": 12,
+      "barWidth": 17,
       "labelSize": 12,
       "showLabel": true,
       "titleShow": false,
@@ -1530,13 +1522,13 @@ const DS_CONFIG = {
   },
   "cpm392223cb-81f8-4803-8377-3d3661ebf467": {
     "x": 683,
-    "y": 940,//销地图y位置
+    "y": 851,
     "isWarning": false,
     "_key": "cpm392223cb-81f8-4803-8377-3d3661ebf467",
     "creater": "EChartElement",
     "render": "EChart",
     "width": 571,
-    "height": 180,
+    "height": 321,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -1584,7 +1576,8 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": "销地采购量排名"
+      "dataSetName": "产地销售量排名11\n",
+      "updateType": "none"
     },
     "option": {
       "uuid": "qaIpT0oE07h75s1LrrX-BS7k",
@@ -2354,8 +2347,7 @@ const DS_CONFIG = {
         "yAxis.splitLine.lineStyle.color": "config.yAxisSplitLineColor",
         "yAxis.splitLine.lineStyle.width": "config.yAxisSplitLineWidth",
         "series[x].backgroundStyle.borderRadius": "data.default.values[x].borderRadius=config.barBorderRadius",
-        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius",
-        "series[x].barCategoryGap": "config.barCategoryGap"
+        "series[x].itemStyle.normal.barBorderRadius": "data.default.values[x].itemStyle.normal.barBorderRadius=config.barBorderRadius"
       },
       "styleConfig": null,
       "baseConfig": null
@@ -2365,7 +2357,6 @@ const DS_CONFIG = {
       "gridL": 10,
       "gridR": 10,
       "gridT": 12,
-      "barCategoryGap": "4%",
       "title": "销地采购量排名TOP5",
       "colors": [
         "rgba(0, 247, 255, 1)",
@@ -2381,7 +2372,7 @@ const DS_CONFIG = {
       "colorBy": "data",
       "legendB": 0,
       "areaShow": true,
-      "barWidth": 12,
+      "barWidth": 17,
       "labelSize": 12,
       "showLabel": true,
       "titleShow": false,
@@ -2434,13 +2425,13 @@ const DS_CONFIG = {
   },
   "cpm027c0b66-a434-4fc9-8343-f76ce8afdc09": {
     "x": 33,
-    "y": 890,
+    "y": 830,
     "isWarning": false,
     "_key": "cpm027c0b66-a434-4fc9-8343-f76ce8afdc09",
     "creater": "BorderElement",
     "render": "BorderEl",
     "width": 593,
-    "height": 240,
+    "height": 292,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -2465,14 +2456,14 @@ const DS_CONFIG = {
     }
   },
   "cpm4f49fbea-c692-4178-b8c6-f698a829612e": {
-    "x": 1472,
+    "x": 1433,
     "y": 478,
     "isWarning": false,
     "_key": "cpm4f49fbea-c692-4178-b8c6-f698a829612e",
     "creater": "BorderElement",
     "render": "BorderEl",
-    "width": 395,
-    "height": 388,
+    "width": 434,
+    "height": 325,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -2498,13 +2489,13 @@ const DS_CONFIG = {
   },
   "cpm7b3a596e-6e36-4b7e-8e75-ac33b464e646": {
     "x": 1274,
-    "y": 890,
+    "y": 830,
     "isWarning": false,
     "_key": "cpm7b3a596e-6e36-4b7e-8e75-ac33b464e646",
     "creater": "BorderElement",
     "render": "BorderEl",
-    "width": 593,
-    "height": 240,
+    "width": 598,
+    "height": 297,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -2529,8 +2520,8 @@ const DS_CONFIG = {
     }
   },
   "cpmf3591fa9-ff54-48f7-bdd4-7d3bf5fab755": {
-    "x": 1491,
-    "y": 475,
+    "x": 1459,
+    "y": 474,
     "isWarning": false,
     "_key": "cpmf3591fa9-ff54-48f7-bdd4-7d3bf5fab755",
     "creater": "TextElement",
@@ -2576,8 +2567,8 @@ const DS_CONFIG = {
     }
   },
   "cpmdf32aab5-1afb-455c-ac76-848a0b6fb189": {
-    "x": 1738,
-    "y": 475,
+    "x": 1704,
+    "y": 478,
     "isWarning": false,
     "_key": "cpmdf32aab5-1afb-455c-ac76-848a0b6fb189",
     "creater": "TextElement",
@@ -2624,7 +2615,7 @@ const DS_CONFIG = {
   },
   "cpmfaf24b6b-642d-4c12-80a3-f3f1009eb5d5": {
     "x": 1302,
-    "y": 906,
+    "y": 843,
     "isWarning": false,
     "_key": "cpmfaf24b6b-642d-4c12-80a3-f3f1009eb5d5",
     "creater": "TextElement",
@@ -2712,7 +2703,7 @@ const DS_CONFIG = {
   },
   "cpme55a84fd-cf3a-483b-adf8-301d6a611f22": {
     "x": 47,
-    "y": 308,
+    "y": 280,
     "isWarning": false,
     "_key": "cpme55a84fd-cf3a-483b-adf8-301d6a611f22",
     "creater": "NumElement",
@@ -2755,7 +2746,7 @@ const DS_CONFIG = {
   },
   "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0": {
     "x": 44,
-    "y": 402,
+    "y": 374,
     "isWarning": false,
     "_key": "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0",
     "creater": "NumElement",
@@ -2798,7 +2789,7 @@ const DS_CONFIG = {
   },
   "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a": {
     "x": 45,
-    "y": 500,
+    "y": 472,
     "isWarning": false,
     "_key": "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a",
     "creater": "NumElement",
@@ -2841,7 +2832,7 @@ const DS_CONFIG = {
   },
   "cpm18e89d42-8641-40e8-8884-db5ce5da24dc": {
     "x": 19,
-    "y": 593,
+    "y": 565,
     "isWarning": false,
     "_key": "cpm18e89d42-8641-40e8-8884-db5ce5da24dc",
     "creater": "NumElement",
@@ -2884,7 +2875,7 @@ const DS_CONFIG = {
   },
   "cpm9ce068f3-90b3-4556-a306-58c47635d1a2": {
     "x": 20,
-    "y": 684,
+    "y": 656,
     "isWarning": false,
     "_key": "cpm9ce068f3-90b3-4556-a306-58c47635d1a2",
     "creater": "NumElement",
@@ -2926,14 +2917,14 @@ const DS_CONFIG = {
     }
   },
   "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f": {
-    "x": 1466,
-    "y": 194,
+    "x": 1436,
+    "y": 202,
     "isWarning": false,
     "_key": "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f",
     "creater": "EChartElement",
     "render": "EChart",
-    "width": 420,
-    "height": 260,
+    "width": 421,
+    "height": 251,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -3728,7 +3719,7 @@ const DS_CONFIG = {
     },
     "config": {
       "gridB": 10,
-      "gridL": 20,
+      "gridL": 10,
       "gridR": 5,
       "gridT": 10,
       "title": "                                   实时交易活跃度",
@@ -3772,7 +3763,7 @@ const DS_CONFIG = {
       "xAxisTickColor": "#eee",
       "xAxisTickWidth": 1,
       "yAxisLabelShow": true,
-      "yAxisLabelSize": 11,
+      "yAxisLabelSize": 12,
       "yAxisLineColor": "#eee",
       "yAxisLineWidth": 1,
       "yAxisTickColor": "#eee",
@@ -3940,7 +3931,7 @@ const DS_CONFIG = {
   },
   "cpme41cb160-0568-4114-90c8-c847a9d8aa0b": {
     "x": 58,
-    "y": 126,
+    "y": 98,
     "isWarning": false,
     "_key": "cpme41cb160-0568-4114-90c8-c847a9d8aa0b",
     "creater": "SelectElement",
@@ -4014,7 +4005,7 @@ const DS_CONFIG = {
   },
   "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52": {
     "x": 175,
-    "y": 313,
+    "y": 285,
     "isWarning": false,
     "_key": "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52",
     "creater": "TextElement",
@@ -4061,7 +4052,7 @@ const DS_CONFIG = {
   },
   "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55": {
     "x": 170,
-    "y": 408,
+    "y": 380,
     "isWarning": false,
     "_key": "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55",
     "creater": "TextElement",
@@ -4108,7 +4099,7 @@ const DS_CONFIG = {
   },
   "cpm0b291d93-9e3c-417d-9377-81d5b6486b83": {
     "x": 166,
-    "y": 505,
+    "y": 477,
     "isWarning": false,
     "_key": "cpm0b291d93-9e3c-417d-9377-81d5b6486b83",
     "creater": "TextElement",
@@ -4155,7 +4146,7 @@ const DS_CONFIG = {
   },
   "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9": {
     "x": 119,
-    "y": 598,
+    "y": 570,
     "isWarning": false,
     "_key": "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9",
     "creater": "TextElement",
@@ -4202,7 +4193,7 @@ const DS_CONFIG = {
   },
   "cpmbc5cfb60-ce8d-4806-856b-064496971855": {
     "x": 121,
-    "y": 689,
+    "y": 661,
     "isWarning": false,
     "_key": "cpmbc5cfb60-ce8d-4806-856b-064496971855",
     "creater": "TextElement",
@@ -4249,7 +4240,7 @@ const DS_CONFIG = {
   },
   "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e": {
     "x": 63,
-    "y": 267,
+    "y": 239,
     "isWarning": false,
     "_key": "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e",
     "creater": "TextElement",
@@ -4296,7 +4287,7 @@ const DS_CONFIG = {
   },
   "cpmd8dea03a-c8c2-4a18-9258-138454296f1e": {
     "x": 63,
-    "y": 359,
+    "y": 331,
     "isWarning": false,
     "_key": "cpmd8dea03a-c8c2-4a18-9258-138454296f1e",
     "creater": "TextElement",
@@ -4343,7 +4334,7 @@ const DS_CONFIG = {
   },
   "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8": {
     "x": 64,
-    "y": 455,
+    "y": 427,
     "isWarning": false,
     "_key": "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8",
     "creater": "TextElement",
@@ -4390,7 +4381,7 @@ const DS_CONFIG = {
   },
   "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47": {
     "x": 63,
-    "y": 550,
+    "y": 522,
     "isWarning": false,
     "_key": "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47",
     "creater": "TextElement",
@@ -4437,7 +4428,7 @@ const DS_CONFIG = {
   },
   "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3": {
     "x": 63,
-    "y": 641,
+    "y": 613,
     "isWarning": false,
     "_key": "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3",
     "creater": "TextElement",
@@ -4484,7 +4475,7 @@ const DS_CONFIG = {
   },
   "cpmbd3a7549-e208-42e1-a158-fa080262956e": {
     "x": 317,
-    "y": 18,
+    "y": -8,
     "isWarning": false,
     "_key": "cpmbd3a7549-e208-42e1-a158-fa080262956e",
     "creater": "ImgElement",
@@ -4532,13 +4523,13 @@ const DS_CONFIG = {
   },
   "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a": {
     "x": 657,
-    "y": 890,//边框y位置
+    "y": 830,
     "isWarning": false,
     "_key": "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a",
     "creater": "BorderElement",
     "render": "BorderEl",
     "width": 593,
-    "height": 240,//边框高度
+    "height": 292,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -4564,7 +4555,7 @@ const DS_CONFIG = {
   },
   "cpme7612333-ba11-4dc7-8cb8-e82dfb629692": {
     "x": 692,
-    "y": 906,//标题位置
+    "y": 840,
     "isWarning": false,
     "_key": "cpme7612333-ba11-4dc7-8cb8-e82dfb629692",
     "creater": "TextElement",
@@ -4611,7 +4602,7 @@ const DS_CONFIG = {
   },
   "cpm17b89f9f-94ab-436f-acd1-12ea189ace09": {
     "x": 73,
-    "y": 906, //产地表头y位置
+    "y": 846,
     "isWarning": false,
     "_key": "cpm17b89f9f-94ab-436f-acd1-12ea189ace09",
     "creater": "TextElement",
@@ -4657,14 +4648,14 @@ const DS_CONFIG = {
     }
   },
   "cpm817f187b-80cb-47eb-b250-a6a559a3cc8d": {
-    "x": 1298,
-    "y": 945,
+    "x": 1289,
+    "y": 890,
     "isWarning": false,
     "_key": "cpm817f187b-80cb-47eb-b250-a6a559a3cc8d",
     "creater": "DynamicElement",
     "render": "Dynamic",
-    "width": 550,
-    "height": 165,
+    "width": 568,
+    "height": 215,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -4731,23 +4722,7 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": "异常交易数据"
-    },
-    "config": {
-      "duration": 10,
-      "fontSize": 13,
-      "paddingX": 2,
-      "paddingY": 3,
-      "showRank": false,
-      "rowHeight": 32,
-      "textAlign": "center",
-      "textColor": "#fff",
-      "fontFamily": "AlimamaAgileVF-Thin",
-      "fontWeight": "normal",
-      "headerHeight": 26,
-      "headerBgColor": "rgba(30, 144, 255, 0.14)",
-      "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
-      "evenRowBgColor": "rgba(30, 144, 255, 0.18)"
+      "dataSetName": ""
     },
     "option": {
       "uuid": "LiAAJQArXmobte7OjxkJJder",
@@ -4756,17 +4731,17 @@ const DS_CONFIG = {
       "styles": null,
       "config": {
         "duration": 10,
-        "fontSize": 14,
+        "fontSize": 16,
         "paddingX": 2,
-        "paddingY": 4,
+        "paddingY": 10,
         "showRank": false,
-        "rowHeight": 36,
+        "rowHeight": 60,
         "textAlign": "center",
         "textColor": "#fff",
         "fontFamily": "AlimamaAgileVF-Thin",
         "fontWeight": "normal",
         "componentUrl": "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/sys/common/dynamicComponents/AutoScrollLoopTable.js",
-        "headerHeight": 28,
+        "headerHeight": 40,
         "headerBgColor": "rgba(30, 144, 255, 0.14)",
         "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
         "evenRowBgColor": "rgba(30, 144, 255, 0.18)"
@@ -5013,14 +4988,14 @@ const DS_CONFIG = {
     }
   },
   "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9": {
-    "x": 1475,
-    "y": 184 ,
+    "x": 1429,
+    "y": 192,
     "isWarning": false,
     "_key": "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9",
     "creater": "BorderElement",
     "render": "BorderEl",
-    "width": 395,
-    "height": 272,
+    "width": 438,
+    "height": 262,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -5046,7 +5021,7 @@ const DS_CONFIG = {
   },
   "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f": {
     "x": 1572,
-    "y": 103,
+    "y": 108,
     "isWarning": false,
     "_key": "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f",
     "creater": "DecorationElement",
@@ -5082,7 +5057,7 @@ const DS_CONFIG = {
   },
   "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7": {
     "x": 1606,
-    "y": 112,
+    "y": 117,
     "isWarning": false,
     "_key": "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7",
     "creater": "TextElement",
@@ -5131,7 +5106,7 @@ const DS_CONFIG = {
   },
   "cpm366b3d38-0dff-487b-9cde-b962629f6466": {
     "x": 1739,
-    "y": 102,
+    "y": 107,
     "isWarning": false,
     "_key": "cpm366b3d38-0dff-487b-9cde-b962629f6466",
     "creater": "DecorationElement",
@@ -5167,7 +5142,7 @@ const DS_CONFIG = {
   },
   "cpm72cfdd7d-6978-415a-8a20-caa827a7d277": {
     "x": 1406,
-    "y": 103,
+    "y": 108,
     "isWarning": false,
     "_key": "cpm72cfdd7d-6978-415a-8a20-caa827a7d277",
     "creater": "DecorationElement",
@@ -5203,7 +5178,7 @@ const DS_CONFIG = {
   },
   "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20": {
     "x": 1775,
-    "y": 111,
+    "y": 117,
     "isWarning": false,
     "_key": "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20",
     "creater": "TextElement",
@@ -5250,7 +5225,7 @@ const DS_CONFIG = {
   },
   "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f": {
     "x": 1442,
-    "y": 112,
+    "y": 117,
     "isWarning": false,
     "_key": "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f",
     "creater": "TextElement",
