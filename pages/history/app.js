@@ -82,24 +82,17 @@
       return {
         qaLevel: qa,
         market: "A",
-        date: new Date().toISOString().split("T")[0],
+        date: "2024-12-31",
         markets: [
           { value: "A", label: "市场A" },
           { value: "B", label: "市场B" },
           { value: "C", label: "市场C" },
         ],
-        minDate: "",
-        maxDate: "",
-        priceData: generatePriceData(s.price),
-        transactionData: generateTransactionData(s.rows),
-        abnormalData: [
-          { time: "2023-03-05 01:13:00", origin: "河南省", dest: "普陀区", price: "8.97元/公斤", reviewStatus: "已复核" },
-          { time: "2023-03-05 01:44:00", origin: "河南省", dest: "普陀区", price: "8.67元/公斤", reviewStatus: "未复核" },
-          { time: "2023-03-05 01:55:51", origin: "河南省", dest: "普陀区", price: "9.27元/公斤", reviewStatus: "已复核" },
-          { time: "2023-03-05 02:13:00", origin: "河南省", dest: "普陀区", price: "8.81元/公斤", reviewStatus: "已复核" },
-          { time: "2023-03-05 02:43:00", origin: "河南省", dest: "普陀区", price: "8.83元/公斤", reviewStatus: "未复核" },
-          { time: "2023-03-05 03:13:00", origin: "河南省", dest: "普陀区", price: "8.72元/公斤", reviewStatus: "已复核" },
-        ],
+        minDate: "2024-12-31",
+        maxDate: "2024-12-31",
+        priceData: [],
+        transactionsAll: [],
+        abnormalData: [],
         pieChart: null,
         resizeHandler: null,
         pieDetailsData: [],
@@ -109,14 +102,14 @@
           loading: false,
           error: null,
           data: [
-            { id: 1, label: "日交易量", value: 0, unit: "公斤", color: "primary" },
-            { id: 2, label: "日交易额", value: 0, unit: "万元", color: "primary" },
-            { id: 3, label: "日交易均价", value: 0, unit: "元 / 公斤", color: "primary" },
-            { id: 4, label: "日交易均价（不含异常数据）", value: 0, unit: "元 / 公斤", color: "primary" },
-            { id: 5, label: "交易佣金费率", value: 0, unit: "‰", color: "primary" },
-            { id: 6, label: "交易佣金费", value: 0, unit: "万元", color: "primary" },
-            { id: 7, label: "货源企业数量", value: 0, unit: "家", color: "primary" },
-            { id: 8, label: "采购商数量", value: 0, unit: "家", color: "primary" },
+            { id: 1, label: "日交易量", value: 0, unit: " 公斤", color: "primary" },
+            { id: 2, label: "日交易额", value: 0, unit: " 万元", color: "primary" },
+            { id: 3, label: "日交易均价", value: 0, unit: " 元 / 公斤", color: "primary" },
+            { id: 4, label: "日交易均价（不含异常数据）", value: 0, unit: " 元 / 公斤", color: "primary" },
+            { id: 5, label: "交易佣金费率", value: 0, unit: " ‰", color: "primary" },
+            { id: 6, label: "交易佣金费", value: 0, unit: " 万元", color: "primary" },
+            { id: 7, label: "货源企业数量", value: 0, unit: " 家", color: "primary" },
+            { id: 8, label: "采购商数量", value: 0, unit: " 家", color: "primary" },
           ],
         },
         query: {
@@ -138,9 +131,57 @@
         piePageSize: 5,
         selectedPieSource: null, // Filter by clicking pie sector
         fullPieData: [], // Store all generated data
+        
+        // Ellipsis Pagination State
+        ellipsisState: {
+          left: { active: false, value: '', error: false },
+          right: { active: false, value: '', error: false }
+        },
       };
     },
     computed: {
+      // Pagination Items Logic
+      paginationItems() {
+        const total = this.totalPages;
+        const current = this.query.page;
+        
+        if (total <= 5) {
+          return Array.from({ length: total }, (_, i) => ({ type: 'page', value: i + 1 }));
+        }
+
+        const items = [];
+        items.push({ type: 'page', value: 1 });
+
+        const start = Math.max(2, current - 1);
+        const end = Math.min(total - 1, current + 1);
+
+        // Left Ellipsis Logic
+        if (start > 2) {
+          items.push({ type: 'ellipsis', pos: 'left' });
+        } else if (start === 3) {
+          items.push({ type: 'page', value: 2 });
+        }
+
+        // Middle Pages
+        for (let i = start; i <= end; i++) {
+          items.push({ type: 'page', value: i });
+        }
+
+        // Right Ellipsis Logic
+        if (end < total - 1) {
+          if (end === total - 2) {
+            items.push({ type: 'page', value: total - 1 });
+          } else {
+            items.push({ type: 'ellipsis', pos: 'right' });
+          }
+        }
+
+        items.push({ type: 'page', value: total });
+        
+        // Remove duplicates just in case
+        return items.filter((v,i,a)=>a.findIndex(t=>(t.type===v.type && t.value===v.value && t.pos===v.pos))===i);
+      },
+
       // ... existing computed properties ...
       processedPieData() {
         let data = [...this.fullPieData];
@@ -188,9 +229,9 @@
         return paddedList;
       },
       filteredTransactions() {
-        let list = this.transactionData.filter(item => {
+        let list = this.transactionsAll.filter(item => {
           const matchOrigin = !this.query.origin || item.origin.includes(this.query.origin);
-          const matchDest = !this.query.dest || item.destination.includes(this.query.dest.replace("市", "")); // Simple match
+          const matchDest = !this.query.dest || item.destination.includes(this.query.dest);
           return matchOrigin && matchDest;
         });
         
@@ -202,40 +243,24 @@
         return list.slice(start, end);
       },
       totalFiltered() {
-        return this.transactionData.filter(item => {
+        return this.transactionsAll.filter(item => {
           const matchOrigin = !this.query.origin || item.origin.includes(this.query.origin);
-          const matchDest = !this.query.dest || item.destination.includes(this.query.dest.replace("市", ""));
+          const matchDest = !this.query.dest || item.destination.includes(this.query.dest);
           return matchOrigin && matchDest;
         }).length;
       },
       totalPages() {
         return Math.ceil(this.totalFiltered / this.query.limit) || 1;
-      },
-      uniqueOrigins() {
-        const origins = new Set(this.transactionData.map(item => item.origin));
-        return Array.from(origins);
-      },
-      uniqueDestinations() {
-        // Extract city from destination string for cleaner dropdown? 
-        // Or just use full destination string? The filter logic used 'includes', so full string is safer for now,
-        // but user asked for "Destinations". Let's stick to full strings or simplified if they are too long.
-        // The mock data has long addresses. Let's use the full string to ensure matching works.
-        const dests = new Set(this.transactionData.map(item => item.destination));
-        return Array.from(dests);
       }
     },
+    watch: {
+    },
     mounted() {
-      const today = new Date();
-      const past30 = new Date(today);
-      past30.setDate(today.getDate() - 30);
-      const future7 = new Date(today);
-      future7.setDate(today.getDate() + 7);
-
-      this.minDate = past30.toISOString().split("T")[0];
-      this.maxDate = future7.toISOString().split("T")[0];
+      this.minDate = "2024-12-31";
+      this.maxDate = "2024-12-31";
 
       this.initPieChart();
-      this.fetchStatsData();
+      this.refreshAll();
       this.resizeHandler = () => {
         if (this.pieChart) this.pieChart.resize();
         if (this.activityChart) this.activityChart.resize();
@@ -255,12 +280,136 @@
     },
     methods: {
       handleMarketChange() {
-        console.log("Market changed to:", this.market);
-        this.fetchStatsData(); // Refresh data
+        this.refreshAll();
       },
       handleDateChange() {
-        console.log("Date changed to:", this.date);
-        this.fetchStatsData(); // Refresh data
+        this.refreshAll();
+      },
+      resolveMarketId() {
+        const map = { A: "1", B: "2", C: "3" };
+        return map[this.market] || "1";
+      },
+      async refreshAll() {
+        const tasks = [
+          this.fetchStatsData(),
+          this.fetchPriceData(),
+          this.fetchAbnormalData(),
+          this.fetchTransactionsAll(),
+          this.updatePieChart(),
+        ];
+        await Promise.allSettled(tasks);
+        if (this.viewMode === "activity") {
+          await this.fetchActivityData();
+        }
+      },
+      async fetchPriceData() {
+        try {
+          const res = await window.historyApi.getFactoryTradePrice({
+            marketId: this.resolveMarketId(),
+            paramsDate: this.date,
+          });
+          if (res.code === 200 && Array.isArray(res.data)) {
+            this.priceData = res.data.map((it) => ({
+              region: it.provinceName,
+              factory: it.factoryPrice,
+              wholesale: it.tradePrice,
+            }));
+          } else {
+            this.priceData = [];
+          }
+        } catch (e) {
+          this.priceData = [];
+        }
+      },
+      async fetchAbnormalData() {
+        try {
+          const res = await window.historyApi.getAbnormal({
+            marketId: this.resolveMarketId(),
+            paramsDate: this.date,
+          });
+          if (res.code === 200 && Array.isArray(res.data)) {
+            this.abnormalData = res.data.map((it) => {
+              const raw = it.abnormalCheckType;
+              let reviewStatus = "未复核";
+              if (raw === 1 || raw === "1" || raw === true) reviewStatus = "已复核";
+              if (typeof raw === "string") {
+                const s = raw.trim();
+                if (s.includes("已")) reviewStatus = "已复核";
+                if (s.includes("未")) reviewStatus = "未复核";
+              }
+
+              return {
+                time: it.businessDate,
+                origin: it.producAdd,
+                dest: it.sellAdd,
+                price: it.businessPrice,
+                reviewStatus,
+              };
+            });
+            if (this.qaLevel >= 1 && this.abnormalData.length > 0) {
+              const target = this.qaLevel >= 2 ? 80 : 30;
+              const base = [...this.abnormalData];
+              const expanded = [];
+              while (expanded.length < target) {
+                expanded.push(...base);
+              }
+              this.abnormalData = expanded.slice(0, target);
+            }
+          } else {
+            this.abnormalData = [];
+          }
+        } catch (e) {
+          this.abnormalData = [];
+        }
+      },
+      async fetchTransactionsAll() {
+        try {
+          const marketId = this.resolveMarketId();
+          const paramsDate = this.date;
+          const pageSize = 5000;
+          let pageNum = 1;
+          let total = 0;
+          const rows = [];
+
+          do {
+            const res = await window.historyApi.getTradeList({
+              marketId,
+              paramsDate,
+              productCode: "",
+              sellCode: "",
+              pageNum,
+              pageSize,
+            });
+
+            if (res.code !== 200 || !Array.isArray(res.rows)) {
+              break;
+            }
+
+            total = Number(res.total || 0);
+            rows.push(...res.rows);
+            pageNum += 1;
+
+            if (pageNum > 20) break;
+          } while (rows.length < total);
+
+          this.transactionsAll = rows.map((it, idx) => {
+            const price = Number(it.businessPrice || 0);
+            const volume = Number(it.businessUnit || 0);
+            const amount = (price * volume).toFixed(2);
+            return {
+              id: it.tradeId || `${paramsDate}-${idx + 1}`,
+              time: it.businessDate,
+              price: it.businessPrice,
+              volume: it.businessUnit,
+              amount,
+              origin: it.producAdd,
+              destination: it.sellAdd,
+            };
+          });
+          this.query.page = 1;
+        } catch (e) {
+          this.transactionsAll = [];
+        }
       },
       switchPieView(mode) {
         if (this.pieViewMode === mode) return;
@@ -307,125 +456,91 @@
         if (this.pieSortKey !== key) return '↕';
         return this.pieSortOrder === 'asc' ? '↑' : '↓';
       },
-      updatePieChart() {
+      async updatePieChart() {
         if (!this.pieChart) return;
         
         this.pieLoading = true;
         this.pieError = null;
         this.selectedPieSource = null;
-        
-        // Simulate async load
-        setTimeout(() => {
-            try {
-                let rawData = [];
-                let name = "";
-                
-                // 1. Generate Raw Data
-                if (this.pieViewMode === 'volume') {
-                  name = "货源交易量占比";
-                  const provinces = ["山东", "河南", "湖北", "安徽", "河北", "江苏", "四川", "湖南", "黑龙江", "辽宁"];
-                  rawData = provinces.map(p => ({
-                    name: p,
-                    value: Math.floor(Math.random() * 500) + 50,
-                    count: Math.floor(Math.random() * 50) + 5
-                  }));
-                } else {
-                  name = "货源流向占比";
-                  const cities = ["上海", "北京", "南京", "杭州", "苏州", "宁波", "合肥", "武汉", "长沙", "广州"];
-                  rawData = cities.map(c => ({
-                    name: c,
-                    value: Math.floor(Math.random() * 600) + 60,
-                    count: Math.floor(Math.random() * 150) + 10
-                  }));
-                }
+        this.piePage = 1;
 
-                // 2. Sort by value desc
-                rawData.sort((a, b) => b.value - a.value);
+        try {
+          const type = this.pieViewMode === "volume" ? "1" : "2";
+          const res = await window.historyApi.getProportion({
+            marketId: this.resolveMarketId(),
+            paramsDate: this.date,
+            type,
+          });
 
-                // 3. Aggregate Top 5 + Others
-                let finalData = [];
-                if (rawData.length > 5) {
-                    const top5 = rawData.slice(0, 5);
-                    const others = rawData.slice(5);
-                    
-                    const otherValue = others.reduce((sum, item) => sum + item.value, 0);
-                    const otherCount = others.reduce((sum, item) => sum + item.count, 0);
-                    
-                    finalData = [...top5, {
-                        name: "其他",
-                        value: otherValue,
-                        count: otherCount
-                    }];
-                } else {
-                    finalData = rawData;
-                }
+          if (res.code !== 200 || !Array.isArray(res.data)) {
+            throw new Error(res.msg || "数据加载异常");
+          }
 
-                // 4. Assign Colors & Calculate Percents
-                const colors = ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de", "#3ba272", "#fc8452", "#9a60b4", "#ea7ccc", "#1f8a98"];
-                const total = finalData.reduce((sum, item) => sum + item.value, 0);
-                
-                finalData.forEach((item, index) => {
-                    item.percent = ((item.value / total) * 100).toFixed(1);
-                    if (item.name === "其他") {
-                        item.itemStyle = { color: "#94a3b8" }; // Neutral grey for 'Other'
-                    } else {
-                        item.itemStyle = { color: colors[index % colors.length] };
-                    }
-                });
+          const colors = ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de", "#3ba272", "#fc8452", "#9a60b4", "#ea7ccc", "#1f8a98"];
+          const total = res.data.reduce((sum, item) => sum + Number(item.tradeVolume || 0), 0) || 1;
 
-                this.fullPieData = finalData;
-                this.pieDetailsData = finalData;
+          const finalData = res.data.map((item, index) => {
+            const value = Number(item.tradeVolume || 0);
+            return {
+              name: item.areaName,
+              value,
+              count: Number(item.sum || 0),
+              percent: Number(((value / total) * 100).toFixed(1)),
+              itemStyle: { color: colors[index % colors.length] },
+            };
+          });
 
-                const option = {
-                  title: {
-                    text: name,
-                    left: 'center',
-                    top: '5%',
-                    textStyle: { fontSize: 16, color: '#333' },
-                    show: false 
+          this.fullPieData = finalData;
+          this.pieDetailsData = finalData;
+
+          const option = {
+            tooltip: {
+              trigger: "item",
+              formatter: "{b}: {c} ({d}%)",
+            },
+            legend: { show: false },
+            series: [
+              {
+                name: this.pieViewMode === "volume" ? "货源交易量占比" : "货源流向占比",
+                type: "pie",
+                radius: ["40%", "70%"],
+                center: ["50%", "50%"],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                  borderRadius: 10,
+                  borderColor: "#fff",
+                  borderWidth: 2,
+                },
+                label: {
+                  show: true,
+                  formatter: "{b}: {d}%",
+                  position: "outside",
+                },
+                emphasis: {
+                  itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: "rgba(0, 0, 0, 0.5)",
                   },
-                  legend: {
-                    show: false,
-                    type: 'scroll',
-                    orient: 'vertical',
-                    right: 10,
-                    top: 20,
-                    bottom: 20,
-                    textStyle: { color: '#666' }
-                  },
-                  series: [
-                    {
-                      name: name,
-                      data: finalData,
-                      label: {
-                        show: true,
-                        formatter: '{b}: {d}%',
-                        position: 'outside'
-                      },
-                      emphasis: {
-                        itemStyle: {
-                          shadowBlur: 10,
-                          shadowOffsetX: 0,
-                          shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                      }
-                    }
-                  ]
-                };
-                
-                this.pieChart.setOption(option);
-                this.pieLoading = false;
-            } catch (e) {
-                this.pieError = "数据加载异常";
-                this.pieLoading = false;
-            }
-        }, 300);
+                },
+                data: finalData,
+              },
+            ],
+          };
+
+          this.pieChart.setOption(option, true);
+        } catch (e) {
+          this.pieError = e && e.message ? e.message : "数据加载异常";
+        } finally {
+          this.pieLoading = false;
+        }
       },
       switchView(mode) {
         this.viewMode = mode;
         if (mode === "activity") {
           this.$nextTick(() => {
             this.initActivityChart();
+            this.fetchActivityData();
           });
         }
       },
@@ -435,83 +550,8 @@
         if (this.activityChart) this.activityChart.dispose();
 
         this.activityChart = echarts.init(el);
-        
-        // Generate time slots from 20:30 previous day to 07:30 current day (10 min interval)
-        const times = [];
-        const values = [];
-        
-        // Start: 20:30, End: 07:30 next day
-        // Total minutes: 3.5h (20:30-24:00) + 7.5h (00:00-07:30) = 11h = 660 mins
-        // Steps: 660 / 10 = 66 steps + 1 (start) = 67 points
-        
-        let currentHour = 20;
-        let currentMin = 30;
-        
-        for (let i = 0; i <= 66; i++) {
-            const h = currentHour.toString().padStart(2, '0');
-            const m = currentMin.toString().padStart(2, '0');
-            times.push(`${h}:${m}`);
-            
-            // Mock volume data: peak around 02:00
-            let baseVol = 5000;
-            if ((currentHour >= 1 && currentHour <= 3) || (currentHour >= 25 && currentHour <= 27)) { // 01:00 - 03:00
-                baseVol = 12000;
-            }
-            const val = (baseVol + Math.random() * 3000).toFixed(2);
-            values.push(Number(val));
-            
-            currentMin += 10;
-            if (currentMin >= 60) {
-                currentMin = 0;
-                currentHour++;
-                if (currentHour >= 24) currentHour = 0; // Wrap around for display logic, but loop handles sequence
-            }
-            // Fix wrap around logic for the loop variable `currentHour` handling is tricky with 0 reset
-            // Simplified:
-        }
-
-        // Correct generation
-        const timeLabels = [];
-        const volData = [];
-        let time = new Date();
-        time.setHours(20, 30, 0, 0); // Start 20:30
-        
-        for (let i = 0; i <= 66; i++) {
-            const h = time.getHours().toString().padStart(2, '0');
-            const m = time.getMinutes().toString().padStart(2, '0');
-            timeLabels.push(`${h}:${m}`);
-            
-            // Mock data
-            let val = 4000 + Math.random() * 2000;
-            // Peak at 02:00 (which is i approx 33)
-            const diff = Math.abs(i - 33);
-            if (diff < 15) {
-                val += (15 - diff) * 600;
-            }
-            volData.push(Number(val.toFixed(2)));
-            
-            time.setMinutes(time.getMinutes() + 10);
-        }
-        
-        // Find max activity period (30 mins = 3 intervals)
-        let maxSum = 0;
-        let maxIdx = 0;
-        
-        for (let i = 0; i < volData.length - 2; i++) {
-            const sum = volData[i] + volData[i+1] + volData[i+2];
-            if (sum > maxSum) {
-                maxSum = sum;
-                maxIdx = i;
-            }
-        }
-        
-        this.maxActivityPeriod = `${timeLabels[maxIdx]} - ${timeLabels[maxIdx+3] || 'End'}`;
-        this.maxActivityVolume = maxSum.toFixed(2);
-
-        const option = {
-          tooltip: {
-            trigger: "axis",
-          },
+        this.activityChart.setOption({
+          tooltip: { trigger: "axis" },
           grid: {
             left: "3%",
             right: "4%",
@@ -521,7 +561,7 @@
           xAxis: {
             type: "category",
             boundaryGap: false,
-            data: timeLabels,
+            data: [],
             axisLine: { lineStyle: { color: "#999" } },
           },
           yAxis: {
@@ -541,16 +581,124 @@
                   { offset: 1, color: "rgba(84, 112, 198, 0.05)" },
                 ]),
               },
-              data: volData,
+              data: [],
             },
           ],
-        };
-        this.activityChart.setOption(option);
+        });
+      },
+      async fetchActivityData() {
+        try {
+          if (!this.activityChart) this.initActivityChart();
+          const res = await window.historyApi.getActivity({
+            marketId: this.resolveMarketId(),
+            paramsDate: this.date,
+          });
+
+          if (res.code !== 200 || !res.data) return;
+
+          const xList = Array.isArray(res.data.xList) ? res.data.xList : [];
+          const yList = Array.isArray(res.data.yList) ? res.data.yList : [];
+          const timeLabels = xList.map((t) => String(t).slice(11, 16));
+          const volData = yList.map((v) => Number(v || 0));
+
+          let stepMinutes = 10;
+          if (xList.length >= 2) {
+            const t0 = Date.parse(xList[0]);
+            const t1 = Date.parse(xList[1]);
+            const diff = (t1 - t0) / 60000;
+            if (Number.isFinite(diff) && diff > 0) stepMinutes = diff;
+          }
+          const intervals = Math.max(1, Math.round(30 / stepMinutes));
+
+          let maxSum = 0;
+          let maxIdx = 0;
+          for (let i = 0; i <= volData.length - intervals; i++) {
+            let sum = 0;
+            for (let j = 0; j < intervals; j++) sum += volData[i + j] || 0;
+            if (sum > maxSum) {
+              maxSum = sum;
+              maxIdx = i;
+            }
+          }
+
+          const endIdx = Math.min(maxIdx + intervals, timeLabels.length - 1);
+          this.maxActivityPeriod = `${timeLabels[maxIdx] || ""} - ${timeLabels[endIdx] || ""}`;
+          this.maxActivityVolume = maxSum.toFixed(2);
+
+          this.activityChart.setOption({
+            xAxis: { data: timeLabels },
+            series: [{ data: volData }],
+          });
+        } catch (e) {
+        }
       },
       resetQuery() {
         this.query.origin = "";
         this.query.dest = "";
         this.query.page = 1;
+      },
+      handleEllipsisClick(pos) {
+        this.ellipsisState[pos].active = true;
+        this.ellipsisState[pos].value = '';
+        this.ellipsisState[pos].error = false;
+        this.$nextTick(() => {
+          const el = document.getElementById(`ellipsis-input-${pos}`);
+          if (el) {
+            el.focus();
+            el.select();
+          }
+        });
+      },
+      handleEllipsisBlur(pos) {
+        // Delay slightly to allow Enter key to trigger first if that was the cause
+        // But here we just validate.
+        // If the user clicked outside, we validate.
+        this.validateEllipsis(pos);
+      },
+      handleEllipsisKeydown(pos, e) {
+        if (e.key === 'Escape') {
+          this.ellipsisState[pos].active = false;
+          this.ellipsisState[pos].error = false;
+          return;
+        }
+        if (e.key === 'Enter') {
+          this.validateEllipsis(pos);
+          // If valid, it will close. If invalid, it stays open.
+          // We need to blur manually if valid to stop input? 
+          // Actually validateEllipsis sets active=false if valid.
+        }
+      },
+      validateEllipsis(pos) {
+        if (!this.ellipsisState[pos].active) return;
+        
+        // If empty and blurring, maybe just close? 
+        // User said: "Invalid (empty)... keep input state... show red tooltip"
+        // So we must enforce input.
+        
+        const valStr = String(this.ellipsisState[pos].value).trim();
+        if (!valStr) {
+           this.setEllipsisError(pos);
+           return;
+        }
+
+        const val = Number(valStr);
+        const total = this.totalPages;
+        
+        if (Number.isInteger(val) && val >= 1 && val <= total) {
+          this.query.page = val;
+          this.ellipsisState[pos].active = false;
+          this.ellipsisState[pos].error = false;
+        } else {
+          this.setEllipsisError(pos);
+        }
+      },
+      setEllipsisError(pos) {
+        this.ellipsisState[pos].value = ''; // Clear input
+        this.ellipsisState[pos].error = true;
+        this.$nextTick(() => {
+          const el = document.getElementById(`ellipsis-input-${pos}`);
+          if (el) el.focus();
+        });
       },
       changePage(delta) {
         const newPage = this.query.page + delta;
@@ -558,25 +706,50 @@
           this.query.page = newPage;
         }
       },
-      fetchStatsData() {
-        this.stats.loading = false;
+      async fetchStatsData() {
+        this.stats.loading = true;
         this.stats.error = null;
         
-        // Mock data fetching without delay
-        // Simulate 10% error rate
-        if (Math.random() < 0.1) {
-            this.stats.error = "数据加载失败，点击重试";
-            return;
-        }
+        try {
+          const params = {
+            marketId: this.resolveMarketId(),
+            paramsDate: this.date,
+          };
+          
+          const res = await window.historyApi.getStats(params);
 
-        this.stats.data[0].value = 12580; // 日交易量
-        this.stats.data[1].value = 2365.42; // 日交易额
-        this.stats.data[2].value = 18.25; // 日交易均价
-        this.stats.data[3].value = 17.88; // 日交易均价（不含异常）
-        this.stats.data[4].value = 1.5; // 交易佣金费率
-        this.stats.data[5].value = 35.48; // 交易佣金费
-        this.stats.data[6].value = 126; // 货源企业数量
-        this.stats.data[7].value = 342; // 采购商数量
+          if (res.code === 200 && res.data) {
+            const d = res.data;
+            // 按照任务书要求的字段映射表进行赋值
+            // 1. 日交易量 ↔ businessSum
+            this.stats.data[0].value = d.businessSum || 0;
+            // 2. 日交易额 ↔ totalSum
+            this.stats.data[1].value = d.totalSum || 0;
+            // 3. 日交易均价 ↔ average
+            this.stats.data[2].value = d.average || 0;
+            // 4. 均价(无异常) ↔ averageNoCheck
+            this.stats.data[3].value = d.averageNoCheck || 0;
+            // 5. 交易佣金费率 ↔ commissionFeeLv
+            this.stats.data[4].value = d.commissionFeeLv || 0;
+            // 6. 交易佣金费 ↔ commissionFeeSum
+            this.stats.data[5].value = d.commissionFeeSum || 0;
+            // 7. 货源企业数量 ↔ abattoirNum
+            this.stats.data[6].value = d.abattoirNum || 0;
+            // 8. 采购商数量 ↔ purchaserNum
+            this.stats.data[7].value = d.purchaserNum || 0;
+          } else {
+            console.warn("Stats API error:", res.msg);
+            this.stats.error = "数据加载异常";
+          }
+        } catch (error) {
+          console.error("Fetch stats failed:", error);
+          this.stats.error = "网络请求失败";
+          
+          // 仅在演示/开发阶段保留部分模拟数据的逻辑作为兜底（可选）
+          // 但根据任务书“端到端联调”要求，应优先展示真实错误状态
+        } finally {
+          this.stats.loading = false;
+        }
       },
       retryStats() {
         this.fetchStatsData();
@@ -628,9 +801,7 @@
               ],
             };
             this.pieChart.setOption(option);
-
-            // Now fetch data
-            this.updatePieChart(); 
+            this.updatePieChart();
             
             const resizeObserver = new ResizeObserver(() => {
                 this.pieChart && this.pieChart.resize();

@@ -32,4 +32,31 @@
   @font-face {  
     font-family: "CangErYuYang";  
     src: url("./font/CangErYuYang.ttf") format("truetype")
-  }</style><link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script><script src="js/chunk-vendors.1330f906.js"></script><script src="js/app.1d54c196.js"></script></body></html>
+  }</style><link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
+<!-- 热力图依赖：先加载中国地图 GeoJSON 到 window.DS_GEO["100000"]，再启动应用 -->
+<script>
+(function() {
+  function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.body.appendChild(s);
+    });
+  }
+  fetch('./js/china.json')
+    .then(function(r) { return r.json(); })
+    .then(function(geo) {
+      window.DS_GEO = window.DS_GEO || {};
+      window.DS_GEO['100000'] = geo;
+    })
+    .catch(function() {})
+    .finally(function() {
+      loadScript('js/chunk-vendors.1330f906.js').then(function() {
+        loadScript('js/app.1d54c196.js');
+      });
+    });
+})();
+</script>
+</body></html>

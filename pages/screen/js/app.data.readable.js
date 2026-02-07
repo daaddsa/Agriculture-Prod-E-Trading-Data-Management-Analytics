@@ -4474,51 +4474,1325 @@ const DS_CONFIG = {
     }
   },
   "cpmbd3a7549-e208-42e1-a158-fa080262956e": {
-    "x": 317,
-    "y": -8,
+    "x": 107,
+    "y": 100,
     "isWarning": false,
     "_key": "cpmbd3a7549-e208-42e1-a158-fa080262956e",
-    "creater": "ImgElement",
-    "render": "ImgEl",
-    "width": 1252,
-    "height": 930,
+    "creater": "EChartElement",
+    "render": "EChartMap",
+    "width": 1652,
+    "height": 990,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
-    "zindex": 14,
+    "zindex": 50,
     "visibility": true,
     "id": 1770110536420,
-    "type": "type",
-    "contentType": "img",
-    "name": "地图图片",
-    "isLocal": true,
-    "src": null,
+    "type": "getChartDataType2",
+    "contentType": "eHotMap",
+    "name": "热力地图 含省市",
+    "chartTitle": null,
     "style": {
-      "width": "1252",
-      "height": 930,
-      "opacity": 1,
-      "userSelect": "none",
-      "href": "",
-      "path": "",
+      "width": "500",
+      "height": "500",
+      "backgroundColor": "rgba(40, 44, 52,0)"
+    },
+    "data": {
+      "api": {
+        "url": "",
+        "header": "null",
+        "method": "get",
+        "params": "null",
+        "interval": 10,
+        "dataFormatter": {
+          "data": [
+            {
+              "name": "北京",
+              "value": 100
+            },
+            {
+              "name": "天津",
+              "value": 100
+            },
+            {
+              "name": "河北",
+              "value": 100
+            }
+          ]
+        },
+        "__dataFormatter_was_string__": true
+      },
+      "value": [
+        {
+          "name": "北京",
+          "value": 154
+        },
+        {
+          "name": "天津",
+          "value": 113
+        },
+        {
+          "name": "上海",
+          "value": 140
+        },
+        {
+          "name": "重庆",
+          "value": 275
+        },
+        {
+          "name": "河北",
+          "value": 213
+        },
+        {
+          "name": "河南",
+          "value": 183
+        },
+        {
+          "name": "云南",
+          "value": 111
+        },
+        {
+          "name": "辽宁",
+          "value": 19
+        },
+        {
+          "name": "黑龙江",
+          "value": 15
+        },
+        {
+          "name": "湖南",
+          "value": 169
+        },
+        {
+          "name": "安徽",
+          "value": 860
+        },
+        {
+          "name": "山东",
+          "value": 539
+        },
+        {
+          "name": "新疆",
+          "value": 4
+        },
+        {
+          "name": "江苏",
+          "value": 1131
+        },
+        {
+          "name": "浙江",
+          "value": 904
+        },
+        {
+          "name": "江西",
+          "value": 336
+        },
+        {
+          "name": "湖北",
+          "value": 252
+        },
+        {
+          "name": "广西",
+          "value": 133
+        },
+        {
+          "name": "甘肃",
+          "value": 117
+        },
+        {
+          "name": "山西",
+          "value": 119
+        },
+        {
+          "name": "内蒙古",
+          "value": 27
+        },
+        {
+          "name": "陕西",
+          "value": 122
+        },
+        {
+          "name": "吉林",
+          "value": 14
+        },
+        {
+          "name": "福建",
+          "value": 418
+        },
+        {
+          "name": "贵州",
+          "value": 35
+        },
+        {
+          "name": "广东",
+          "value": 998
+        },
+        {
+          "name": "青海",
+          "value": 14
+        },
+        {
+          "name": "西藏",
+          "value": 20
+        },
+        {
+          "name": "四川",
+          "value": 44
+        },
+        {
+          "name": "宁夏",
+          "value": 24
+        },
+        {
+          "name": "海南",
+          "value": 22
+        },
+        {
+          "name": "台湾",
+          "value": 13
+        },
+        {
+          "name": "香港",
+          "value": 5
+        },
+        {
+          "name": "澳门",
+          "value": 5
+        }
+      ],
+      "__value_was_string__": true,
+      "default": [
+        {
+          "name": "北京",
+          "value": 154
+        },
+        {
+          "name": "天津",
+          "value": 113
+        },
+        {
+          "name": "上海",
+          "value": 140
+        },
+        {
+          "name": "重庆",
+          "value": 275
+        },
+        {
+          "name": "河北",
+          "value": 213
+        },
+        {
+          "name": "河南",
+          "value": 183
+        },
+        {
+          "name": "云南",
+          "value": 111
+        },
+        {
+          "name": "辽宁",
+          "value": 19
+        },
+        {
+          "name": "黑龙江",
+          "value": 15
+        },
+        {
+          "name": "湖南",
+          "value": 169
+        },
+        {
+          "name": "安徽",
+          "value": 860
+        },
+        {
+          "name": "山东",
+          "value": 539
+        },
+        {
+          "name": "新疆",
+          "value": 4
+        },
+        {
+          "name": "江苏",
+          "value": 1131
+        },
+        {
+          "name": "浙江",
+          "value": 904
+        },
+        {
+          "name": "江西",
+          "value": 336
+        },
+        {
+          "name": "湖北",
+          "value": 252
+        },
+        {
+          "name": "广西",
+          "value": 133
+        },
+        {
+          "name": "甘肃",
+          "value": 117
+        },
+        {
+          "name": "山西",
+          "value": 119
+        },
+        {
+          "name": "内蒙古",
+          "value": 27
+        },
+        {
+          "name": "陕西",
+          "value": 122
+        },
+        {
+          "name": "吉林",
+          "value": 14
+        },
+        {
+          "name": "福建",
+          "value": 418
+        },
+        {
+          "name": "贵州",
+          "value": 35
+        },
+        {
+          "name": "广东",
+          "value": 998
+        },
+        {
+          "name": "青海",
+          "value": 14
+        },
+        {
+          "name": "西藏",
+          "value": 20
+        },
+        {
+          "name": "四川",
+          "value": 44
+        },
+        {
+          "name": "宁夏",
+          "value": 24
+        },
+        {
+          "name": "海南",
+          "value": 22
+        },
+        {
+          "name": "台湾",
+          "value": 13
+        },
+        {
+          "name": "香港",
+          "value": 5
+        },
+        {
+          "name": "澳门",
+          "value": 5
+        }
+      ],
+      "getType": 1,
+      "dataSetName": "项目分布"
+    },
+    "option": {
+      "uuid": "xRUYcWWUEd8Q6AKuTed3RByQ",
+      "content": "eHotMap",
+      "attrs": null,
+      "styles": null,
+      "config": {
+        "top": 50,
+        "left": 2,
+        "zoom": 0.95,
+        "title": "门店分布热力图",
+        "adcode": "100000",
+        "orient": "vertical",
+        "centerX": 50,
+        "centerY": 52,
+        "lowText": "低",
+        "Interval": {
+          "funs": [
+            "_instance.dispatchAction({type: 'downplay',seriesIndex: 0})",
+            "_instance.dispatchAction({type: 'highlight',seriesIndex: 0,dataIndex:(_params.count) % _data.default.length})",
+            "_instance.dispatchAction({type: 'showTip',seriesIndex: 0,dataIndex:(_params.count) % _data.default.length})",
+            "_params.count++"
+          ],
+          "time": 2000,
+          "inits": [
+            "_params.count = 0"
+          ]
+        },
+        "highText": "高",
+        "labelSize": 12,
+        "showLabel": true,
+        "titleShow": true,
+        "titleSize": 18,
+        "labelColor": "rgba(0, 0, 0, 1)",
+        "titleColor": "#eee",
+        "borderWidth": 1,
+        "runInterval": true,
+        "valueColors": [
+          "#9dd5dc",
+          "#006edd"
+        ],
+        "labelBgColor": "rgba(0, 0, 0, 0)",
+        "labelPadding": 4,
+        "mapAreaColor": "rgba(0,255,255,.02)",
+        "tooltipTitle": "门店数量",
+        "showVisualMap": false,
+        "visualMapSize": 16,
+        "labelFontStyle": "normal",
+        "mapBorderColor": "rgba(0, 0, 0, 0.2)",
+        "tooltipPadding": 15,
+        "visualMapColor": "#fff",
+        "labelBorderType": "solid",
+        "labelFontFamily": "",
+        "labelFontWeight": "normal",
+        "labelBorderColor": "rgba(0, 206, 209, 1)",
+        "labelBorderWidth": 0,
+        "tooltipTextColor": "#fff",
+        "labelBorderRadius": 0,
+        "tooltipBorderColor": "rgba(99, 138, 255, 1)",
+        "tooltipBorderWidth": 2,
+        "labelTextBorderType": "solid",
+        "tooltipTextFontSize": 18,
+        "labelTextBorderColor": "rgba(0, 206, 209, 1)",
+        "labelTextBorderWidth": 0,
+        "tooltipTextFontStyle": "normal",
+        "tooltipTextFontFamily": "",
+        "tooltipTextFontWeight": "bolder",
+        "tooltipBackgroundColor": "rgba(0, 80, 209, 0.8)",
+        "tooltipTextBorderColor": "#000",
+        "tooltipTextBorderWidth": 2
+      },
+      "setConfig": [
+        {
+          "key": 1,
+          "groupName": "标题",
+          "groupConfigs": [
+            {
+              "key": "titleShow",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "title",
+              "name": "标题",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "titleColor",
+              "name": "标题颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "titleSize",
+              "max": 9999,
+              "min": 12,
+              "name": "标题字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 2,
+          "groupName": "地图",
+          "groupConfigs": [
+            {
+              "key": "adcode",
+              "name": "切换地区",
+              "span": 24,
+              "type": "string",
+              "inputType": "citySearch"
+            },
+            {
+              "key": "centerX",
+              "max": 100,
+              "min": 0,
+              "name": "横向偏移",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "centerY",
+              "max": 100,
+              "min": 0,
+              "name": "纵向偏移",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "zoom",
+              "max": 15,
+              "min": 1,
+              "name": "地图缩放级别",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "runInterval",
+              "name": "显示动画",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            }
+          ]
+        },
+        {
+          "key": 4,
+          "groupName": "图表样式",
+          "groupConfigs": [
+            {
+              "key": "mapBorderColor",
+              "name": "边界线颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "borderWidth",
+              "max": 100,
+              "min": 1,
+              "name": "边界线宽",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "valueColors",
+              "name": "地图色彩范围",
+              "span": 24,
+              "type": "string",
+              "inputType": "colors"
+            }
+          ]
+        },
+        {
+          "key": 3,
+          "groupName": "图例",
+          "groupConfigs": [
+            {
+              "key": "showVisualMap",
+              "name": "显示",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "left",
+              "max": 100,
+              "min": 0,
+              "name": "横向偏移",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "top",
+              "max": 100,
+              "min": 0,
+              "name": "纵向偏移",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "highText",
+              "name": "高位名称",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "lowText",
+              "name": "低位名称",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "orient",
+              "name": "方向",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "垂直",
+                  "value": "vertical"
+                },
+                {
+                  "label": "水平",
+                  "value": "horizontal"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "visualMapColor",
+              "name": "图例文字颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "visualMapSize",
+              "max": 9999,
+              "min": 12,
+              "name": "图例文字字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            }
+          ]
+        },
+        {
+          "key": 5,
+          "groupName": "标签",
+          "groupConfigs": [
+            {
+              "key": "showLabel",
+              "name": "显示标签",
+              "span": 24,
+              "type": "boolean",
+              "inputType": "switch"
+            },
+            {
+              "key": "labelColor",
+              "name": "标签颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelSize",
+              "max": 9999,
+              "min": 1,
+              "name": "标签字号",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "input"
+            },
+            {
+              "key": "labelFontStyle",
+              "name": "文字类型",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "普通",
+                  "value": "normal"
+                },
+                {
+                  "label": "倾斜",
+                  "value": "italic"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "labelFontWeight",
+              "name": "文字粗细",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "细",
+                  "value": "lighter"
+                },
+                {
+                  "label": "普通",
+                  "value": "normal"
+                },
+                {
+                  "label": "偏粗",
+                  "value": "bold"
+                },
+                {
+                  "label": "粗",
+                  "value": "bolder"
+                }
+              ],
+              "inputType": "select"
+            },
+            {
+              "key": "labelFontFamily",
+              "name": "文字字体",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "digital",
+                  "value": "digital"
+                },
+                {
+                  "label": "digital2",
+                  "value": "digital2"
+                },
+                {
+                  "label": "AlimamaShuHeiTi-Bold",
+                  "value": "AlimamaShuHeiTi-Bold"
+                },
+                {
+                  "label": "AlimamaAgileVF-Thin",
+                  "value": "AlimamaAgileVF-Thin"
+                }
+              ],
+              "inputType": "select"
+            },
+            {
+              "key": "labelTextBorderWidth",
+              "max": 10,
+              "min": 0,
+              "name": "文字描边宽度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelTextBorderColor",
+              "name": "文字描边颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelTextBorderType",
+              "name": "文字描边类型",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "实线",
+                  "value": "solid"
+                },
+                {
+                  "label": "虚线",
+                  "value": "dashed"
+                },
+                {
+                  "label": "点",
+                  "value": "dotted"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "labelBorderWidth",
+              "max": 20,
+              "min": 0,
+              "name": "边框宽度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelBorderColor",
+              "name": "边框颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelBgColor",
+              "name": "背景色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "labelBorderRadius",
+              "max": 100,
+              "min": 0,
+              "name": "边框圆角半径",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "labelBorderType",
+              "name": "边框类型",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "实线",
+                  "value": "solid"
+                },
+                {
+                  "label": "虚线",
+                  "value": "dashed"
+                },
+                {
+                  "label": "点",
+                  "value": "dotted"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "labelPadding",
+              "max": 100,
+              "min": 0,
+              "name": "内边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            }
+          ]
+        },
+        {
+          "key": 6,
+          "groupName": "提示框",
+          "groupConfigs": [
+            {
+              "key": "tooltipTitle",
+              "name": "提示框标题",
+              "span": 24,
+              "type": "string",
+              "inputType": "input"
+            },
+            {
+              "key": "tooltipBackgroundColor",
+              "name": "背景色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "tooltipPadding",
+              "max": 100,
+              "min": 0,
+              "name": "内边距",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "tooltipBorderWidth",
+              "max": 20,
+              "min": 0,
+              "name": "边框宽度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "tooltipBorderColor",
+              "name": "边框颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "tooltipTextColor",
+              "name": "文字颜色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "tooltipTextFontSize",
+              "max": 200,
+              "min": 12,
+              "name": "字号",
+              "span": 24,
+              "step": 2,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "tooltipTextFontStyle",
+              "name": "文字类型",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "普通",
+                  "value": "normal"
+                },
+                {
+                  "label": "倾斜",
+                  "value": "italic"
+                }
+              ],
+              "inputType": "radio"
+            },
+            {
+              "key": "tooltipTextFontWeight",
+              "name": "文字粗细",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "细",
+                  "value": "lighter"
+                },
+                {
+                  "label": "普通",
+                  "value": "normal"
+                },
+                {
+                  "label": "偏粗",
+                  "value": "bold"
+                },
+                {
+                  "label": "粗",
+                  "value": "bolder"
+                }
+              ],
+              "inputType": "select"
+            },
+            {
+              "key": "tooltipTextFontFamily",
+              "name": "文字字体",
+              "span": 24,
+              "type": "string",
+              "options": [
+                {
+                  "label": "digital",
+                  "value": "digital"
+                },
+                {
+                  "label": "digital2",
+                  "value": "digital2"
+                },
+                {
+                  "label": "AlimamaShuHeiTi-Bold",
+                  "value": "AlimamaShuHeiTi-Bold"
+                },
+                {
+                  "label": "AlimamaAgileVF-Thin",
+                  "value": "AlimamaAgileVF-Thin"
+                }
+              ],
+              "inputType": "select"
+            }
+          ]
+        }
+      ],
+      "data": {
+        "api": {
+          "url": "",
+          "header": "null",
+          "method": "get",
+          "params": "null",
+          "interval": 10,
+          "dataFormatter": {
+            "data": [
+              {
+                "name": "北京",
+                "value": 100
+              },
+              {
+                "name": "天津",
+                "value": 100
+              },
+              {
+                "name": "河北",
+                "value": 100
+              }
+            ]
+          },
+          "__dataFormatter_was_string__": true
+        },
+        "value": {},
+        "__value_was_string__": true,
+        "default": [
+          {
+            "name": "北京",
+            "value": 154
+          },
+          {
+            "name": "天津",
+            "value": 113
+          },
+          {
+            "name": "上海",
+            "value": 140
+          },
+          {
+            "name": "重庆",
+            "value": 275
+          },
+          {
+            "name": "河北",
+            "value": 213
+          },
+          {
+            "name": "河南",
+            "value": 183
+          },
+          {
+            "name": "云南",
+            "value": 111
+          },
+          {
+            "name": "辽宁",
+            "value": 19
+          },
+          {
+            "name": "黑龙江",
+            "value": 15
+          },
+          {
+            "name": "湖南",
+            "value": 169
+          },
+          {
+            "name": "安徽",
+            "value": 860
+          },
+          {
+            "name": "山东",
+            "value": 539
+          },
+          {
+            "name": "新疆",
+            "value": 4
+          },
+          {
+            "name": "江苏",
+            "value": 1131
+          },
+          {
+            "name": "浙江",
+            "value": 904
+          },
+          {
+            "name": "江西",
+            "value": 336
+          },
+          {
+            "name": "湖北",
+            "value": 252
+          },
+          {
+            "name": "广西",
+            "value": 133
+          },
+          {
+            "name": "甘肃",
+            "value": 117
+          },
+          {
+            "name": "山西",
+            "value": 119
+          },
+          {
+            "name": "内蒙古",
+            "value": 27
+          },
+          {
+            "name": "陕西",
+            "value": 122
+          },
+          {
+            "name": "吉林",
+            "value": 14
+          },
+          {
+            "name": "福建",
+            "value": 418
+          },
+          {
+            "name": "贵州",
+            "value": 35
+          },
+          {
+            "name": "广东",
+            "value": 998
+          },
+          {
+            "name": "青海",
+            "value": 14
+          },
+          {
+            "name": "西藏",
+            "value": 20
+          },
+          {
+            "name": "四川",
+            "value": 44
+          },
+          {
+            "name": "宁夏",
+            "value": 24
+          },
+          {
+            "name": "海南",
+            "value": 22
+          },
+          {
+            "name": "台湾",
+            "value": 13
+          },
+          {
+            "name": "香港",
+            "value": 5
+          },
+          {
+            "name": "澳门",
+            "value": 5
+          }
+        ],
+        "getType": 1
+      },
+      "option": {
+        "geo": {
+          "map": "map",
+          "roam": false,
+          "show": true,
+          "zoom": 1,
+          "label": {
+            "normal": {
+              "show": false
+            },
+            "emphasis": {
+              "show": true
+            }
+          },
+          "silent": false,
+          "itemStyle": {
+            "normal": {
+              "borderColor": "rgba(0,255,255,.4)",
+              "borderWidth": 1
+            },
+            "emphasis": {
+              "areaColor": "rgba(0, 200, 255, 0.35)",
+              "borderColor": "rgba(0, 255, 255, 0.9)",
+              "borderWidth": 2
+            }
+          },
+          "layoutSize": "100%",
+          "layoutCenter": [
+            "50%",
+            "50%"
+          ]
+        },
+        "title": {
+          "text": "",
+          "textStyle": {
+            "color": "",
+            "fontSize": ""
+          }
+        },
+        "series": [
+          {
+            "data": [],
+            "name": "门店数量",
+            "type": "map",
+            "geoIndex": 0,
+            "label": {
+              "show": true,
+              "color": "#fff",
+              "fontSize": 12,
+              "formatter": "{b}\n{c}"
+            },
+            "emphasis": {
+              "itemStyle": {
+                "areaColor": "rgba(0, 200, 255, 0.4)"
+              },
+              "label": {
+                "show": true,
+                "color": "#fff",
+                "fontSize": 12,
+                "formatter": "{b}\n{c}"
+              }
+            }
+          }
+        ],
+        "tooltip": {
+          "trigger": "item",
+          "show": true,
+          "padding": 10,
+          "enterable": true,
+          "backgroundColor": "rgba(0, 80, 209, 0.85)",
+          "borderColor": "rgba(99, 138, 255, 1)",
+          "borderWidth": 2,
+          "textStyle": {
+            "color": "#fff",
+            "fontSize": 14
+          },
+          "formatter": "{b}<br/>{c}"
+        },
+        "visualMap": {
+          "top": 40,
+          "left": 26,
+          "show": false,
+          "text": [
+            "高",
+            "低"
+          ],
+          "orient": "vertical",
+          "inRange": {
+            "color": [
+              "#00467F",
+              "#A5CC82"
+            ]
+          },
+          "showLabel": true,
+          "textStyle": {
+            "color": "#f00",
+            "fontSize": 18
+          },
+          "seriesIndex": [
+            0
+          ]
+        }
+      },
+      "setOption": {
+        "geo.map": "config.adcode",
+        "geo.zoom": "config.zoom",
+        "title.show": "config.titleShow",
+        "title.text": "config.title",
+        "visualMap.max": "FUN:  Math.max(...this.element.data.default.map(item => item.value))",
+        "visualMap.top": "config.top+%",
+        "series[0].data": "data.default",
+        "series[0].name": "config.tooltipTitle",
+        "visualMap.left": "config.left+%",
+        "visualMap.show": "config.showVisualMap",
+        "tooltip.padding": "config.tooltipPadding",
+        "visualMap.orient": "config.orient",
+        "visualMap.text[0]": "config.highText",
+        "visualMap.text[1]": "config.lowText",
+        "geo.layoutCenter[0]": "config.centerX+%",
+        "geo.layoutCenter[1]": "config.centerY+%",
+        "tooltip.borderColor": "config.tooltipBorderColor",
+        "tooltip.borderWidth": "config.tooltipBorderWidth",
+        "geo.label.normal.show": "config.showLabel",
+        "title.textStyle.color": "config.titleColor",
+        "geo.label.normal.color": "config.labelColor",
+        "tooltip.backgroundColor": "config.tooltipBackgroundColor",
+        "tooltip.textStyle.color": "config.tooltipTextColor",
+        "visualMap.inRange.color": "config.valueColors",
+        "geo.label.normal.padding": "config.labelPadding",
+        "title.textStyle.fontSize": "config.titleSize",
+        "geo.label.normal.fontSize": "config.labelSize",
+        "visualMap.textStyle.color": "config.visualMapColor",
+        "geo.label.normal.fontStyle": "config.labelFontStyle",
+        "tooltip.textStyle.fontSize": "config.tooltipTextFontSize",
+        "geo.label.normal.borderType": "config.labelBorderType",
+        "geo.label.normal.fontFamily": "config.labelFontFamily",
+        "geo.label.normal.fontWeight": "config.labelFontWeight",
+        "tooltip.textStyle.fontStyle": "config.tooltipTextFontStyle",
+        "geo.label.normal.borderColor": "config.labelBorderColor",
+        "geo.label.normal.borderWidth": "config.labelBorderWidth",
+        "tooltip.textStyle.fontFamily": "config.tooltipTextFontFamily",
+        "tooltip.textStyle.fontWeight": "config.tooltipTextFontWeight",
+        "visualMap.textStyle.fontSize": "config.visualMapSize",
+        "geo.label.normal.borderRadius": "config.labelBorderRadius",
+        "geo.label.normal.textBorderType": "config.labelTextBorderType",
+        "geo.itemStyle.normal.borderColor": "config.mapBorderColor",
+        "geo.itemStyle.normal.borderWidth": "config.borderWidth",
+        "geo.label.normal.backgroundColor": "config.labelBgColor",
+        "geo.label.normal.textBorderColor": "config.labelTextBorderColor",
+        "geo.label.normal.textBorderWidth": "config.labelTextBorderWidth",
+        "tooltip.textStyle.textBorderColor": "config.tooltipTextBorderColor",
+        "tooltip.textStyle.textBorderWidth": "config.tooltipTextBorderWidth"
+      },
+      "styleConfig": null,
+      "baseConfig": null
+    },
+    "config": {
+      "top": 44,
+      "left": 2,
+      "zoom": 0.95,
+      "title": "项目分布",
+      "adcode": "100000",
+      "orient": "vertical",
+      "centerX": 50,
+      "centerY": 52,
+      "lowText": "低",
+      "Interval": {
+        "funs": [
+          "_instance.dispatchAction({type: 'downplay',seriesIndex: 0})",
+          "_instance.dispatchAction({type: 'highlight',seriesIndex: 0,dataIndex:(_params.count) % _data.default.length})",
+          "_instance.dispatchAction({type: 'showTip',seriesIndex: 0,dataIndex:(_params.count) % _data.default.length})",
+          "_params.count++"
+        ],
+        "time": 2000,
+        "inits": [
+          "_params.count = 0"
+        ]
+      },
+      "highText": "高",
+      "labelSize": 12,
+      "showLabel": true,
+      "titleShow": true,
+      "titleSize": 24,
+      "labelColor": "rgba(0, 99, 196, 1)",
+      "titleColor": "#eee",
+      "borderWidth": 1,
+      "runInterval": true,
+      "valueColors": [
+        "#9dd5dc",
+        "#006edd"
+      ],
+      "labelBgColor": "rgba(0, 0, 0, 0)",
+      "labelPadding": 4,
+      "mapAreaColor": "rgba(0,255,255,.02)",
+      "tooltipTitle": "项目数量",
+      "showVisualMap": false,
+      "visualMapSize": 16,
+      "labelFontStyle": "normal",
+      "mapBorderColor": "rgba(0, 0, 0, 0.2)",
+      "tooltipPadding": 15,
+      "visualMapColor": "#fff",
+      "labelBorderType": "solid",
+      "labelFontFamily": "AlimamaShuHeiTi-Bold",
+      "labelFontWeight": "normal",
+      "labelBorderColor": "rgba(0, 206, 209, 1)",
+      "labelBorderWidth": 0,
+      "tooltipTextColor": "#fff",
+      "labelBorderRadius": 0,
+      "tooltipBorderColor": "rgba(99, 138, 255, 1)",
+      "tooltipBorderWidth": 2,
+      "labelTextBorderType": "solid",
+      "tooltipTextFontSize": 18,
+      "labelTextBorderColor": "rgba(0, 206, 209, 1)",
+      "labelTextBorderWidth": 0,
+      "tooltipTextFontStyle": "normal",
+      "tooltipTextFontFamily": "",
+      "tooltipTextFontWeight": "bolder",
+      "tooltipBackgroundColor": "rgba(0, 80, 209, 0.8)",
+      "tooltipTextBorderColor": "#000",
+      "tooltipTextBorderWidth": 2,
       "rotateY": 0,
       "rotateX": 0,
-      "rotateZ": 0,
-      "hue": 0,
-      "saturate": 1,
-      "brightness": 1,
-      "contrast": 1,
-      "blur": 0,
-      "invert": false,
-      "shadowX": 0,
-      "shadowY": 0,
-      "shadowR": 0,
-      "shadowColor": "rgba(0,0,0,0)",
-      "aniType": "none",
-      "aniAlternate": false,
-      "aniLoop": "once",
-      "aniTime": 1,
-      "src": "/shared/image/map.png",
-      "lineHeight": 928
+      "rotateZ": 0
     }
   },
   "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a": {
