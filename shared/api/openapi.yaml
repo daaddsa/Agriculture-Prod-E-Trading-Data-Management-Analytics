@@ -1,0 +1,449 @@
+openapi: 3.0.3
+info:
+  title: 批发市场采购分析仪表板 API
+  version: "1.0.0"
+  description: 基于当前前端页面的最小必要接口契约
+servers:
+  - url: /api
+paths:
+  /metrics/volume:
+    get:
+      summary: 交易量趋势（单位：吨）
+      parameters:
+        - $ref: "#/components/parameters/dateMonth"
+        - $ref: "#/components/parameters/market"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrendPointsResponse"
+              examples:
+                example:
+                  value:
+                    unit: "吨"
+                    points:
+                      - { date: "2026-02-01", value: 123.45 }
+                      - { date: "2026-02-02", value: 0 }
+                      - { date: "2026-02-03", value: null }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /metrics/amount:
+    get:
+      summary: 交易额趋势（单位：元）
+      parameters:
+        - $ref: "#/components/parameters/dateMonth"
+        - $ref: "#/components/parameters/market"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrendPointsResponse"
+              examples:
+                example:
+                  value:
+                    unit: "元"
+                    points:
+                      - { date: "2026-02-01", value: 9800 }
+                      - { date: "2026-02-02", value: 10200 }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /metrics/avg-price:
+    get:
+      summary: 交易均价趋势（单位：元；双线）
+      parameters:
+        - $ref: "#/components/parameters/dateMonth"
+        - $ref: "#/components/parameters/market"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvgPriceResponse"
+              examples:
+                example:
+                  value:
+                    unit: "元"
+                    series:
+                      - name: "工厂均价"
+                        points:
+                          - { date: "2026-02-01", value: 23.4 }
+                      - name: "市场交易均价（不含异常交易）"
+                        points:
+                          - { date: "2026-02-01", value: 24.1 }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /metrics/commission:
+    get:
+      summary: 佣金趋势（左轴：‰；右轴：元；双轴）
+      parameters:
+        - $ref: "#/components/parameters/dateMonth"
+        - $ref: "#/components/parameters/market"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommissionResponse"
+              examples:
+                example:
+                  value:
+                    yLeftUnit: "‰"
+                    yRightUnit: "元"
+                    seriesLeft:
+                      - { date: "2026-02-01", value: 3.5 }
+                    seriesRight:
+                      - { date: "2026-02-01", value: 1200 }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /metrics/province-price:
+    get:
+      summary: 省份均价（单位：元；双线）
+      parameters:
+        - $ref: "#/components/parameters/province"
+        - $ref: "#/components/parameters/dateMonth"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AvgPriceResponse"
+              examples:
+                example:
+                  value:
+                    unit: "元"
+                    series:
+                      - name: "出厂均价"
+                        points:
+                          - { date: "2026-02-01", value: 21.3 }
+                      - name: "市场均价（不含异常）"
+                        points:
+                          - { date: "2026-02-01", value: 22.0 }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /reports:
+    get:
+      summary: 报告列表分页/搜索
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/pageSize"
+        - $ref: "#/components/parameters/keyword"
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportsResponse"
+              examples:
+                example:
+                  value:
+                    items:
+                      - id: "rpt_001"
+                        name: "2026年2月周报（第1周）"
+                        uploadedAt: "2026-02-05 10:20:00"
+                        summary: "本周交易额环比+3.2%，均价稳定。"
+                        fileUrl: "https://example.com/rpt_001.pdf"
+                    total: 42
+                    page: 1
+                    pageSize: 6
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /date-range:
+    get:
+      summary: 日期范围
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DateRangeResponse"
+              examples:
+                example:
+                  value:
+                    minDate: "2024-01"
+                    maxDate: "2026-02"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /provinces:
+    get:
+      summary: 省份列表
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptionsResponse"
+              examples:
+                example:
+                  value:
+                    - { value: "安徽", label: "安徽" }
+                    - { value: "河南", label: "河南" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+  /markets:
+    get:
+      summary: 市场列表
+      responses:
+        "200":
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptionsResponse"
+              examples:
+                example:
+                  value:
+                    - { value: "bj-xinfadi", label: "北京新发地" }
+                    - { value: "sh-jingxia", label: "上海经销市场" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/ServerError"
+components:
+  parameters:
+    dateMonth:
+      name: date
+      in: query
+      required: true
+      schema:
+        type: string
+        pattern: "^\\d{4}-\\d{2}$"
+      description: 月份（YYYY-MM）
+    market:
+      name: market
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 市场标识（可选）
+    province:
+      name: province
+      in: query
+      required: true
+      schema:
+        type: string
+      description: 省份名称
+    page:
+      name: page
+      in: query
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: 页码
+    pageSize:
+      name: pageSize
+      in: query
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: 每页数量
+    keyword:
+      name: keyword
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 搜索关键词
+  responses:
+    BadRequest:
+      description: 请求错误
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: 未授权
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    ServerError:
+      description: 服务器错误
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    Point:
+      type: object
+      properties:
+        date:
+          type: string
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+        value:
+          type: number
+          nullable: true
+      required: [date]
+    TrendPointsResponse:
+      type: object
+      properties:
+        unit:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: "#/components/schemas/Point"
+      required: [unit, points]
+    NamedSeries:
+      type: object
+      properties:
+        name:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: "#/components/schemas/Point"
+      required: [name, points]
+    AvgPriceResponse:
+      type: object
+      properties:
+        unit:
+          type: string
+        series:
+          type: array
+          items:
+            $ref: "#/components/schemas/NamedSeries"
+      required: [unit, series]
+    CommissionResponse:
+      type: object
+      properties:
+        yLeftUnit:
+          type: string
+        yRightUnit:
+          type: string
+        seriesLeft:
+          type: array
+          items:
+            $ref: "#/components/schemas/Point"
+        seriesRight:
+          type: array
+          items:
+            $ref: "#/components/schemas/Point"
+      required: [yLeftUnit, yRightUnit, seriesLeft, seriesRight]
+    ReportItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        uploadedAt:
+          type: string
+        summary:
+          type: string
+        fileUrl:
+          type: string
+      required: [id, name, uploadedAt]
+    ReportsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportItem"
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+      required: [items, total, page, pageSize]
+    DateRangeResponse:
+      type: object
+      properties:
+        minDate:
+          type: string
+          pattern: "^\\d{4}-\\d{2}$"
+        maxDate:
+          type: string
+          pattern: "^\\d{4}-\\d{2}$"
+      required: [minDate, maxDate]
+    Option:
+      type: object
+      properties:
+        value:
+          type: string
+        label:
+          type: string
+      required: [value, label]
+    OptionsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Option"
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required: [code, message]

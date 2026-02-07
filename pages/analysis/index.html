@@ -27,7 +27,6 @@
           </div>
         </div>
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a href="#" class="nav-tab">首页</a>
           <a href="#" class="nav-tab">实时交易</a>
           <a href="../history/index.html" class="nav-tab">历史查询</a>
           <a href="#" class="nav-tab active">数据分析</a>
@@ -36,33 +35,68 @@
 
       <div class="container">
         <aside class="sidebar" aria-label="左侧菜单">
-          <div class="menu-item teal">❶ 交易量走势</div>
-          <div class="menu-item orange">❷ 交易额走势</div>
-          <div class="menu-item green">❸ 交易均价走势</div>
-          <div class="menu-item orange">❹ 交易佣金费率走势</div>
-          <div class="menu-item gray">❺ 16省猪平均出厂价与批发市场交易价走势</div>
-          <div class="menu-item orange">❻ 交易佣金费走势</div>
-          <div class="menu-item teal">❼ 分析报告</div>
+          <div class="menu-item" :class="{active: activeMenu==='volume'}" @click="selectMenu('volume')">交易量走势</div>
+          <div class="menu-item" :class="{active: activeMenu==='amount'}" @click="selectMenu('amount')">交易额走势</div>
+          <div class="menu-item" :class="{active: activeMenu==='avgprice'}" @click="selectMenu('avgprice')">交易均价走势</div>
+          <div class="menu-item" :class="{active: activeMenu==='commission'}" @click="selectMenu('commission')">交易佣金费率与交易佣金费走势</div>
+          <div class="menu-item" :class="{active: activeMenu==='province16'}" @click="selectMenu('province16')">16省平均出厂价与市场交易均价走势</div>
+          <div class="menu-item" :class="{active: activeMenu==='reports'}" @click="selectMenu('reports')">分析报告</div>
         </aside>
 
         <main class="content">
-          <div class="chart-card">
+          <div class="chart-card" v-if="activeMenu==='volume'">
             <h3 class="chart-title">交易量趋势图</h3>
             <div id="trendChart"></div>
-          </div>
-
-          <div class="chart-card">
-            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
+
+          <div class="chart-card" v-if="activeMenu==='amount'">
+            <h3 class="chart-title">交易额趋势图</h3>
+            <div id="amountChart"></div>
+            <div class="insights">暂无解读</div>
+          </div>
+
+          <div class="chart-card" v-if="activeMenu==='avgprice'">
+            <h3 class="chart-title">交易均价趋势图</h3>
+            <div id="avgPriceChart"></div>
+            <div class="insights">暂无解读</div>
+          </div>
+
+          <div class="chart-card" v-if="activeMenu==='commission'">
+            <h3 class="chart-title">交易佣金费率与交易佣金费走势图</h3>
+            <div id="commissionChart"></div>
+            <div class="insights">暂无解读</div>
+          </div>
+
+          <div class="chart-card" v-if="activeMenu==='province16'">
+            <h3 class="chart-title">16省平均出厂价与市场交易均价走势图</h3>
+            <div class="chart-toolbar">
+              <div class="filter-group">
+                <span class="filter-label">省份</span>
+                <select class="nav-select-header" v-model="province16" @change="handleProvince16Change">
+                  <option v-for="p in provinces" :key="p.value" :value="p.value">{{ p.label }}</option>
+                </select>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon factory"></span>该省平均出厂价</div>
+                <div class="legend-item"><span class="legend-icon market"></span>市场交易均价（不含异常交易）</div>
+              </div>
+            </div>
+            <div id="provinceChart"></div>
+            <div class="insights">暂无解读</div>
+          </div>
+
           
-          <div class="chart-card">
+          
+          <div class="chart-card" v-if="activeMenu==='reports'">
             <h3 class="chart-title">分析报告</h3>
-            <div class="reports-controls">
-              <div class="page-info">第 {{ currentPage }} / {{ totalPages }} 页 · 每页 {{ pageSize }} 条</div>
-              <div class="pager">
-                <button class="pager-btn" @click="prevPage" :disabled="currentPage===1">上一页</button>
-                <button class="pager-btn" @click="nextPage" :disabled="currentPage===totalPages">下一页</button>
+            <div class="report-type-bar">
+              <div class="report-type-buttons">
+                <button class="report-type-btn" v-for="t in reportTypes" :key="t.value" :class="{active: reportTypeValue===t.value}" @click="setReportType(t.value)">{{ t.label }}</button>
+              </div>
+              <div class="report-search">
+                <input class="report-input" v-model="reportKeyword" placeholder="请输入关键词" />
+                <button class="btn" @click="searchReports">查询</button>
               </div>
             </div>
             <div class="reports-grid">
@@ -79,9 +113,16 @@
                   </div>
                 </template>
                 <div class="placeholder-body" v-else>
-                  <div class="placeholder-title">空位</div>
+                 
                   <div class="placeholder-note">暂无报告</div>
                 </div>
+              </div>
+            </div>
+            <div class="reports-controls">
+              <div class="page-info">第 {{ currentPage }} / {{ totalPages }} 页 · 每页 {{ pageSize }} 条</div>
+              <div class="pager">
+                <button class="pager-btn" @click="prevPage" :disabled="currentPage===1">上一页</button>
+                <button class="pager-btn" @click="nextPage" :disabled="currentPage===totalPages">下一页</button>
               </div>
             </div>
           </div>
@@ -104,6 +145,7 @@
       </div>
     </div>
 
+    <script src="../../shared/api/modules/analysis.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
