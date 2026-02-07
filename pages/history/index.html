@@ -106,30 +106,32 @@
               <span class="title-icon"></span>
               异常交易信息
             </h3>
-            <table class="abnormal-table">
-              <thead>
-                <tr>
-                  <th>交易时间</th>
-                  <th>货源省份</th>
-                  <th>流向地区</th>
-                  <th>交易单价</th>
-                  <th>复核情况</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in abnormalData" :key="index">
-                  <td>{{ item.time }}</td>
-                  <td>{{ item.origin }}</td>
-                  <td>{{ item.dest }}</td>
-                  <td>{{ item.price }}</td>
-                  <td>
-                    <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
-                      {{ item.reviewStatus }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="abnormal-table-scroll">
+              <table class="abnormal-table">
+                <thead>
+                  <tr>
+                    <th>交易时间</th>
+                    <th>货源省份</th>
+                    <th>流向地区</th>
+                    <th>交易单价</th>
+                    <th>复核情况</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in abnormalData" :key="index">
+                    <td>{{ item.time }}</td>
+                    <td>{{ item.origin }}</td>
+                    <td>{{ item.dest }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>
+                      <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
+                        {{ item.reviewStatus }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -175,18 +177,24 @@
               <h3 class="card-title">日交易信息查询</h3>
               <div class="query-filters">
                 <div class="filter-item">
-                  <label for="origin-select">产地：</label>
-                  <select id="origin-select" v-model="query.origin" class="nav-select">
-                    <option value="">全部</option>
-                    <option v-for="origin in uniqueOrigins" :key="origin" :value="origin">{{ origin }}</option>
-                  </select>
+                  <label for="origin-input">产地：</label>
+                  <input 
+                    type="text" 
+                    id="origin-input" 
+                    v-model="query.origin" 
+                    class="nav-input" 
+                    placeholder="输入产地关键词"
+                  />
                 </div>
                 <div class="filter-item">
-                  <label for="dest-select">销地：</label>
-                  <select id="dest-select" v-model="query.dest" class="nav-select">
-                    <option value="">全部</option>
-                    <option v-for="dest in uniqueDestinations" :key="dest" :value="dest">{{ dest }}</option>
-                  </select>
+                  <label for="dest-input">销地：</label>
+                  <input 
+                    type="text" 
+                    id="dest-input" 
+                    v-model="query.dest" 
+                    class="nav-input" 
+                    placeholder="输入销地关键词"
+                  />
                 </div>
                 <button class="reset-btn" @click="resetQuery">重置</button>
               </div>
@@ -230,27 +238,58 @@
               </table>
             </div>
             <div class="card-footer pagination">
+              <button class="page-btn" :disabled="query.page === 1" @click="query.page = 1">首页</button>
               <button class="page-btn" :disabled="query.page === 1" @click="changePage(-1)">上一页</button>
               
-              <!-- Numbered Pagination Buttons -->
-              <button 
-                v-for="p in totalPages" 
-                :key="p"
-                class="page-btn"
-                :class="{ active: query.page === p }"
-                @click="query.page = p"
-                v-show="totalPages <= 7 || (p === 1 || p === totalPages || (p >= query.page - 1 && p <= query.page + 1))"
-              >
-                {{ p }}
-              </button>
+              <!-- Smart Pagination -->
+              <template v-for="(item, index) in paginationItems" :key="index">
+                <!-- Page Number -->
+                <button 
+                  v-if="item.type === 'page'"
+                  class="page-btn"
+                  :class="{ active: query.page === item.value }"
+                  @click="query.page = item.value"
+                >
+                  {{ item.value }}
+                </button>
+
+                <!-- Ellipsis / Input -->
+                <div v-else-if="item.type === 'ellipsis'" class="pagination-input-wrapper">
+                  <button 
+                    v-if="!ellipsisState[item.pos].active"
+                    class="page-btn pagination-ellipsis-btn"
+                    @click="handleEllipsisClick(item.pos)"
+                    title="点击输入页码快速跳转"
+                  >
+                    ...
+                  </button>
+                  <div v-else class="input-container">
+                    <input 
+                      :id="'ellipsis-input-' + item.pos"
+                      type="text" 
+                      class="page-input pagination-mini-input"
+                      v-model="ellipsisState[item.pos].value"
+                      @blur="handleEllipsisBlur(item.pos)"
+                      @keydown="handleEllipsisKeydown(item.pos, $event)"
+                      autocomplete="off"
+                    />
+                    <div v-if="ellipsisState[item.pos].error" class="tooltip-error">
+                      请输入 1~{{ totalPages }} 之间的页码
+                    </div>
+                  </div>
+                </div>
+              </template>
               
               <button class="page-btn" :disabled="query.page === totalPages" @click="changePage(1)">下一页</button>
+              <button class="page-btn" :disabled="query.page === totalPages" @click="query.page = totalPages">末页</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <script src="../../shared/api/config.js"></script>
+    <script src="../../shared/api/modules/history.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
