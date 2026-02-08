@@ -97,7 +97,7 @@
         currentPage: 1,
         showPreview: false,
         previewReport: null,
-        activeMenu: "reports",
+        activeMenu: "volume",
       };
     },
 
@@ -115,6 +115,7 @@
         .catch(function () { self.fetchReports(); });
       this.calcPageSize();
       window.addEventListener("resize", this.calcPageSize);
+      this.$nextTick(this._refreshCurrentChart.bind(this));
     },
 
     methods: {
@@ -134,6 +135,7 @@
               if (ids.indexOf(self.market) === -1) {
                 self.market = ids[0];
               }
+              self.$nextTick(self._refreshCurrentChart.bind(self));
             }
           })
           .catch(function () {
@@ -264,7 +266,7 @@
           },
           yAxis: {
             type: "value",
-            name: "单位：吨",
+            name: "单位：公斤",
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
@@ -345,20 +347,53 @@
 
         var xAxisData = [];
         var avgData = [];
+        var avgCleanData = [];
         try {
-          var res = await AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 });
-          var d = (res && res.data) || {};
-          var trimmed = this._lastN(d.xList, d.yList, 30);
-          xAxisData = this._toMD(trimmed.xList);
-          avgData = this._toNums(trimmed.yList);
+          var results = await Promise.all([
+            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 }),
+            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30, isRemoveAbnormal: 1 }),
+          ]);
+          var normalD = (results[0] && results[0].data) || {};
+          var cleanD  = (results[1] && results[1].data) || {};
+          var rawX = normalD.xList || cleanD.xList || [];
+          var trimmed = this._lastNMulti(rawX, [normalD.yList || [], cleanD.yList || []], 30);
+          xAxisData    = this._toMD(trimmed.xList);
+          avgData      = this._toNums(trimmed.yLists[0]);
+          avgCleanData = this._toNums(trimmed.yLists[1]);
         } catch (e) {
           console.error("交易均价走势加载失败:", e);
         }
 
-        var hasData = avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); });
+        var hasData = (avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); }))
+                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));
+        var legendData = ["交易均价"];
+        var seriesData = [{
+          name: "交易均价",
+          type: "line",
+          smooth: true,
+          showSymbol: false,
+          sampling: "lttb",
+          lineStyle: { width: 2, color: "#1f8a98" },
+          itemStyle: { color: "#1f8a98" },
+          data: avgData,
+        }];
+        var cleanHasValues = avgCleanData.some(function (v) { return Number.isFinite(v); });
+        if (cleanHasValues) {
+          legendData.push("交易均价（不含异常数据）");
+          seriesData.push({
+            name: "交易均价（不含异常数据）",
+            type: "line",
+            smooth: true,
+            showSymbol: false,
+            sampling: "lttb",
+            lineStyle: { width: 2, color: "#fbbf24" },
+            itemStyle: { color: "#fbbf24" },
+            data: avgCleanData,
+          });
+        }
         chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-          legend: { show: true, data: ["交易均价"], top: 8, right: 8 },
+          legend: { show: true, data: legendData, top: 8, right: 8 },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
@@ -375,16 +410,7 @@
             axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: [{
-            name: "交易均价",
-            type: "line",
-            smooth: true,
-            showSymbol: false,
-            sampling: "lttb",
-            lineStyle: { width: 2, color: "#1f8a98" },
-            itemStyle: { color: "#1f8a98" },
-            data: avgData,
-          }],
+          series: seriesData,
         });
       },
 
@@ -412,7 +438,7 @@
           var trimmed = this._lastNMulti(rawX, [rawRateY, rawFeeY], 30);
           xAxisData = this._toMD(trimmed.xList);
           rateData  = this._toNums(trimmed.yLists[0]);
-          feeData   = this._toNums(trimmed.yLists[1]);
+          feeData   = this._toNums(trimmed.yLists[1]).map(function(v){ return Number(v)/10000; });
         } catch (e) {
           console.error("佣金费走势加载失败:", e);
         }
@@ -442,7 +468,7 @@
             },
             {
               type: "value",
-              name: "单位：元",
+              name: "单位：万元",
               nameTextStyle: { color: "#64748b" },
               axisLine: { show: true },
               axisTick: { show: true },
