@@ -3882,7 +3882,7 @@ const DS_CONFIG = {
       "aniAlternate": false,
       "aniLoop": "once",
       "aniTime": 1,
-      "src": "../../shared/logo/logo.png",
+      "src": "../../shared/assets/logo/logo.png",
       "lineHeight": 76
     }
   },
