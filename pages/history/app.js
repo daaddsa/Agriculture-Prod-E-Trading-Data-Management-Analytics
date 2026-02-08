@@ -8,6 +8,19 @@
     return Math.max(0, Math.min(5, Math.floor(v)));
   }
 
+  /** 从 URL query 解析 marketId，兼容数字和旧版 A/B/C 格式 */
+  function parseUrlMarketId() {
+    var params = new URLSearchParams(window.location.search);
+    var v = params.get("marketId");
+    if (v !== null) {
+      var n = Number(v);
+      if (Number.isFinite(n) && n >= 1) return n;
+      var map = { A: 1, B: 2, C: 3 };
+      if (map[v]) return map[v];
+    }
+    return 1;
+  }
+
   function generateTransactionData(count) {
     const arr = [];
     const origins = ["山东省聊城市东平县", "河北省石家庄市正定县", "河南省郑州市中牟县", "安徽省合肥市长丰县", "江苏省徐州市铜山区"];
@@ -81,17 +94,20 @@
 
       return {
         qaLevel: qa,
-        market: "A",
+        market: parseUrlMarketId(),
         date: "2024-12-31",
         markets: [
-          { value: "A", label: "市场A" },
-          { value: "B", label: "市场B" },
-          { value: "C", label: "市场C" },
+          { value: 1, label: "上海西郊国际农产品交易中心" },
+          { value: 2, label: "上海农产品中心批发市场" },
+          { value: 3, label: "江苏无锡朝阳农产品大市场" },
+          { value: 4, label: "江苏苏州农产品大市场" },
         ],
         minDate: "2024-12-31",
         maxDate: "2024-12-31",
         priceData: [],
-        transactionsAll: [],
+        transactionRows: [],
+        transactionTotal: 0,
+        transactionLoading: false,
         abnormalData: [],
         pieChart: null,
         resizeHandler: null,
@@ -215,9 +231,9 @@
       totalPiePages() {
         return Math.ceil(this.processedPieData.length / this.piePageSize) || 1;
       },
-      // Computed property to pad empty rows
+      // Computed property to pad empty rows (now uses server-side paginated data)
       displayTransactions() {
-        const list = this.filteredTransactions;
+        const list = this.transactionRows;
         const totalRows = this.query.limit;
         const paddedList = [...list];
         
@@ -228,29 +244,8 @@
         
         return paddedList;
       },
-      filteredTransactions() {
-        let list = this.transactionsAll.filter(item => {
-          const matchOrigin = !this.query.origin || item.origin.includes(this.query.origin);
-          const matchDest = !this.query.dest || item.destination.includes(this.query.dest);
-          return matchOrigin && matchDest;
-        });
-        
-        // Pagination logic
-        const start = (this.query.page - 1) * this.query.limit;
-        const end = start + this.query.limit;
-        
-        // Return sliced data but also expose total count for pagination controls
-        return list.slice(start, end);
-      },
-      totalFiltered() {
-        return this.transactionsAll.filter(item => {
-          const matchOrigin = !this.query.origin || item.origin.includes(this.query.origin);
-          const matchDest = !this.query.dest || item.destination.includes(this.query.dest);
-          return matchOrigin && matchDest;
-        }).length;
-      },
       totalPages() {
-        return Math.ceil(this.totalFiltered / this.query.limit) || 1;
+        return Math.ceil(this.transactionTotal / this.query.limit) || 1;
       }
     },
     watch: {
@@ -259,6 +254,7 @@
       this.minDate = "2024-12-31";
       this.maxDate = "2024-12-31";
 
+      this.loadMarkets();
       this.initPieChart();
       this.refreshAll();
       this.resizeHandler = () => {
@@ -279,22 +275,39 @@
       }
     },
     methods: {
+      /** 从大屏接口 /tradeDynamicData/getTradeMarket 动态获取市场列表 */
+      loadMarkets() {
+        var self = this;
+        ApiHelper.getData("/tradeDynamicData/getTradeMarket")
+          .then(function (list) {
+            if (Array.isArray(list) && list.length > 0) {
+              self.markets = list.map(function (m) {
+                return { value: Number(m.marketId), label: m.marketName };
+              });
+              var ids = self.markets.map(function (m) { return m.value; });
+              if (ids.indexOf(self.market) === -1) {
+                self.market = ids[0];
+              }
+            }
+          })
+          .catch(function () {
+            // API 失败时保留静态兜底列表
+          });
+      },
       handleMarketChange() {
         this.refreshAll();
       },
       handleDateChange() {
         this.refreshAll();
       },
-      resolveMarketId() {
-        const map = { A: "1", B: "2", C: "3" };
-        return map[this.market] || "1";
-      },
+      /** market 现在直接是数字 1/2/3，无需映射 */
       async refreshAll() {
+        this.query.page = 1;
         const tasks = [
           this.fetchStatsData(),
           this.fetchPriceData(),
           this.fetchAbnormalData(),
-          this.fetchTransactionsAll(),
+          this.fetchTransactions(),
           this.updatePieChart(),
         ];
         await Promise.allSettled(tasks);
@@ -305,7 +318,7 @@
       async fetchPriceData() {
         try {
           const res = await window.historyApi.getFactoryTradePrice({
-            marketId: this.resolveMarketId(),
+            marketId: this.market,
             paramsDate: this.date,
           });
           if (res.code === 200 && Array.isArray(res.data)) {
@@ -324,7 +337,7 @@
       async fetchAbnormalData() {
         try {
           const res = await window.historyApi.getAbnormal({
-            marketId: this.resolveMarketId(),
+            marketId: this.market,
             paramsDate: this.date,
           });
           if (res.code === 200 && Array.isArray(res.data)) {
@@ -362,53 +375,47 @@
           this.abnormalData = [];
         }
       },
-      async fetchTransactionsAll() {
+      /**
+       * 服务端分页查询日交易信息
+       * 每次只请求当前页数据（pageSize=5），避免全量加载导致的性能问题
+       */
+      async fetchTransactions() {
+        this.transactionLoading = true;
         try {
-          const marketId = this.resolveMarketId();
-          const paramsDate = this.date;
-          const pageSize = 5000;
-          let pageNum = 1;
-          let total = 0;
-          const rows = [];
-
-          do {
-            const res = await window.historyApi.getTradeList({
-              marketId,
-              paramsDate,
-              productCode: "",
-              sellCode: "",
-              pageNum,
-              pageSize,
-            });
-
-            if (res.code !== 200 || !Array.isArray(res.rows)) {
-              break;
-            }
-
-            total = Number(res.total || 0);
-            rows.push(...res.rows);
-            pageNum += 1;
-
-            if (pageNum > 20) break;
-          } while (rows.length < total);
-
-          this.transactionsAll = rows.map((it, idx) => {
-            const price = Number(it.businessPrice || 0);
-            const volume = Number(it.businessUnit || 0);
-            const amount = (price * volume).toFixed(2);
-            return {
-              id: it.tradeId || `${paramsDate}-${idx + 1}`,
-              time: it.businessDate,
-              price: it.businessPrice,
-              volume: it.businessUnit,
-              amount,
-              origin: it.producAdd,
-              destination: it.sellAdd,
-            };
+          const res = await window.historyApi.getTradeList({
+            marketId: this.market,
+            paramsDate: this.date,
+            productCode: this.query.origin,
+            sellCode: this.query.dest,
+            pageNum: this.query.page,
+            pageSize: this.query.limit,
           });
-          this.query.page = 1;
+
+          if (res.code === 200 && Array.isArray(res.rows)) {
+            this.transactionTotal = Number(res.total || 0);
+            this.transactionRows = res.rows.map((it, idx) => {
+              const price = Number(it.businessPrice || 0);
+              const volume = Number(it.businessUnit || 0);
+              const amount = (price * volume).toFixed(2);
+              return {
+                id: it.tradeId || `${this.date}-${idx + 1}`,
+                time: it.businessDate,
+                price: it.businessPrice,
+                volume: it.businessUnit,
+                amount,
+                origin: it.producAdd,
+                destination: it.sellAdd,
+              };
+            });
+          } else {
+            this.transactionRows = [];
+            this.transactionTotal = 0;
+          }
         } catch (e) {
-          this.transactionsAll = [];
+          this.transactionRows = [];
+          this.transactionTotal = 0;
+        } finally {
+          this.transactionLoading = false;
         }
       },
       switchPieView(mode) {
@@ -467,7 +474,7 @@
         try {
           const type = this.pieViewMode === "volume" ? "1" : "2";
           const res = await window.historyApi.getProportion({
-            marketId: this.resolveMarketId(),
+            marketId: this.market,
             paramsDate: this.date,
             type,
           });
@@ -590,7 +597,7 @@
         try {
           if (!this.activityChart) this.initActivityChart();
           const res = await window.historyApi.getActivity({
-            marketId: this.resolveMarketId(),
+            marketId: this.market,
             paramsDate: this.date,
           });
 
@@ -632,10 +639,27 @@
         } catch (e) {
         }
       },
+      /** 查询按钮：将筛选条件传给后端并重新加载第一页 */
+      handleSearch() {
+        if (this.query.page === 1) {
+          this.fetchTransactions();
+        } else {
+          this.query.page = 1;
+          this.fetchTransactions();
+        }
+      },
+      /** 重置筛选条件并重新加载 */
       resetQuery() {
         this.query.origin = "";
         this.query.dest = "";
         this.query.page = 1;
+        this.fetchTransactions();
+      },
+      /** 跳转到指定页码并从后端拉取数据 */
+      goToPage(page) {
+        if (page < 1 || page > this.totalPages || page === this.query.page) return;
+        this.query.page = page;
+        this.fetchTransactions();
       },
       handleEllipsisClick(pos) {
         this.ellipsisState[pos].active = true;
@@ -685,9 +709,12 @@
         const total = this.totalPages;
         
         if (Number.isInteger(val) && val >= 1 && val <= total) {
-          this.query.page = val;
           this.ellipsisState[pos].active = false;
           this.ellipsisState[pos].error = false;
+          if (val !== this.query.page) {
+            this.query.page = val;
+            this.fetchTransactions();
+          }
         } else {
           this.setEllipsisError(pos);
         }
@@ -701,10 +728,7 @@
         });
       },
       changePage(delta) {
-        const newPage = this.query.page + delta;
-        if (newPage >= 1 && newPage <= this.totalPages) {
-          this.query.page = newPage;
-        }
+        this.goToPage(this.query.page + delta);
       },
       async fetchStatsData() {
         this.stats.loading = true;
@@ -712,7 +736,7 @@
         
         try {
           const params = {
-            marketId: this.resolveMarketId(),
+            marketId: this.market,
             paramsDate: this.date,
           };
           

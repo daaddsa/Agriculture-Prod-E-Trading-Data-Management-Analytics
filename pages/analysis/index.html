@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>批发市场采购分析仪表板</title>
-    <link rel="icon" href="/shared/logo/logoicon.png" />
+    <link rel="icon" href="../../shared/logo/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -27,8 +27,8 @@
           </div>
         </div>
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a href="#" class="nav-tab">实时交易</a>
-          <a href="../history/index.html" class="nav-tab">历史查询</a>
+          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab">实时交易</a>
+          <a :href="'../history/index.html?marketId=' + market" class="nav-tab">历史查询</a>
           <a href="#" class="nav-tab active">数据分析</a>
         </nav>
       </header>
@@ -45,31 +45,31 @@
 
         <main class="content">
           <div class="chart-card" v-if="activeMenu==='volume'">
-            <h3 class="chart-title">交易量趋势图</h3>
+            <h3 class="chart-title">交易量趋势图（近30天）</h3>
             <div id="trendChart"></div>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='amount'">
-            <h3 class="chart-title">交易额趋势图</h3>
+            <h3 class="chart-title">交易额趋势图（近30天）</h3>
             <div id="amountChart"></div>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='avgprice'">
-            <h3 class="chart-title">交易均价趋势图</h3>
+            <h3 class="chart-title">交易均价趋势图（近30天）</h3>
             <div id="avgPriceChart"></div>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='commission'">
-            <h3 class="chart-title">交易佣金费率与交易佣金费走势图</h3>
+            <h3 class="chart-title">交易佣金费率与交易佣金费走势图（近30天）</h3>
             <div id="commissionChart"></div>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='province16'">
-            <h3 class="chart-title">16省平均出厂价与市场交易均价走势图</h3>
+            <h3 class="chart-title">16省平均出厂价与市场交易均价走势图（近30天）</h3>
             <div class="chart-toolbar">
               <div class="filter-group">
                 <span class="filter-label">省份</span>
@@ -86,8 +86,6 @@
             <div class="insights">暂无解读</div>
           </div>
 
-          
-          
           <div class="chart-card" v-if="activeMenu==='reports'">
             <h3 class="chart-title">分析报告</h3>
             <div class="report-type-bar">
@@ -95,7 +93,7 @@
                 <button class="report-type-btn" v-for="t in reportTypes" :key="t.value" :class="{active: reportTypeValue===t.value}" @click="setReportType(t.value)">{{ t.label }}</button>
               </div>
               <div class="report-search">
-                <input class="report-input" v-model="reportKeyword" placeholder="请输入关键词" />
+                <input class="report-input" v-model="reportKeyword" placeholder="请输入关键词" @keyup.enter="searchReports" />
                 <button class="btn" @click="searchReports">查询</button>
               </div>
             </div>
@@ -138,13 +136,17 @@
           <div class="modal-body">
             <div class="modal-meta">上传时间：{{ previewReport && previewReport.uploadedAt }}</div>
             <div class="modal-summary">{{ previewReport && previewReport.summary }}</div>
-            <iframe v-if="previewReport && previewReport.fileUrl" :src="previewReport.fileUrl" class="modal-iframe"></iframe>
+            <div v-if="previewReport && previewReport.fileUrl" class="modal-pdf-actions">
+              <div class="modal-pdf-name">{{ previewReport.fileName }}</div>
+              <button class="btn" @click="download(previewReport)">打开 PDF 文件</button>
+            </div>
             <div v-else class="modal-placeholder">暂无文件，已展示摘要内容。</div>
           </div>
         </div>
       </div>
     </div>
 
+    <script src="../../shared/api/config.js"></script>
     <script src="../../shared/api/modules/analysis.js"></script>
     <script src="./app.js"></script>
   </body>

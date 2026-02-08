@@ -55,9 +55,9 @@ body {
   --pattern-opacity: 0.18;
   --pattern-size: 28px;
   --pattern-image: var(--pattern-dots);
-  --pattern-dots: url("../assets/patterns/pattern-dots.svg");
-  --pattern-lines: url("../assets/patterns/pattern-lines.svg");
-  --pattern-grid: url("../assets/patterns/pattern-grid.svg");
+  --pattern-dots: url("../../shared/assets/patterns/pattern-dots.svg");
+  --pattern-lines: url("../../shared/assets/patterns/pattern-lines.svg");
+  --pattern-grid: url("../../shared/assets/patterns/pattern-grid.svg");
 }
 
 body[data-pattern="off"] {
@@ -108,6 +108,7 @@ body[data-pattern="off"] {
   cursor: pointer;
   transition: all 0.2s;
   min-width: 120px;
+  max-width: 280px;
 }
 
 .nav-select-header:focus, .nav-datepicker-header:focus {
@@ -145,18 +146,6 @@ body[data-pattern="off"] {
   box-shadow: none;
   border-radius: 4px 4px 0 0;
 }
-
-/* Note: In history page, .nav-tab active style wasn't explicitly in the read output for history/styles.css? 
-   Wait, I missed checking history/styles.css for .nav-tab.active. 
-   Looking at history/styles.css read result:
-   .nav-tab { ... }
-   .nav-tab:hover { ... }
-   There is NO .nav-tab.active in history/styles.css! 
-   However, analysis/index.html has "active" class. 
-   I should add a reasonable active style consistent with the theme.
-   The history page navigation didn't have an "active" class in the HTML I read (index.html), 
-   but analysis does. I will style it to look good and consistent.
-*/
 
 /* Analysis Layout Styles */
 .container {display:flex;height:auto}
@@ -224,10 +213,6 @@ body[data-pattern="off"] {
 .chart-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .chart-legend{display:flex;gap:14px}
 .legend-item{display:flex;align-items:center;color:var(--color-text-muted);font-size:13px}
-.legend-dot{width:10px;height:10px;border-radius:50%;margin-right:6px;display:inline-block}
-.legend-dot.factory{background:#1f8a98}
-.legend-dot.market{background:#fbbf24}
-
 .legend-icon{position:relative;display:inline-block;width:28px;height:10px;margin-right:6px}
 .legend-icon::before{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:currentColor;transform:translateY(-50%)}
 .legend-icon::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;background:currentColor;border-radius:50%;transform:translate(-50%,-50%)}
@@ -253,18 +238,15 @@ body[data-pattern="off"] {
 .report-card{border:1px solid var(--color-border);border-radius:8px;background:var(--color-surface);padding:12px;box-shadow:var(--card-shadow);min-height:220px}
 .report-card.placeholder{border:1px dashed var(--color-border);background:var(--color-surface-2);color:var(--color-text-muted)}
 .placeholder-body{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:180px}
-.placeholder-title{font-weight:600;color:var(--color-neutral-600);margin-bottom:6px}
 .placeholder-note{font-size:12px}
 .report-header{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;gap:4px;margin-bottom:8px}
-.report-name{font-weight:600;color:var(--color-text)}
-.report-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-name{font-weight:600;color:var(--color-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .report-time{font-size:12px;color:var(--color-text-muted);justify-self:end}
 .report-summary{color:var(--color-text);font-size:13px;line-height:1.5;min-height:50px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:8px;padding:8px}
 .report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
 .btn{border:1px solid rgba(255,255,255,.15);background:var(--grad-primary);color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;box-shadow:var(--card-shadow)}
 .btn.outline{background:transparent;border:1px solid var(--color-primary-500);color:var(--color-primary-600)}
 .btn:hover{filter:brightness(1.05)}
-.btn.ghost{background:var(--grad-primary);border:1px solid rgba(255,255,255,.15);color:#fff;box-shadow:var(--card-shadow)}
 
 .report-type-bar{display:flex;align-items:center;justify-content:space-between;margin:16px 0 12px}
 .report-type-buttons{display:flex;gap:14px;flex-wrap:wrap}
@@ -281,7 +263,9 @@ body[data-pattern="off"] {
 .modal-body{padding:16px;overflow:auto}
 .modal-meta{color:var(--color-text-muted);font-size:12px;margin-bottom:8px}
 .modal-summary{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:8px;padding:10px;margin-bottom:12px}
-.modal-iframe{width:100%;height:480px;border:none;border-radius:8px}
+.modal-pdf-actions{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;margin-top:16px;background:var(--color-surface-2);border:1px dashed var(--color-border);border-radius:8px}
+.modal-pdf-name{font-size:14px;color:var(--color-text);font-weight:500;word-break:break-all}
+.modal-pdf-actions .btn{flex-shrink:0;margin-left:16px}
 .modal-placeholder{color:var(--color-text-muted);text-align:center;padding:40px 0}
 
 @media (max-width: 1200px){
@@ -292,13 +276,6 @@ body[data-pattern="off"] {
 }
 @media (max-width: 560px){
   .reports-grid{grid-template-columns:1fr}
-}
-
-/* Responsive Styles */
-@media (max-width: 1100px) {
-  .top-section {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 720px) {

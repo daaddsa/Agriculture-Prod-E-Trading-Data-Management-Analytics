@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>批发市场白条猪系统</title>
-    <link rel="icon" href="../../index/index/logoicon.png" />
+    <link rel="icon" href="../../shared/logo/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
@@ -29,9 +29,9 @@
         </div>
 
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a href="#" class="nav-tab">实时交易</a>
+          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab">实时交易</a>
           <a href="#" class="nav-tab active">历史查询</a>
-          <a href="../analysis/index.html" class="nav-tab">数据分析</a>
+          <a :href="'../analysis/index.html?marketId=' + market" class="nav-tab">数据分析</a>
         </nav>
       </header>
 
@@ -196,6 +196,7 @@
                     placeholder="输入销地关键词"
                   />
                 </div>
+                <button class="search-btn" @click="handleSearch">查询</button>
                 <button class="reset-btn" @click="resetQuery">重置</button>
               </div>
             </div>
@@ -238,7 +239,7 @@
               </table>
             </div>
             <div class="card-footer pagination">
-              <button class="page-btn" :disabled="query.page === 1" @click="query.page = 1">首页</button>
+              <button class="page-btn" :disabled="query.page === 1" @click="goToPage(1)">首页</button>
               <button class="page-btn" :disabled="query.page === 1" @click="changePage(-1)">上一页</button>
               
               <!-- Smart Pagination -->
@@ -248,7 +249,7 @@
                   v-if="item.type === 'page'"
                   class="page-btn"
                   :class="{ active: query.page === item.value }"
-                  @click="query.page = item.value"
+                  @click="goToPage(item.value)"
                 >
                   {{ item.value }}
                 </button>
@@ -281,7 +282,7 @@
               </template>
               
               <button class="page-btn" :disabled="query.page === totalPages" @click="changePage(1)">下一页</button>
-              <button class="page-btn" :disabled="query.page === totalPages" @click="query.page = totalPages">末页</button>
+              <button class="page-btn" :disabled="query.page === totalPages" @click="goToPage(totalPages)">末页</button>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/shared/logo/logoicon.png"><title>datav</title><style>@font-face {  
+<!DOCTYPE html><html lang=""><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="../../shared/logo/logo.png"><title>农产品电子交易数据管理分析交互平台</title><style>@font-face {  
         font-family: "AlimamaAgileVF-Thin";  
         src: url("./font/AlimamaAgileVF-Thin.ttf") format("truetype"),  
             url("./font/AlimamaAgileVF-Thin.woff") format("woff"),  
@@ -32,7 +32,7 @@
   @font-face {  
     font-family: "CangErYuYang";  
     src: url("./font/CangErYuYang.ttf") format("truetype")
-  }</style><link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
+  }</style><link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="../../shared/api/config.js"></script><script src="../../shared/api/modules/screen.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
 <!-- 热力图依赖：先加载中国地图 GeoJSON 到 window.DS_GEO["100000"]，再启动应用 -->
 <script>
 (function() {
@@ -50,6 +50,7 @@
     .then(function(geo) {
       window.DS_GEO = window.DS_GEO || {};
       window.DS_GEO['100000'] = geo;
+      window.DS_GEO['china'] = geo;
     })
     .catch(function() {})
     .finally(function() {

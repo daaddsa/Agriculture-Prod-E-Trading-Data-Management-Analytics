@@ -479,8 +479,8 @@ const DS_CONFIG = {
     }
   },
   "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a": {
-    "x": 63,
-    "y": 146,
+    "x": 93,
+    "y": 176,
     "isWarning": false,
     "_key": "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a",
     "creater": "TextElement",
@@ -526,14 +526,14 @@ const DS_CONFIG = {
     }
   },
   "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29": {
-    "x": 72,
-    "y": 189,
+    "x": 93,
+    "y": 219,
     "isWarning": false,
     "_key": "cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 143,
-    "height": 59,
+    "width": 350,
+    "height": 50,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -556,7 +556,7 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "交易总量"
     },
     "style": {
       "fontSize": 40,
@@ -566,13 +566,14 @@ const DS_CONFIG = {
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0,
-      "lineHeight": 57,
-      "height": 59
+      "textAlign": "left",
+      "lineHeight": 50,
+      "height": 50
     }
   },
   "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535": {
-    "x": 242,
-    "y": 194,
+    "x": 245,
+    "y": 224,
     "isWarning": false,
     "_key": "cpm7dc21b96-c49e-49fc-8141-a1d8d5477535",
     "creater": "TextElement",
@@ -583,7 +584,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 19,
-    "visibility": true,
+    "visibility": false,
     "id": 1769960322753,
     "type": "text",
     "contentType": "text",
@@ -673,7 +674,7 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": "产地销售量排名\n",
+      "dataSetName": "产地销售量排名",
       "updateType": "none"
     },
     "option": {
@@ -1571,12 +1572,12 @@ const DS_CONFIG = {
               2870,
               3210
             ],
-            "name": "销地采购量排名11"
+            "name": "销地采购量排名"
           }
         ]
       },
       "getType": 1,
-      "dataSetName": "产地销售量排名11\n",
+      "dataSetName": "销地采购量排名",
       "updateType": "none"
     },
     "option": {
@@ -2354,8 +2355,8 @@ const DS_CONFIG = {
     },
     "config": {
       "gridB": 24,
-      "gridL": 10,
-      "gridR": 10,
+      "gridL": 12,
+      "gridR": 12,
       "gridT": 12,
       "title": "销地采购量排名TOP5",
       "colors": [
@@ -2702,13 +2703,13 @@ const DS_CONFIG = {
     }
   },
   "cpme55a84fd-cf3a-483b-adf8-301d6a611f22": {
-    "x": 47,
-    "y": 280,
+    "x": 93,
+    "y": 310,
     "isWarning": false,
     "_key": "cpme55a84fd-cf3a-483b-adf8-301d6a611f22",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 130,
+    "width": 350,
     "height": 50,
     "active": false,
     "locked": false,
@@ -2732,26 +2733,27 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "交易金额"
     },
     "style": {
       "fontSize": 40,
       "fontWeight": "bold",
       "color": "rgba(97, 223, 255, 1)",
       "fontFamily": "DouyinSansBold",
+      "textAlign": "left",
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
     }
   },
   "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0": {
-    "x": 44,
-    "y": 374,
+    "x": 93,
+    "y": 404,
     "isWarning": false,
     "_key": "cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 130,
+    "width": 350,
     "height": 50,
     "active": false,
     "locked": false,
@@ -2775,26 +2777,27 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "交易均价"
     },
     "style": {
       "fontSize": 40,
       "fontWeight": "bold",
       "color": "rgba(97, 223, 255, 1)",
       "fontFamily": "DouyinSansBold",
+      "textAlign": "left",
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
     }
   },
   "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a": {
-    "x": 45,
-    "y": 472,
+    "x": 93,
+    "y": 502,
     "isWarning": false,
     "_key": "cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 130,
+    "width": 350,
     "height": 50,
     "active": false,
     "locked": false,
@@ -2818,26 +2821,27 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "交易均价(不含异常)"
     },
     "style": {
       "fontSize": 40,
       "fontWeight": "bold",
       "color": "rgba(97, 223, 255, 1)",
       "fontFamily": "DouyinSansBold",
+      "textAlign": "left",
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
     }
   },
   "cpm18e89d42-8641-40e8-8884-db5ce5da24dc": {
-    "x": 19,
-    "y": 565,
+    "x": 93,
+    "y": 595,
     "isWarning": false,
     "_key": "cpm18e89d42-8641-40e8-8884-db5ce5da24dc",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 130,
+    "width": 350,
     "height": 50,
     "active": false,
     "locked": false,
@@ -2861,26 +2865,27 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "屠宰场数量"
     },
     "style": {
       "fontSize": 40,
       "fontWeight": "bold",
       "color": "rgba(97, 223, 255, 1)",
       "fontFamily": "DouyinSansBold",
+      "textAlign": "left",
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
     }
   },
   "cpm9ce068f3-90b3-4556-a306-58c47635d1a2": {
-    "x": 20,
-    "y": 656,
+    "x": 93,
+    "y": 686,
     "isWarning": false,
     "_key": "cpm9ce068f3-90b3-4556-a306-58c47635d1a2",
     "creater": "NumElement",
     "render": "NumEl",
-    "width": 130,
+    "width": 350,
     "height": 50,
     "active": false,
     "locked": false,
@@ -2904,13 +2909,14 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": ""
+      "dataSetName": "采购商数量"
     },
     "style": {
       "fontSize": 40,
       "fontWeight": "bold",
       "color": "rgba(97, 223, 255, 1)",
       "fontFamily": "DouyinSansBold",
+      "textAlign": "left",
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
@@ -3876,7 +3882,7 @@ const DS_CONFIG = {
       "aniAlternate": false,
       "aniLoop": "once",
       "aniTime": 1,
-      "src": "./images/c832fffc-c101-465d-9c29-fa788894115b.png",
+      "src": "../../shared/logo/logo.png",
       "lineHeight": 76
     }
   },
@@ -3930,18 +3936,18 @@ const DS_CONFIG = {
     }
   },
   "cpme41cb160-0568-4114-90c8-c847a9d8aa0b": {
-    "x": 58,
-    "y": 98,
+    "x": 88,
+    "y": 128,
     "isWarning": false,
     "_key": "cpme41cb160-0568-4114-90c8-c847a9d8aa0b",
     "creater": "SelectElement",
     "render": "SelectEl",
-    "width": 164,
+    "width": 300,
     "height": 38,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
-    "zindex": 38,
+    "zindex": 999,
     "visibility": true,
     "id": 1770109544871,
     "type": "type",
@@ -3949,28 +3955,34 @@ const DS_CONFIG = {
     "name": "下拉链接 Copy",
     "isLocal": true,
     "style": {
-      "text": "市场 A",
+      "text": "上海西郊国际农产品交易中心",
       "options": [
         {
-          "label": "市场 B",
-          "value": "",
-          "path": "",
+          "label": "上海西郊国际农产品交易中心",
+          "value": "?marketId=1",
+          "path": "?marketId=1",
           "isLocal": true
         },
         {
-          "label": "市场 C",
-          "value": "",
-          "path": "",
+          "label": "上海农产品中心批发市场",
+          "value": "?marketId=2",
+          "path": "?marketId=2",
           "isLocal": true
         },
         {
-          "label": "市场 D",
-          "value": "",
-          "path": "",
+          "label": "江苏无锡朝阳农产品大市场",
+          "value": "?marketId=3",
+          "path": "?marketId=3",
+          "isLocal": true
+        },
+        {
+          "label": "江苏苏州农产品大市场",
+          "value": "?marketId=4",
+          "path": "?marketId=4",
           "isLocal": true
         }
       ],
-      "fontSize": 16,
+      "fontSize": 14,
       "url": "",
       "fontWeight": "bold",
       "fontFamily": "AlimamaAgileVF-Thin",
@@ -4004,8 +4016,8 @@ const DS_CONFIG = {
     }
   },
   "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52": {
-    "x": 175,
-    "y": 285,
+    "x": 203,
+    "y": 315,
     "isWarning": false,
     "_key": "cpm3cce63e8-686b-4d5e-a4cd-f5a5135bff52",
     "creater": "TextElement",
@@ -4016,7 +4028,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 39,
-    "visibility": true,
+    "visibility": false,
     "id": 1770109714251,
     "type": "text",
     "contentType": "text",
@@ -4051,8 +4063,8 @@ const DS_CONFIG = {
     }
   },
   "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55": {
-    "x": 170,
-    "y": 380,
+    "x": 200,
+    "y": 409,
     "isWarning": false,
     "_key": "cpme5b643c2-17d6-41c9-a187-f4bf392b2b55",
     "creater": "TextElement",
@@ -4063,7 +4075,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 40,
-    "visibility": true,
+    "visibility": false,
     "id": 1770109735834,
     "type": "text",
     "contentType": "text",
@@ -4098,8 +4110,8 @@ const DS_CONFIG = {
     }
   },
   "cpm0b291d93-9e3c-417d-9377-81d5b6486b83": {
-    "x": 166,
-    "y": 477,
+    "x": 200,
+    "y": 507,
     "isWarning": false,
     "_key": "cpm0b291d93-9e3c-417d-9377-81d5b6486b83",
     "creater": "TextElement",
@@ -4110,7 +4122,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 41,
-    "visibility": true,
+    "visibility": false,
     "id": 1770109779585,
     "type": "text",
     "contentType": "text",
@@ -4145,8 +4157,8 @@ const DS_CONFIG = {
     }
   },
   "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9": {
-    "x": 119,
-    "y": 570,
+    "x": 175,
+    "y": 600,
     "isWarning": false,
     "_key": "cpm266ea8e9-71b1-48d3-b8e2-ed73373d50a9",
     "creater": "TextElement",
@@ -4157,7 +4169,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 42,
-    "visibility": true,
+    "visibility": false,
     "id": 1770109789021,
     "type": "text",
     "contentType": "text",
@@ -4192,8 +4204,8 @@ const DS_CONFIG = {
     }
   },
   "cpmbc5cfb60-ce8d-4806-856b-064496971855": {
-    "x": 121,
-    "y": 661,
+    "x": 175,
+    "y": 691,
     "isWarning": false,
     "_key": "cpmbc5cfb60-ce8d-4806-856b-064496971855",
     "creater": "TextElement",
@@ -4204,7 +4216,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 43,
-    "visibility": true,
+    "visibility": false,
     "id": 1770109798793,
     "type": "text",
     "contentType": "text",
@@ -4239,8 +4251,8 @@ const DS_CONFIG = {
     }
   },
   "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e": {
-    "x": 63,
-    "y": 239,
+    "x": 93,
+    "y": 269,
     "isWarning": false,
     "_key": "cpm840aee55-5c6e-4565-9c6e-97c96fc55e3e",
     "creater": "TextElement",
@@ -4286,8 +4298,8 @@ const DS_CONFIG = {
     }
   },
   "cpmd8dea03a-c8c2-4a18-9258-138454296f1e": {
-    "x": 63,
-    "y": 331,
+    "x": 93,
+    "y": 361,
     "isWarning": false,
     "_key": "cpmd8dea03a-c8c2-4a18-9258-138454296f1e",
     "creater": "TextElement",
@@ -4333,8 +4345,8 @@ const DS_CONFIG = {
     }
   },
   "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8": {
-    "x": 64,
-    "y": 427,
+    "x": 93,
+    "y": 457,
     "isWarning": false,
     "_key": "cpm815ef9a7-ead0-4474-aff4-e655b4d6cae8",
     "creater": "TextElement",
@@ -4380,8 +4392,8 @@ const DS_CONFIG = {
     }
   },
   "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47": {
-    "x": 63,
-    "y": 522,
+    "x": 93,
+    "y": 552,
     "isWarning": false,
     "_key": "cpm8b2fffb8-4938-492b-8bf3-2f508f350e47",
     "creater": "TextElement",
@@ -4427,8 +4439,8 @@ const DS_CONFIG = {
     }
   },
   "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3": {
-    "x": 63,
-    "y": 613,
+    "x": 93,
+    "y": 643,
     "isWarning": false,
     "_key": "cpm2f566bfc-5da6-43bb-a4cf-bc90c84641e3",
     "creater": "TextElement",
@@ -4475,13 +4487,13 @@ const DS_CONFIG = {
   },
   "cpmbd3a7549-e208-42e1-a158-fa080262956e": {
     "x": 107,
-    "y": 100,
+    "y": -12,
     "isWarning": false,
     "_key": "cpmbd3a7549-e208-42e1-a158-fa080262956e",
     "creater": "EChartElement",
     "render": "EChartMap",
-    "width": 1652,
-    "height": 990,
+    "width": 1642,
+    "height": 940,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -4522,249 +4534,112 @@ const DS_CONFIG = {
         },
         "__dataFormatter_was_string__": true
       },
-      "value": [
-        {
-          "name": "北京",
-          "value": 154
-        },
-        {
-          "name": "天津",
-          "value": 113
-        },
-        {
-          "name": "上海",
-          "value": 140
-        },
-        {
-          "name": "重庆",
-          "value": 275
-        },
-        {
-          "name": "河北",
-          "value": 213
-        },
-        {
-          "name": "河南",
-          "value": 183
-        },
-        {
-          "name": "云南",
-          "value": 111
-        },
-        {
-          "name": "辽宁",
-          "value": 19
-        },
-        {
-          "name": "黑龙江",
-          "value": 15
-        },
-        {
-          "name": "湖南",
-          "value": 169
-        },
-        {
-          "name": "安徽",
-          "value": 860
-        },
-        {
-          "name": "山东",
-          "value": 539
-        },
-        {
-          "name": "新疆",
-          "value": 4
-        },
-        {
-          "name": "江苏",
-          "value": 1131
-        },
-        {
-          "name": "浙江",
-          "value": 904
-        },
-        {
-          "name": "江西",
-          "value": 336
-        },
-        {
-          "name": "湖北",
-          "value": 252
-        },
-        {
-          "name": "广西",
-          "value": 133
-        },
-        {
-          "name": "甘肃",
-          "value": 117
-        },
-        {
-          "name": "山西",
-          "value": 119
-        },
-        {
-          "name": "内蒙古",
-          "value": 27
-        },
-        {
-          "name": "陕西",
-          "value": 122
-        },
-        {
-          "name": "吉林",
-          "value": 14
-        },
-        {
-          "name": "福建",
-          "value": 418
-        },
-        {
-          "name": "贵州",
-          "value": 35
-        },
-        {
-          "name": "广东",
-          "value": 998
-        },
-        {
-          "name": "青海",
-          "value": 14
-        },
-        {
-          "name": "西藏",
-          "value": 20
-        },
-        {
-          "name": "四川",
-          "value": 44
-        },
-        {
-          "name": "宁夏",
-          "value": 24
-        },
-        {
-          "name": "海南",
-          "value": 22
-        },
-        {
-          "name": "台湾",
-          "value": 13
-        },
-        {
-          "name": "香港",
-          "value": 5
-        },
-        {
-          "name": "澳门",
-          "value": 5
-        }
-      ],
+      "value": [],
       "__value_was_string__": true,
       "default": [
         {
           "name": "北京",
-          "value": 154
+          "value": 44
         },
         {
           "name": "天津",
-          "value": 113
+          "value": 44
         },
         {
           "name": "上海",
-          "value": 140
-        },
-        {
-          "name": "重庆",
-          "value": 275
-        },
-        {
-          "name": "河北",
-          "value": 213
-        },
-        {
-          "name": "河南",
-          "value": 183
-        },
-        {
-          "name": "云南",
-          "value": 111
-        },
-        {
-          "name": "辽宁",
-          "value": 19
-        },
-        {
-          "name": "黑龙江",
-          "value": 15
-        },
-        {
-          "name": "湖南",
-          "value": 169
-        },
-        {
-          "name": "安徽",
-          "value": 860
-        },
-        {
-          "name": "山东",
-          "value": 539
-        },
-        {
-          "name": "新疆",
-          "value": 4
-        },
-        {
-          "name": "江苏",
-          "value": 1131
-        },
-        {
-          "name": "浙江",
-          "value": 904
-        },
-        {
-          "name": "江西",
-          "value": 336
-        },
-        {
-          "name": "湖北",
-          "value": 252
-        },
-        {
-          "name": "广西",
-          "value": 133
-        },
-        {
-          "name": "甘肃",
-          "value": 117
-        },
-        {
-          "name": "山西",
-          "value": 119
-        },
-        {
-          "name": "内蒙古",
-          "value": 27
-        },
-        {
-          "name": "陕西",
-          "value": 122
-        },
-        {
-          "name": "吉林",
           "value": 14
         },
         {
+          "name": "重庆",
+          "value": 14
+        },
+        {
+          "name": "河北",
+          "value": 44
+        },
+        {
+          "name": "河南",
+          "value": 44
+        },
+        {
+          "name": "云南",
+          "value": 14
+        },
+        {
+          "name": "辽宁",
+          "value": 44
+        },
+        {
+          "name": "黑龙江",
+          "value": 44
+        },
+        {
+          "name": "湖南",
+          "value": 44
+        },
+        {
+          "name": "安徽",
+          "value": 44
+        },
+        {
+          "name": "山东",
+          "value": 44
+        },
+        {
+          "name": "新疆",
+          "value": 14
+        },
+        {
+          "name": "江苏",
+          "value": 44
+        },
+        {
+          "name": "浙江",
+          "value": 44
+        },
+        {
+          "name": "江西",
+          "value": 14
+        },
+        {
+          "name": "湖北",
+          "value": 44
+        },
+        {
+          "name": "广西",
+          "value": 14
+        },
+        {
+          "name": "甘肃",
+          "value": 14
+        },
+        {
+          "name": "山西",
+          "value": 14
+        },
+        {
+          "name": "内蒙古",
+          "value": 14
+        },
+        {
+          "name": "陕西",
+          "value": 14
+        },
+        {
+          "name": "吉林",
+          "value": 44
+        },
+        {
           "name": "福建",
-          "value": 418
+          "value": 44
         },
         {
           "name": "贵州",
-          "value": 35
+          "value": 14
         },
         {
           "name": "广东",
-          "value": 998
+          "value": 44
         },
         {
           "name": "青海",
@@ -4772,7 +4647,7 @@ const DS_CONFIG = {
         },
         {
           "name": "西藏",
-          "value": 20
+          "value": 14
         },
         {
           "name": "四川",
@@ -4780,27 +4655,27 @@ const DS_CONFIG = {
         },
         {
           "name": "宁夏",
-          "value": 24
+          "value": 14
         },
         {
           "name": "海南",
-          "value": 22
+          "value": 14
         },
         {
           "name": "台湾",
-          "value": 13
+          "value": 14
         },
         {
           "name": "香港",
-          "value": 5
+          "value": 14
         },
         {
           "name": "澳门",
-          "value": 5
+          "value": 14
         }
       ],
       "getType": 1,
-      "dataSetName": "项目分布"
+      "dataSetName": "省份均价数据"
     },
     "option": {
       "uuid": "xRUYcWWUEd8Q6AKuTed3RByQ",
@@ -4815,7 +4690,7 @@ const DS_CONFIG = {
         "adcode": "100000",
         "orient": "vertical",
         "centerX": 50,
-        "centerY": 52,
+        "centerY": 28,
         "lowText": "低",
         "Interval": {
           "funs": [
@@ -4830,17 +4705,17 @@ const DS_CONFIG = {
           ]
         },
         "highText": "高",
-        "labelSize": 12,
+        "labelSize": 13,
         "showLabel": true,
         "titleShow": true,
         "titleSize": 18,
-        "labelColor": "rgba(0, 0, 0, 1)",
+        "labelColor": "#ffffff",
         "titleColor": "#eee",
         "borderWidth": 1,
         "runInterval": true,
         "valueColors": [
-          "#9dd5dc",
-          "#006edd"
+          "#5AABD4",
+          "#2478B5"
         ],
         "labelBgColor": "rgba(0, 0, 0, 0)",
         "labelPadding": 4,
@@ -4854,7 +4729,7 @@ const DS_CONFIG = {
         "visualMapColor": "#fff",
         "labelBorderType": "solid",
         "labelFontFamily": "",
-        "labelFontWeight": "normal",
+        "labelFontWeight": "bold",
         "labelBorderColor": "rgba(0, 206, 209, 1)",
         "labelBorderWidth": 0,
         "tooltipTextColor": "#fff",
@@ -4863,12 +4738,12 @@ const DS_CONFIG = {
         "tooltipBorderWidth": 2,
         "labelTextBorderType": "solid",
         "tooltipTextFontSize": 18,
-        "labelTextBorderColor": "rgba(0, 206, 209, 1)",
-        "labelTextBorderWidth": 0,
+        "labelTextBorderColor": "rgba(0, 0, 0, 0.5)",
+        "labelTextBorderWidth": 2,
         "tooltipTextFontStyle": "normal",
         "tooltipTextFontFamily": "",
         "tooltipTextFontWeight": "bolder",
-        "tooltipBackgroundColor": "rgba(0, 80, 209, 0.8)",
+        "tooltipBackgroundColor": "rgba(73, 133, 229, 0.8)",
         "tooltipTextBorderColor": "#000",
         "tooltipTextBorderWidth": 2
       },
@@ -5433,91 +5308,91 @@ const DS_CONFIG = {
         "default": [
           {
             "name": "北京",
-            "value": 154
+            "value": 14
           },
           {
             "name": "天津",
-            "value": 113
+            "value": 14
           },
           {
             "name": "上海",
-            "value": 140
+            "value": 0
           },
           {
             "name": "重庆",
-            "value": 275
+            "value": 0
           },
           {
             "name": "河北",
-            "value": 213
+            "value": 14
           },
           {
             "name": "河南",
-            "value": 183
+            "value": 14
           },
           {
             "name": "云南",
-            "value": 111
+            "value": 0
           },
           {
             "name": "辽宁",
-            "value": 19
+            "value": 14
           },
           {
             "name": "黑龙江",
-            "value": 15
+            "value": 14
           },
           {
             "name": "湖南",
-            "value": 169
+            "value": 14
           },
           {
             "name": "安徽",
-            "value": 860
+            "value": 14
           },
           {
             "name": "山东",
-            "value": 539
+            "value": 14
           },
           {
             "name": "新疆",
-            "value": 4
+            "value": 0
           },
           {
             "name": "江苏",
-            "value": 1131
+            "value": 14
           },
           {
             "name": "浙江",
-            "value": 904
+            "value": 14
           },
           {
             "name": "江西",
-            "value": 336
+            "value": 0
           },
           {
             "name": "湖北",
-            "value": 252
+            "value": 14
           },
           {
             "name": "广西",
-            "value": 133
+            "value": 0
           },
           {
             "name": "甘肃",
-            "value": 117
+            "value": 0
           },
           {
             "name": "山西",
-            "value": 119
+            "value": 0
           },
           {
             "name": "内蒙古",
-            "value": 27
+            "value": 0
           },
           {
             "name": "陕西",
-            "value": 122
+            "value": 0
           },
           {
             "name": "吉林",
@@ -5525,50 +5400,51 @@ const DS_CONFIG = {
           },
           {
             "name": "福建",
-            "value": 418
-          },
-          {
-            "name": "贵州",
-            "value": 35
-          },
-          {
-            "name": "广东",
-            "value": 998
-          },
-          {
-            "name": "青海",
             "value": 14
           },
           {
+            "name": "贵州",
+            "value": 0
+          },
+          {
+            "name": "广东",
+            "value": 14
+          },
+          {
+            "name": "青海",
+            "value": 0
+          },
+          {
             "name": "西藏",
-            "value": 20
+            "value": 0
           },
           {
             "name": "四川",
-            "value": 44
+            "value": 14
           },
           {
             "name": "宁夏",
-            "value": 24
+            "value": 0
           },
           {
             "name": "海南",
-            "value": 22
+            "value": 0
           },
           {
             "name": "台湾",
-            "value": 13
+            "value": 0
           },
           {
             "name": "香港",
-            "value": 5
+            "value": 0
           },
           {
             "name": "澳门",
-            "value": 5
+            "value": 0
           }
         ],
-        "getType": 1
+        "getType": 1,
+        "dataSetName": "省份均价数据"
       },
       "option": {
         "geo": {
@@ -5578,15 +5454,20 @@ const DS_CONFIG = {
           "zoom": 1,
           "label": {
             "normal": {
-              "show": false
+              "show": true,
+              "color": "#fff",
+              "fontSize": 12
             },
             "emphasis": {
-              "show": true
+              "show": true,
+              "color": "#fff",
+              "fontSize": 14
             }
           },
           "silent": false,
           "itemStyle": {
             "normal": {
+              "areaColor": "#0a2e5c",
               "borderColor": "rgba(0,255,255,.4)",
               "borderWidth": 1
             },
@@ -5596,6 +5477,17 @@ const DS_CONFIG = {
               "borderWidth": 2
             }
           },
+          "regions": [{
+            "name": "南海诸岛",
+            "itemStyle": {
+              "normal": {
+                "areaColor": "rgba(0, 20, 60, 0.8)",
+                "borderColor": "rgba(0,255,255,.6)",
+                "borderWidth": 1
+              }
+            },
+            "label": { "normal": { "show": false }, "emphasis": { "show": false } }
+          }],
           "layoutSize": "100%",
           "layoutCenter": [
             "50%",
@@ -5614,37 +5506,21 @@ const DS_CONFIG = {
             "data": [],
             "name": "门店数量",
             "type": "map",
-            "geoIndex": 0,
-            "label": {
-              "show": true,
-              "color": "#fff",
-              "fontSize": 12,
-              "formatter": "{b}\n{c}"
-            },
-            "emphasis": {
-              "itemStyle": {
-                "areaColor": "rgba(0, 200, 255, 0.4)"
-              },
-              "label": {
-                "show": true,
-                "color": "#fff",
-                "fontSize": 12,
-                "formatter": "{b}\n{c}"
-              }
-            }
+            "geoIndex": 0
           }
         ],
         "tooltip": {
           "trigger": "item",
           "show": true,
-          "padding": 10,
+          "padding": 12,
           "enterable": true,
-          "backgroundColor": "rgba(0, 80, 209, 0.85)",
-          "borderColor": "rgba(99, 138, 255, 1)",
-          "borderWidth": 2,
+          "backgroundColor": "rgba(0, 40, 100, 0.9)",
+          "borderColor": "rgba(100, 160, 255, 0.35)",
+          "borderWidth": 1,
+          "extraCssText": "border-radius:4px;",
           "textStyle": {
             "color": "#fff",
-            "fontSize": 14
+            "fontSize": 13
           },
           "formatter": "{b}<br/>{c}"
         },
@@ -5693,35 +5569,38 @@ const DS_CONFIG = {
         "tooltip.borderColor": "config.tooltipBorderColor",
         "tooltip.borderWidth": "config.tooltipBorderWidth",
         "geo.label.normal.show": "config.showLabel",
-        "title.textStyle.color": "config.titleColor",
+        "geo.label.normal.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0)return '';return p.name+'\\n'+v;};}).call(this)",
+        "geo.label.emphasis.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0)return p.name;return p.name+'\\n'+v;};}).call(this)",
         "geo.label.normal.color": "config.labelColor",
+        "geo.label.normal.padding": "config.labelPadding",
+        "geo.label.normal.fontSize": "config.labelSize",
+        "geo.label.normal.fontStyle": "config.labelFontStyle",
+        "geo.label.normal.fontFamily": "config.labelFontFamily",
+        "geo.label.normal.fontWeight": "config.labelFontWeight",
+        "geo.label.normal.borderType": "config.labelBorderType",
+        "geo.label.normal.borderColor": "config.labelBorderColor",
+        "geo.label.normal.borderWidth": "config.labelBorderWidth",
+        "geo.label.normal.borderRadius": "config.labelBorderRadius",
+        "geo.label.normal.backgroundColor": "config.labelBgColor",
+        "geo.label.normal.textBorderType": "config.labelTextBorderType",
+        "geo.label.normal.textBorderColor": "config.labelTextBorderColor",
+        "geo.label.normal.textBorderWidth": "config.labelTextBorderWidth",
+        "geo.itemStyle.normal.borderColor": "config.mapBorderColor",
+        "geo.itemStyle.normal.borderWidth": "config.borderWidth",
+        "title.textStyle.color": "config.titleColor",
         "tooltip.backgroundColor": "config.tooltipBackgroundColor",
         "tooltip.textStyle.color": "config.tooltipTextColor",
         "visualMap.inRange.color": "config.valueColors",
-        "geo.label.normal.padding": "config.labelPadding",
         "title.textStyle.fontSize": "config.titleSize",
-        "geo.label.normal.fontSize": "config.labelSize",
         "visualMap.textStyle.color": "config.visualMapColor",
-        "geo.label.normal.fontStyle": "config.labelFontStyle",
         "tooltip.textStyle.fontSize": "config.tooltipTextFontSize",
-        "geo.label.normal.borderType": "config.labelBorderType",
-        "geo.label.normal.fontFamily": "config.labelFontFamily",
-        "geo.label.normal.fontWeight": "config.labelFontWeight",
         "tooltip.textStyle.fontStyle": "config.tooltipTextFontStyle",
-        "geo.label.normal.borderColor": "config.labelBorderColor",
-        "geo.label.normal.borderWidth": "config.labelBorderWidth",
         "tooltip.textStyle.fontFamily": "config.tooltipTextFontFamily",
         "tooltip.textStyle.fontWeight": "config.tooltipTextFontWeight",
         "visualMap.textStyle.fontSize": "config.visualMapSize",
-        "geo.label.normal.borderRadius": "config.labelBorderRadius",
-        "geo.label.normal.textBorderType": "config.labelTextBorderType",
-        "geo.itemStyle.normal.borderColor": "config.mapBorderColor",
-        "geo.itemStyle.normal.borderWidth": "config.borderWidth",
-        "geo.label.normal.backgroundColor": "config.labelBgColor",
-        "geo.label.normal.textBorderColor": "config.labelTextBorderColor",
-        "geo.label.normal.textBorderWidth": "config.labelTextBorderWidth",
         "tooltip.textStyle.textBorderColor": "config.tooltipTextBorderColor",
-        "tooltip.textStyle.textBorderWidth": "config.tooltipTextBorderWidth"
+        "tooltip.textStyle.textBorderWidth": "config.tooltipTextBorderWidth",
+        "tooltip.formatter": "FUN: (function(){return function(params){var raw=window._DS_PROVINCE_RAW_DATA||{};var name=params.name||'';var info=null;for(var key in raw){if(raw.hasOwnProperty(key)){var fn=key.split('-').slice(1).join('-');var sn=fn.replace(/壮族自治区|维吾尔自治区|回族自治区|自治区|特别行政区|省|市$/,'').trim();if(sn===name){info=raw[key];break;}}}if(!info)return name+'<br/><span style=\"color:rgba(255,255,255,0.5);\">暂无数据</span>';var L=function(lb,val,ut){return '<div style=\"padding:2px 0;color:rgba(255,255,255,0.85);\">'+lb+'：<b>'+val+'</b> '+ut+'</div>';};var h='<div style=\"font-size:14px;font-weight:bold;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid rgba(255,255,255,0.15);\">'+name+'</div>';if(info.currentAverage!=null)h+=L('今日市场均价',info.currentAverage,'元/公斤');if(info.yesterdayAverage!=null)h+=L('昨日市场均价',info.yesterdayAverage,'元/公斤');if(info.factoryPrice!=null)h+=L('屠宰场出厂价',info.factoryPrice,'元/公斤');if(info.enterpriseNum!=null)h+=L('货源企业数量',info.enterpriseNum,'家');if(info.abnormalNum!=null)h+=L('疑似异常交易',info.abnormalNum,'笔');return h;};}).call(this)"
       },
       "styleConfig": null,
       "baseConfig": null
@@ -5730,7 +5609,7 @@ const DS_CONFIG = {
       "top": 44,
       "left": 2,
       "zoom": 0.95,
-      "title": "项目分布",
+      "title": "省份均价数据",
       "adcode": "100000",
       "orient": "vertical",
       "centerX": 50,
@@ -5749,22 +5628,23 @@ const DS_CONFIG = {
         ]
       },
       "highText": "高",
-      "labelSize": 12,
+      "labelSize": 14,
       "showLabel": true,
-      "titleShow": true,
+      "titleShow": false,
       "titleSize": 24,
-      "labelColor": "rgba(0, 99, 196, 1)",
+      "labelColor": "#ffffff",
       "titleColor": "#eee",
       "borderWidth": 1,
-      "runInterval": true,
+      "runInterval": false,
       "valueColors": [
-        "#9dd5dc",
-        "#006edd"
+        "#5AABD4",
+        "#2478B5"
       ],
       "labelBgColor": "rgba(0, 0, 0, 0)",
       "labelPadding": 4,
       "mapAreaColor": "rgba(0,255,255,.02)",
-      "tooltipTitle": "项目数量",
+      "tooltipTitle": "省份数据",
+      "tooltipPadding": 12,
       "showVisualMap": false,
       "visualMapSize": 16,
       "labelFontStyle": "normal",
@@ -5773,21 +5653,21 @@ const DS_CONFIG = {
       "visualMapColor": "#fff",
       "labelBorderType": "solid",
       "labelFontFamily": "AlimamaShuHeiTi-Bold",
-      "labelFontWeight": "normal",
+      "labelFontWeight": "bold",
       "labelBorderColor": "rgba(0, 206, 209, 1)",
       "labelBorderWidth": 0,
       "tooltipTextColor": "#fff",
       "labelBorderRadius": 0,
-      "tooltipBorderColor": "rgba(99, 138, 255, 1)",
-      "tooltipBorderWidth": 2,
+      "tooltipBorderColor": "rgba(100, 160, 255, 0.35)",
+      "tooltipBorderWidth": 1,
       "labelTextBorderType": "solid",
-      "tooltipTextFontSize": 18,
-      "labelTextBorderColor": "rgba(0, 206, 209, 1)",
-      "labelTextBorderWidth": 0,
+      "tooltipTextFontSize": 13,
+      "labelTextBorderColor": "rgba(0, 0, 0, 0.6)",
+      "labelTextBorderWidth": 1,
       "tooltipTextFontStyle": "normal",
       "tooltipTextFontFamily": "",
       "tooltipTextFontWeight": "bolder",
-      "tooltipBackgroundColor": "rgba(0, 80, 209, 0.8)",
+      "tooltipBackgroundColor": "rgba(0, 40, 100, 0.9)",
       "tooltipTextBorderColor": "#000",
       "tooltipTextBorderWidth": 2,
       "rotateY": 0,
@@ -5996,7 +5876,7 @@ const DS_CONFIG = {
         ]
       },
       "getType": 1,
-      "dataSetName": ""
+      "dataSetName": "异常交易数据"
     },
     "option": {
       "uuid": "LiAAJQArXmobte7OjxkJJder",
@@ -6004,7 +5884,7 @@ const DS_CONFIG = {
       "attrs": null,
       "styles": null,
       "config": {
-        "duration": 10,
+        "duration": 15,
         "fontSize": 16,
         "paddingX": 2,
         "paddingY": 10,
@@ -6014,7 +5894,7 @@ const DS_CONFIG = {
         "textColor": "#fff",
         "fontFamily": "AlimamaAgileVF-Thin",
         "fontWeight": "normal",
-        "componentUrl": "https://datav-1259182967.cos.ap-shanghai.myqcloud.com/sys/common/dynamicComponents/AutoScrollLoopTable.js",
+        "componentUrl": "./scripts/AutoScrollLoopTable.js",
         "headerHeight": 40,
         "headerBgColor": "rgba(30, 144, 255, 0.14)",
         "oddRowBgColor": "rgba(0, 206, 209, 0.04)",
@@ -6470,7 +6350,7 @@ const DS_CONFIG = {
     "name": "文本 Copy",
     "isLocal": true,
     "style": {
-      "text": "分析报告",
+      "text": "数据分析",
       "fontSize": 24,
       "url": "",
       "localFilePath": "",
@@ -6547,6 +6427,22 @@ const DS_CONFIG = {
     }
   }
 };
+
+// ==================== 根据 URL 参数动态设置下拉框文本 ====================
+(function () {
+  var selectKey = 'cpme41cb160-0568-4114-90c8-c847a9d8aa0b';
+  var selectCfg = DS_CONFIG[selectKey];
+  if (selectCfg && selectCfg.style && selectCfg.style.options) {
+    var params = new URLSearchParams(window.location.search);
+    var marketId = params.get('marketId') || '1';
+    var matched = selectCfg.style.options.find(function (opt) {
+      return opt.value === '?marketId=' + marketId;
+    });
+    if (matched) {
+      selectCfg.style.text = matched.label;
+    }
+  }
+})();
 
 // ==================== 导出数据（请勿修改此部分）====================
 window.DS_DATA = {

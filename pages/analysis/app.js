@@ -1,62 +1,97 @@
 (function () {
-  const { createApp } = Vue;
+  var createApp = Vue.createApp;
 
-  function parseQaLevel() {
-    const params = new URLSearchParams(window.location.search);
-    const v = Number(params.get("qa"));
-    if (!Number.isFinite(v)) return 0;
-    return Math.max(0, Math.min(5, Math.floor(v)));
-  }
+  // ======================== 常量 ========================
 
-  function generateXAxis(count) {
-    const arr = [];
-    for (let i = 1; i <= count; i++) arr.push(String(i));
-    return arr;
-  }
+  /** 16省省份代码映射（与后端 provinceCode 参数对应） */
+  var PROVINCE_LIST = [
+    { label: "北京市",   value: "110000" },
+    { label: "天津市",   value: "120000" },
+    { label: "河北省",   value: "130000" },
+    { label: "辽宁省",   value: "210000" },
+    { label: "吉林省",   value: "220000" },
+    { label: "黑龙江省", value: "230000" },
+    { label: "江苏省",   value: "320000" },
+    { label: "浙江省",   value: "330000" },
+    { label: "安徽省",   value: "340000" },
+    { label: "福建省",   value: "350000" },
+    { label: "山东省",   value: "370000" },
+    { label: "河南省",   value: "410000" },
+    { label: "湖北省",   value: "420000" },
+    { label: "湖南省",   value: "430000" },
+    { label: "广东省",   value: "440000" },
+    { label: "四川省",   value: "510000" },
+  ];
 
-  function generateDateAxis(endDateStr, count) {
-    const out = [];
-    const end = endDateStr ? new Date(endDateStr) : new Date();
-    for (let i = count - 1; i >= 0; i--) {
-      const d = new Date(end);
-      d.setDate(end.getDate() - i);
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      out.push(`${yyyy}-${mm}-${dd}`);
+  /** 市场列表 — 静态兜底，mounted 后会从 API 动态刷新 */
+  var MARKET_LIST = [
+    { value: 1, label: "上海西郊国际农产品交易中心" },
+    { value: 2, label: "上海农产品中心批发市场" },
+    { value: 3, label: "江苏无锡朝阳农产品大市场" },
+    { value: 4, label: "江苏苏州农产品大市场" },
+  ];
+
+  // ======================== URL 参数解析 ========================
+
+  /** 从 URL query 解析 marketId，兼容数字和旧版 A/B/C 格式 */
+  function parseUrlMarketId() {
+    var params = new URLSearchParams(window.location.search);
+    var v = params.get("marketId");
+    if (v !== null) {
+      var n = Number(v);
+      if (Number.isFinite(n) && n >= 1) return n;
+      var map = { A: 1, B: 2, C: 3 };
+      if (map[v]) return map[v];
     }
-    return out;
+    return 1;
   }
 
-  function generateSeriesData(count, seed, base, variance) {
-    const out = [];
-    for (let i = 0; i < count; i++) {
-      const t = Math.sin((i + seed) * 0.63) + Math.cos((i + seed) * 0.23);
-      const v = Math.max(0, Math.round(base + t * variance + (i % 7) * 3));
-      out.push(v);
+  // ======================== ECharts 实例管理 ========================
+  // 用普通对象存储实例（不纳入 Vue 响应式，避免代理开销）
+
+  var _charts = {};
+  var _resizeRegistered = false;
+
+  /**
+   * 获取 ECharts 实例：自动销毁旧实例 → 创建新实例
+   * 全局 resize 监听器只注册一次，统一管理所有图表 resize
+   */
+  function getChart(key, el) {
+    if (_charts[key]) {
+      _charts[key].dispose();
+      _charts[key] = null;
     }
-    return out;
+    var inst = echarts.init(el);
+    _charts[key] = inst;
+    if (!_resizeRegistered) {
+      _resizeRegistered = true;
+      window.addEventListener("resize", function () {
+        Object.keys(_charts).forEach(function (k) {
+          if (_charts[k] && !_charts[k].isDisposed()) {
+            _charts[k].resize();
+          }
+        });
+      });
+    }
+    return inst;
   }
+
+  // ======================== Vue App ========================
 
   createApp({
-    data() {
+    data: function () {
       return {
-        market: "A",
+        market: parseUrlMarketId(),
         date: new Date().toISOString().split("T")[0],
-        markets: [
-          { value: "A", label: "市场A" },
-          { value: "B", label: "市场B" },
-          { value: "C", label: "市场C" },
-        ],
-        provinces: [],
-        province16: "河南",
-        provinceSkeleton: true,
+        markets: MARKET_LIST,
+        provinces: PROVINCE_LIST,
+        province16: "410000",         // 默认河南省
         reportKeyword: "",
-        minDate: "",
+        minDate: "2024-01-01",        // 放宽：允许查询历史数据
         maxDate: "",
         reports: [],
         reportTypes: [],
-        reportTypeValue: "",
+        reportTypeValue: "",          // 空字符串 = 全部
         totalCount: 0,
         pageSize: 6,
         currentPage: 1,
@@ -65,149 +100,222 @@
         activeMenu: "reports",
       };
     },
-    mounted() {
-      const today = new Date();
-      const past30 = new Date(today);
-      past30.setDate(today.getDate() - 30);
-      const future7 = new Date(today);
-      future7.setDate(today.getDate() + 7);
 
-      this.minDate = past30.toISOString().split("T")[0];
+    mounted: function () {
+      var self = this;
+      var today = new Date();
+      var future7 = new Date(today);
+      future7.setDate(today.getDate() + 7);
       this.maxDate = future7.toISOString().split("T")[0];
 
-      this.loadProvinces().then(()=>{}).catch(()=>{});
-      this.loadReportTypes().then(()=>{}).catch(()=>{});
-      this.initChart();
-      this.fetchReports();
+      this.loadMarkets();
+      // 先加载报告类型（含默认选中日报），完成后再拉取报告列表
+      this.loadReportTypes()
+        .then(function () { self.fetchReports(); })
+        .catch(function () { self.fetchReports(); });
       this.calcPageSize();
       window.addEventListener("resize", this.calcPageSize);
     },
+
     methods: {
-      _mapMarketId(code){
-        const map = { A: 1, B: 2, C: 3 };
-        return map[code] || 1;
+      // ==================== 市场列表动态加载 ====================
+
+      /** 从大屏接口 /tradeDynamicData/getTradeMarket 动态获取市场列表 */
+      loadMarkets: function () {
+        var self = this;
+        ApiHelper.getData("/tradeDynamicData/getTradeMarket")
+          .then(function (list) {
+            if (Array.isArray(list) && list.length > 0) {
+              self.markets = list.map(function (m) {
+                return { value: Number(m.marketId), label: m.marketName };
+              });
+              // 若当前 market 值不在列表中，默认选第一个
+              var ids = self.markets.map(function (m) { return m.value; });
+              if (ids.indexOf(self.market) === -1) {
+                self.market = ids[0];
+              }
+            }
+          })
+          .catch(function () {
+            // API 失败时保留静态兜底列表
+          });
       },
-      _toMD(list){
-        return (list || []).map(d=>{
-          const m = Number(String(d).slice(5,7));
-          const day = Number(String(d).slice(8,10));
-          return `${m}-${day}`;
+
+      // ==================== 工具方法 ====================
+
+      /** 日期数组 ["2024-12-01",...] → 短格式 ["12-1",...] 用于 X 轴 */
+      _toMD: function (list) {
+        return (list || []).map(function (d) {
+          var m = Number(String(d).slice(5, 7));
+          var day = Number(String(d).slice(8, 10));
+          return m + "-" + day;
         });
       },
-      _toNums(list){
-        return (list || []).map(v=>Number(v));
+
+      /** 字符串数组 → 数字数组 */
+      _toNums: function (list) {
+        return (list || []).map(function (v) { return Number(v); });
       },
-      _toNumsNullable(list){
-        return (list || []).map(v=>{
-          if(v===undefined || v===null || v==="") return null;
+
+      /** 字符串数组 → 数字数组（空值 → null，用于出厂价有空缺的场景） */
+      _toNumsNullable: function (list) {
+        return (list || []).map(function (v) {
+          if (v === undefined || v === null || v === "") return null;
           return Number(v);
         });
       },
-      async loadProvinces(){
-        try{
-          const res = await AnalysisAPI.getProvinces();
-          const list = ((res && (res.data || res)) || []);
-          const mapped = Array.isArray(list) ? list.map(it=>{
-            const label = it.label || it.name || it.value || "";
-            const value = it.value || label;
-            return { label, value };
-          }) : [];
-          this.provinces = mapped.length ? mapped : [
-            { label: "北京市", value: "北京市" },{ label: "天津市", value: "天津市" },{ label: "河北省", value: "河北省" },
-            { label: "辽宁省", value: "辽宁省" },{ label: "吉林省", value: "吉林省" },{ label: "黑龙江省", value: "黑龙江省" },
-            { label: "江苏省", value: "江苏省" },{ label: "浙江省", value: "浙江省" },{ label: "安徽省", value: "安徽省" },
-            { label: "福建省", value: "福建省" },{ label: "山东省", value: "山东省" },{ label: "河南省", value: "河南省" },
-            { label: "湖北省", value: "湖北省" },{ label: "湖南省", value: "湖南省" },{ label: "广东省", value: "广东省" },
-            { label: "四川省", value: "四川省" }
-          ];
-          const def = this.provinces.find(p=>String(p.value).includes("河南")) || this.provinces[0];
-          this.province16 = def ? def.value : "河南";
-        }catch(e){
-          this.provinces = [
-            { label: "北京市", value: "北京市" },{ label: "天津市", value: "天津市" },{ label: "河北省", value: "河北省" },
-            { label: "辽宁省", value: "辽宁省" },{ label: "吉林省", value: "吉林省" },{ label: "黑龙江省", value: "黑龙江省" },
-            { label: "江苏省", value: "江苏省" },{ label: "浙江省", value: "浙江省" },{ label: "安徽省", value: "安徽省" },
-            { label: "福建省", value: "福建省" },{ label: "山东省", value: "山东省" },{ label: "河南省", value: "河南省" },
-            { label: "湖北省", value: "湖北省" },{ label: "湖南省", value: "湖南省" },{ label: "广东省", value: "广东省" },
-            { label: "四川省", value: "四川省" }
-          ];
-          this.province16 = "河南";
-        }
+
+      /** 截取最近 N 天的数据（对齐 xList 和 yList） */
+      _lastN: function (xList, yList, n) {
+        n = n || 30;
+        if (!Array.isArray(xList)) xList = [];
+        if (!Array.isArray(yList)) yList = [];
+        if (xList.length <= n) return { xList: xList, yList: yList };
+        return { xList: xList.slice(-n), yList: yList.slice(-n) };
       },
-      handleMarketChange() {
-        console.log("Market changed to:", this.market);
-        this.loadReportTypes().then(()=>{}).catch(()=>{});
+
+      /** 截取最近 N 天的数据（多个 y 系列对齐同一 xList） */
+      _lastNMulti: function (xList, yLists, n) {
+        n = n || 30;
+        if (!Array.isArray(xList)) xList = [];
+        if (xList.length <= n) return { xList: xList, yLists: yLists };
+        var slicedX = xList.slice(-n);
+        var slicedYs = (yLists || []).map(function (yl) {
+          return (yl || []).slice(-n);
+        });
+        return { xList: slicedX, yLists: slicedYs };
+      },
+
+      // ==================== 全局事件 ====================
+
+      handleMarketChange: function () {
+        var self = this;
         this.currentPage = 1;
-        this.fetchReports();
+        this._allReportsCache = null; // 市场变化，清除报告缓存
+        // 切换市场：先重新加载报告类型，完成后再拉取报告
+        this.loadReportTypes()
+          .then(function () { self.fetchReports(); })
+          .catch(function () { self.fetchReports(); });
+        this.$nextTick(this._refreshCurrentChart.bind(this));
       },
-      searchReports(){
-        this.currentPage = 1;
-        this.fetchReports();
+
+      handleDateChange: function () {
+        this.$nextTick(this._refreshCurrentChart.bind(this));
       },
-      setReportType(t){
-        this.reportTypeValue = t;
-        this.currentPage = 1;
-        this.fetchReports();
+
+      handleProvince16Change: function () {
+        var self = this;
+        this.$nextTick(function () {
+          if (self.activeMenu === "province16") self.initProvinceChart();
+        });
       },
-      selectMenu(key){
+
+      selectMenu: function (key) {
         this.activeMenu = key;
-        this.$nextTick(()=>{
-          if(key==='volume') this.initChart();
-          if(key==='amount') this.initAmountChart();
-          if(key==='avgprice') this.initAvgPriceChart();
-          if(key==='commission') this.initCommissionChart();
-          if(key==='province16') this.initProvinceChart();
+        var self = this;
+        this.$nextTick(function () {
+          if (key === "volume")     self.initChart();
+          if (key === "amount")     self.initAmountChart();
+          if (key === "avgprice")   self.initAvgPriceChart();
+          if (key === "commission") self.initCommissionChart();
+          if (key === "province16") self.initProvinceChart();
         });
       },
-      handleDateChange() {
-        console.log("Date changed to:", this.date);
-        this.$nextTick(()=>{
-          if(this.activeMenu==='volume') this.initChart();
-          if(this.activeMenu==='amount') this.initAmountChart();
-          if(this.activeMenu==='avgprice') this.initAvgPriceChart();
-          if(this.activeMenu==='commission') this.initCommissionChart();
-          if(this.activeMenu==='province16') this.initProvinceChart();
-        });
+
+      /** 刷新当前显示的图表 */
+      _refreshCurrentChart: function () {
+        var m = this.activeMenu;
+        if (m === "volume")     this.initChart();
+        if (m === "amount")     this.initAmountChart();
+        if (m === "avgprice")   this.initAvgPriceChart();
+        if (m === "commission") this.initCommissionChart();
+        if (m === "province16") this.initProvinceChart();
       },
-      handleProvince16Change(){
-        this.$nextTick(()=>{
-          if(this.activeMenu==='province16') this.initProvinceChart();
-        });
-      },
-      async initAmountChart(){
-        const el = document.getElementById("amountChart");
-        if(!el) return;
-        const chart = echarts.init(el);
-        let xAxisData = [];
-        let amtData = [];
-        try{
-          const month = String(this.date || "").slice(0,7);
-          const res = await AnalysisAPI.getAmount(month, { market: this.market });
-          const points = (res && res.points) || [];
-          xAxisData = this._toMD(points.map(p=>p.date));
-          amtData = points.map(p=>Number(p.value));
-        }catch(e){
-          xAxisData = [];
-          amtData = [];
+
+      // ==================== 交易量走势 (countType=1) ====================
+
+      initChart: async function () {
+        var el = document.getElementById("trendChart");
+        if (!el) return;
+        var chart = getChart("trend", el);
+
+        var xAxisData = [];
+        var aData = [];
+        try {
+          var res = await AnalysisAPI.getCountTrend(this.market, 1, this.date, { countDay: 30 });
+          var d = (res && res.data) || {};
+          var trimmed = this._lastN(d.xList, d.yList, 30);
+          xAxisData = this._toMD(trimmed.xList);
+          aData = this._toNums(trimmed.yList);
+        } catch (e) {
+          console.error("交易量走势加载失败:", e);
         }
-        const hasData = Array.isArray(amtData) && amtData.some(v=>Number.isFinite(v));
-        const maxY = Math.max(1000, ...amtData);
-        const niceMax = Math.ceil(maxY / 100) * 100;
-        const option = {
+
+        var hasData = aData.length > 0 && aData.some(function (v) { return Number.isFinite(v); });
+        chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { interval: 0 },
-            axisTick: { alignWithLabel: true, interval: 0 },
+            axisLabel: { fontSize: 11 },
+            axisTick: { alignWithLabel: true },
           },
           yAxis: {
             type: "value",
-            min: 0,
-            max: niceMax,
-            interval: 100,
+            name: "单位：吨",
+            nameTextStyle: { color: "#64748b" },
+            axisLine: { show: true },
+            axisTick: { show: true },
+            axisLabel: { show: hasData },
+            splitLine: { show: true },
+          },
+          series: [{
+            name: "交易量",
+            type: "line",
+            smooth: true,
+            showSymbol: false,
+            sampling: "lttb",
+            lineStyle: { width: 2, color: "#1f8a98" },
+            itemStyle: { color: "#1f8a98" },
+            data: aData,
+          }],
+        });
+      },
+
+      // ==================== 交易额走势 (countType=2) ====================
+
+      initAmountChart: async function () {
+        var el = document.getElementById("amountChart");
+        if (!el) return;
+        var chart = getChart("amount", el);
+
+        var xAxisData = [];
+        var amtData = [];
+        try {
+          var res = await AnalysisAPI.getCountTrend(this.market, 2, this.date, { countDay: 30 });
+          var d = (res && res.data) || {};
+          var trimmed = this._lastN(d.xList, d.yList, 30);
+          xAxisData = this._toMD(trimmed.xList);
+          amtData = this._toNums(trimmed.yList);
+        } catch (e) {
+          console.error("交易额走势加载失败:", e);
+        }
+
+        var hasData = amtData.length > 0 && amtData.some(function (v) { return Number.isFinite(v); });
+        chart.setOption({
+          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          legend: { show: false },
+          grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
+          xAxis: {
+            type: "category",
+            data: xAxisData,
+            axisLabel: { fontSize: 11 },
+            axisTick: { alignWithLabel: true },
+          },
+          yAxis: {
+            type: "value",
             name: "单位：元",
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
@@ -220,128 +328,126 @@
             type: "line",
             smooth: true,
             showSymbol: false,
-            symbol: "none",
             sampling: "lttb",
             lineStyle: { width: 2, color: "#1f8a98" },
             itemStyle: { color: "#1f8a98" },
             data: amtData,
           }],
-        };
-        chart.setOption(option);
-        window.addEventListener("resize", () => chart.resize());
+        });
       },
-      async initAvgPriceChart(){
-        const el = document.getElementById("avgPriceChart");
-        if(!el) return;
-        const chart = echarts.init(el);
-        let xAxisData = [];
-        let avgData = [];
-        try{
-          const month = String(this.date || "").slice(0,7);
-          const res = await AnalysisAPI.getAvgPrice(month, { market: this.market });
-          const series = (res && res.series) || [];
-          const s0 = series[0] || { points: [] };
-          const points = s0.points || [];
-          xAxisData = this._toMD(points.map(p=>p.date));
-          avgData = points.map(p=>Number(p.value));
-        }catch(e){
-          xAxisData = [];
-          avgData = [];
+
+      // ==================== 交易均价走势 (countType=3) ====================
+
+      initAvgPriceChart: async function () {
+        var el = document.getElementById("avgPriceChart");
+        if (!el) return;
+        var chart = getChart("avgprice", el);
+
+        var xAxisData = [];
+        var avgData = [];
+        try {
+          var res = await AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 });
+          var d = (res && res.data) || {};
+          var trimmed = this._lastN(d.xList, d.yList, 30);
+          xAxisData = this._toMD(trimmed.xList);
+          avgData = this._toNums(trimmed.yList);
+        } catch (e) {
+          console.error("交易均价走势加载失败:", e);
         }
-        const hasData = Array.isArray(avgData) && avgData.some(v=>Number.isFinite(v));
-        const maxY = Math.max(30, ...avgData);
-        const niceMax = Math.ceil(maxY / 10) * 10;
-        const option = {
+
+        var hasData = avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); });
+        chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: true, data: ["交易均价"], top: 8, right: 8 },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { interval: 0 },
-            axisTick: { alignWithLabel: true, interval: 0 },
+            axisLabel: { fontSize: 11 },
+            axisTick: { alignWithLabel: true },
           },
           yAxis: {
             type: "value",
-            min: 0,
-            max: niceMax,
-            interval: 10,
-            name: "单位：元",
+            name: "单位：元/公斤",
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: [
-            {
-              name: "交易均价",
-              type: "line",
-              smooth: true,
-              showSymbol: false,
-              symbol: "none",
-              sampling: "lttb",
-              lineStyle: { width: 2, color: "#1f8a98" },
-              itemStyle: { color: "#1f8a98" },
-              data: avgData,
-            },
-          ],
-        };
-        chart.setOption(option);
-        window.addEventListener("resize", () => chart.resize());
+          series: [{
+            name: "交易均价",
+            type: "line",
+            smooth: true,
+            showSymbol: false,
+            sampling: "lttb",
+            lineStyle: { width: 2, color: "#1f8a98" },
+            itemStyle: { color: "#1f8a98" },
+            data: avgData,
+          }],
+        });
       },
-      async initCommissionChart(){
-        const el = document.getElementById("commissionChart");
-        if(!el) return;
-        const chart = echarts.init(el);
-        let xAxisData = [];
-        let rateData = [];
-        let feeData = [];
-        try{
-          const month = String(this.date || "").slice(0,7);
-          const res = await AnalysisAPI.getCommission(month, { market: this.market });
-          const left = (res && res.seriesLeft) || [];
-          const right = (res && res.seriesRight) || [];
-          const lp = left[0] ? left[0].points || [] : [];
-          const rp = right[0] ? right[0].points || [] : [];
-          const base = lp.length ? lp : rp;
-          xAxisData = this._toMD(base.map(p=>p.date));
-          rateData = lp.map(p=>Number(p.value));
-          feeData = rp.map(p=>Number(p.value));
-        }catch(e){
-          xAxisData = [];
-          rateData = [];
-          feeData = [];
+
+      // ==================== 佣金费率与佣金费走势 ====================
+
+      initCommissionChart: async function () {
+        var el = document.getElementById("commissionChart");
+        if (!el) return;
+        var chart = getChart("commission", el);
+
+        var xAxisData = [];
+        var rateData = [];
+        var feeData = [];
+        try {
+          // 并行请求：佣金费率 + 佣金费(countType=4)
+          var results = await Promise.all([
+            AnalysisAPI.getCommissionFeeLvTrend(this.market, this.date, { countDay: 30 }),
+            AnalysisAPI.getCountTrend(this.market, 4, this.date, { countDay: 30 }),
+          ]);
+          var rateD = (results[0] && results[0].data) || {};
+          var feeD  = (results[1] && results[1].data) || {};
+          var rawX = rateD.xList || feeD.xList || [];
+          var rawRateY = rateD.yList || [];
+          var rawFeeY  = feeD.yList || [];
+          var trimmed = this._lastNMulti(rawX, [rawRateY, rawFeeY], 30);
+          xAxisData = this._toMD(trimmed.xList);
+          rateData  = this._toNums(trimmed.yLists[0]);
+          feeData   = this._toNums(trimmed.yLists[1]);
+        } catch (e) {
+          console.error("佣金费走势加载失败:", e);
         }
-        const hasData = (Array.isArray(rateData) && rateData.some(v=>Number.isFinite(v))) || (Array.isArray(feeData) && feeData.some(v=>Number.isFinite(v)));
-        const option = {
+
+        var hasData = (rateData.length > 0 && rateData.some(function (v) { return Number.isFinite(v); }))
+                   || (feeData.length > 0 && feeData.some(function (v) { return Number.isFinite(v); }));
+
+        chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: true, data: ["交易佣金费率", "交易佣金费"], top: 8, right: 8 },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { interval: 0 },
-            axisTick: { alignWithLabel: true, interval: 0 },
+            axisLabel: { fontSize: 11 },
+            axisTick: { alignWithLabel: true },
           },
           yAxis: [
             {
               type: "value",
+              name: "单位：‰",
+              nameTextStyle: { color: "#64748b" },
               axisLine: { show: true },
               axisTick: { show: true },
               axisLabel: { show: hasData },
               splitLine: { show: true },
-              name: "单位：‰",
-              nameTextStyle: { color: "#64748b" },
             },
             {
               type: "value",
+              name: "单位：元",
+              nameTextStyle: { color: "#64748b" },
               axisLine: { show: true },
               axisTick: { show: true },
               axisLabel: { show: hasData },
               splitLine: { show: false },
-              name: "单位：元",
-              nameTextStyle: { color: "#64748b" },
             },
           ],
           series: [
@@ -350,7 +456,6 @@
               type: "line",
               smooth: true,
               showSymbol: false,
-              symbol: "none",
               sampling: "lttb",
               yAxisIndex: 0,
               lineStyle: { width: 2, color: "#1f8a98" },
@@ -362,7 +467,6 @@
               type: "line",
               smooth: true,
               showSymbol: false,
-              symbol: "none",
               sampling: "lttb",
               yAxisIndex: 1,
               lineStyle: { width: 2, color: "#fbbf24" },
@@ -370,81 +474,64 @@
               data: feeData,
             },
           ],
-        };
-        chart.setOption(option);
-        window.addEventListener("resize", () => chart.resize());
+        });
       },
-      async initProvinceChart(){
-        const el = document.getElementById("provinceChart");
-        if(!el) return;
-        const chart = echarts.init(el);
-        let xAxisData = [];
-        let factoryData = [];
-        let marketCleanData = [];
-        if(this.provinceSkeleton){
-          const month = String(this.date || "").slice(0,7);
-          const y = Number(month.slice(0,4));
-          const m = Number(month.slice(5,7));
-          const days = new Date(y, m, 0).getDate();
-          const dates = [];
-          for(let d=1; d<=days; d++){
-            const dd = String(d).padStart(2,"0");
-            dates.push(`${y}-${String(m).padStart(2,"0")}-${dd}`);
-          }
-          xAxisData = this._toMD(dates);
-          factoryData = [];
-          marketCleanData = [];
-        }else{
-          try{
-            const month = String(this.date || "").slice(0,7);
-            const res = await AnalysisAPI.getProvincePrice(this.province16, month, { market: this.market });
-            const series = (res && res.series) || [];
-            const sA = series[0] || { points: [] };
-            const sB = series[1] || { points: [] };
-            const base = (sA.points || []).length ? sA.points : (sB.points || []);
-            xAxisData = this._toMD((base || []).map(p=>p.date));
-            factoryData = (sA.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
-            marketCleanData = (sB.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
-          }catch(e){
-            xAxisData = [];
-            marketCleanData = [];
-            factoryData = [];
-          }
+
+      // ==================== 16省出厂价与市场均价走势 ====================
+
+      initProvinceChart: async function () {
+        var el = document.getElementById("provinceChart");
+        if (!el) return;
+        var chart = getChart("province", el);
+
+        var xAxisData = [];
+        var factoryData = [];
+        var marketCleanData = [];
+        try {
+          var res = await AnalysisAPI.getPriceTrend(this.market, this.province16, this.date, { countDay: 30 });
+          var d = (res && res.data) || {};
+          var rawX = d.xList || [];
+          var rawFactory  = d.provincePriceList || [];
+          var rawMarket   = d.tradePriceList || [];
+          var trimmed = this._lastNMulti(rawX, [rawFactory, rawMarket], 30);
+          xAxisData       = this._toMD(trimmed.xList);
+          factoryData     = this._toNumsNullable(trimmed.yLists[0]);
+          marketCleanData = this._toNumsNullable(trimmed.yLists[1]);
+        } catch (e) {
+          console.error("省份价格走势加载失败:", e);
         }
-        const hasData = (Array.isArray(factoryData) && factoryData.some(v=>v!=null)) || (Array.isArray(marketCleanData) && marketCleanData.some(v=>v!=null));
-        const maxY = this.provinceSkeleton ? 30 : Math.max(30, ...(factoryData.filter(v=>v!=null)), ...(marketCleanData.filter(v=>v!=null)));
-        const niceMax = Math.ceil(maxY / 10) * 10;
-        const option = {
+
+        var hasData = (factoryData.some(function (v) { return v != null; }))
+                   || (marketCleanData.some(function (v) { return v != null; }));
+
+        chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { show: hasData, interval: 0 },
-            axisTick: { show: true, alignWithLabel: true, interval: 0 },
-            axisLine: { show: true }
+            axisLabel: { show: hasData, fontSize: 11 },
+            axisTick: { show: true, alignWithLabel: true },
+            axisLine: { show: true },
           },
           yAxis: {
             type: "value",
-            min: 0,
-            max: niceMax,
-            interval: 10,
-            name: "单位：元",
+            name: "单位：元/公斤",
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: this.provinceSkeleton ? [] : [
+          series: [
             {
               name: "该省平均出厂价",
               type: "line",
               smooth: true,
               showSymbol: false,
-              symbol: "none",
               sampling: "lttb",
+              connectNulls: false,
               lineStyle: { width: 2, color: "#1f8a98" },
               itemStyle: { color: "#1f8a98" },
               data: factoryData,
@@ -454,187 +541,225 @@
               type: "line",
               smooth: true,
               showSymbol: false,
-              symbol: "none",
               sampling: "lttb",
               lineStyle: { width: 2, color: "#fbbf24" },
               itemStyle: { color: "#fbbf24" },
               data: marketCleanData,
             },
           ],
-        };
-        chart.setOption(option);
-        window.addEventListener("resize", () => chart.resize());
+        });
       },
-      async initChart() {
-        const el = document.getElementById("trendChart");
-        if (!el) return;
 
-        const chart = echarts.init(el);
+      // ==================== 报告时间类型 ====================
 
-        let xAxisData = [];
-        let aData = [];
-        try{
-          const month = String(this.date || "").slice(0,7);
-          const res = await AnalysisAPI.getVolume(month, { market: this.market });
-          const points = (res && res.points) || [];
-          xAxisData = this._toMD(points.map(p=>p.date));
-          aData = points.map(p=>Number(p.value));
-        }catch(e){
-          xAxisData = [];
-          aData = [];
-        }
-        const maxY = Math.max(200, ...aData);
-
-        const option = {
-          tooltip: {
-            trigger: "axis",
-            axisPointer: { type: "line" },
-          },
-          legend: { show: false },
-          grid: {
-            left: "3%",
-            right: "4%",
-            bottom: "3%",
-            containLabel: true,
-          },
-          xAxis: {
-            type: "category",
-            data: xAxisData,
-            axisLabel: {
-              interval: 0,
-            },
-            axisTick: {
-              alignWithLabel: true,
-              interval: 0,
-            },
-          },
-          yAxis: {
-            type: "value",
-            max: maxY,
-            name: "单位：吨",
-            nameTextStyle: { color: "#64748b" },
-            axisLine: { show: true },
-            axisTick: { show: true },
-            axisLabel: { show: true },
-            splitLine: { show: true },
-          },
-          series: [{
-            name: "交易量",
-            type: "line",
-            smooth: true,
-            showSymbol: false,
-            symbol: "none",
-            sampling: "lttb",
-            lineStyle: { width: 2, color: "#1f8a98" },
-            itemStyle: { color: "#1f8a98" },
-            data: aData,
-          }],
-        };
-
-        chart.setOption(option);
-
-        window.addEventListener("resize", () => chart.resize());
-      },
-      async loadReportTypes(){
-        try{
-          const marketId = this._mapMarketId(this.market);
-          const res = await AnalysisAPI.getReportDateType(marketId);
-          const list = ((res && res.data) || []);
-          const mapped = Array.isArray(list) ? list.map(it=>({ label: String(it.dictLabel||""), value: String(it.dictValue||"") })) : [];
-          this.reportTypes = mapped;
-          const def = this.reportTypes[0];
-          this.reportTypeValue = def ? def.value : "";
-        }catch(e){
+      loadReportTypes: async function () {
+        try {
+          var res = await AnalysisAPI.getReportDateType(this.market);
+          var list = (res && res.data) || [];
+          var mapped = Array.isArray(list)
+            ? list.map(function (it) {
+                return { label: String(it.dictLabel || ""), value: String(it.dictValue || "") };
+              })
+            : [];
+          // 在前面加上"全部"选项
+          this.reportTypes = [{ label: "全部", value: "" }].concat(mapped);
+          // 默认选中"全部"，展示所有类型报告
+          this.reportTypeValue = "";
+        } catch (e) {
+          console.error("报告类型加载失败:", e);
           this.reportTypes = [
+            { label: "全部", value: "" },
             { label: "周报", value: "1" },
             { label: "月报", value: "2" },
             { label: "季报", value: "3" },
             { label: "半年报", value: "4" },
             { label: "年报", value: "5" },
-            { label: "专报", value: "6" }
+            { label: "专报", value: "6" },
           ];
-          this.reportTypeValue = this.reportTypes[0].value;
+          this.reportTypeValue = "";
         }
       },
-      async fetchReports(){
-        try{
-          const marketId = this._mapMarketId(this.market);
-          const pageNum = this.currentPage;
-          const pageSize = this.pageSize;
-          const rt = this.reportTypeValue;
-          const title = (this.reportKeyword || "").trim();
-          const res = await AnalysisAPI.getCustomReports(marketId, pageNum, pageSize, rt, title);
-          const rows = ((res && res.rows) || []);
-          const total = Number((res && res.total) || 0);
-          this.totalCount = Number.isFinite(total) ? total : 0;
-          this.reports = rows.map((it, idx)=>({
-            id: `${pageNum}-${idx+1}`,
-            name: String(it.reportTitle||""),
-            uploadedAt: String(it.reportTime||""),
-            summary: String(it.reportContent||""),
-            fileUrl: String(it.reportFileUrl||"") || null
-          }));
-        }catch(e){
+
+      // ==================== 报告列表 ====================
+
+      searchReports: function () {
+        this.currentPage = 1;
+        this._allReportsCache = null; // 关键词变化，清除缓存
+        this.fetchReports();
+      },
+
+      setReportType: function (t) {
+        this.reportTypeValue = t;
+        this.currentPage = 1;
+        this._allReportsCache = null; // 类型变化，清除缓存
+        this.fetchReports();
+      },
+
+      /**
+       * 拉取报告列表
+       * - 选择具体类型时：直接调用后端分页接口
+       * - 选择"全部"时：并行请求所有已知类型，合并后客户端分页
+       *   （后端不传 reportType 时查询不稳定，此方案更可靠）
+       */
+      fetchReports: async function () {
+        var pageNum = this.currentPage;
+        var pageSize = this.pageSize;
+        var rt = this.reportTypeValue;
+        var title = (this.reportKeyword || "").trim();
+
+        try {
+          if (rt !== "") {
+            // ---- 具体类型：服务端分页 ----
+            var res = await AnalysisAPI.getCustomReports(this.market, pageNum, pageSize, rt, title);
+            var rows = (res && res.rows) || [];
+            var total = Number((res && res.total) || 0);
+            this.totalCount = Number.isFinite(total) ? total : 0;
+            this._allReportsCache = null; // 清除缓存
+            this.reports = this._mapReportRows(rows, pageNum);
+          } else {
+            // ---- 全部：并行请求各类型 → 合并 → 客户端分页 ----
+            if (this._allReportsCache) {
+              // 翻页时直接用缓存，无需重新请求
+              this.totalCount = this._allReportsCache.length;
+              var start = (pageNum - 1) * pageSize;
+              var pageRows = this._allReportsCache.slice(start, start + pageSize);
+              this.reports = this._mapReportRows(pageRows, pageNum);
+            } else {
+              await this._fetchAllTypes(pageNum, pageSize, title);
+            }
+          }
+        } catch (e) {
+          console.error("报告列表加载失败:", e);
           this.totalCount = 0;
           this.reports = [];
         }
       },
-      calcPageSize() {
+
+      /** "全部"模式：并行请求各报告类型，合并去重后客户端分页 */
+      _fetchAllTypes: async function (pageNum, pageSize, title) {
+        // 取所有已知类型值（排除"全部"本身的空值）
+        var types = this.reportTypes
+          .filter(function (t) { return t.value !== ""; })
+          .map(function (t) { return t.value; });
+
+        var self = this;
+        var promises = types.map(function (type) {
+          // 每个类型取前 50 条（远超实际数量，确保不丢数据）
+          return AnalysisAPI.getCustomReports(self.market, 1, 50, type, title)
+            .catch(function () { return { rows: [], total: 0 }; });
+        });
+
+        var results = await Promise.all(promises);
+
+        // 合并所有结果
+        var allRows = [];
+        results.forEach(function (res) {
+          var rows = (res && res.rows) || [];
+          allRows = allRows.concat(rows);
+        });
+
+        // 按报告时间倒序排序
+        allRows.sort(function (a, b) {
+          return String(b.reportTime || "").localeCompare(String(a.reportTime || ""));
+        });
+
+        // 去重（以 reportTitle + reportTime 为唯一键）
+        var seen = {};
+        allRows = allRows.filter(function (it) {
+          var key = (it.reportTitle || "") + "|" + (it.reportTime || "");
+          if (seen[key]) return false;
+          seen[key] = true;
+          return true;
+        });
+
+        // 客户端分页
+        this.totalCount = allRows.length;
+        this._allReportsCache = allRows;
+        var start = (pageNum - 1) * pageSize;
+        var pageRows = allRows.slice(start, start + pageSize);
+        this.reports = this._mapReportRows(pageRows, pageNum);
+      },
+
+      /** 统一的行数据映射 */
+      _mapReportRows: function (rows, pageNum) {
+        return (rows || []).map(function (it, idx) {
+          return {
+            id: pageNum + "-" + (idx + 1),
+            name: String(it.reportTitle || ""),
+            uploadedAt: String(it.reportTime || ""),
+            summary: String(it.reportContent || ""),
+            fileUrl: it.reportFileUrl ? (APP_CONFIG.BASE_URL + it.reportFileUrl) : "",
+            fileName: String(it.reportFileName || ""),
+          };
+        });
+      },
+
+      // ==================== 分页 ====================
+
+      calcPageSize: function () {
         this.pageSize = 6;
-        const maxPage = Math.max(1, Math.ceil((this.totalCount||0) / this.pageSize));
+        var maxPage = Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));
         this.currentPage = Math.min(this.currentPage, maxPage);
       },
-      nextPage() {
-        const maxPage = Math.max(1, Math.ceil((this.totalCount||0) / this.pageSize));
+
+      nextPage: function () {
+        var maxPage = Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));
         if (this.currentPage < maxPage) {
           this.currentPage++;
           this.fetchReports();
         }
       },
-      prevPage() {
+
+      prevPage: function () {
         if (this.currentPage > 1) {
           this.currentPage--;
           this.fetchReports();
         }
       },
-      preview(r) {
+
+      // ==================== 预览 & 下载 ====================
+
+      preview: function (r) {
         this.previewReport = r;
         this.showPreview = true;
       },
-      closePreview() {
+
+      closePreview: function () {
         this.showPreview = false;
         this.previewReport = null;
       },
-      download(r) {
-        const blob = new Blob(
-          [
-            `报告名称: ${r.name}\n上传时间: ${r.uploadedAt}\n\n摘要:\n${r.summary}\n`,
-          ],
-          { type: "text/plain;charset=utf-8" }
-        );
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${r.name.replace(/\\s+/g, "_")}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
+
+      download: function (r) {
+        if (r.fileUrl) {
+          // 跨域 PDF 直接用 window.open 打开新标签页下载
+          window.open(r.fileUrl, "_blank");
+        } else {
+          var blob = new Blob(
+            ["报告名称: " + r.name + "\n上传时间: " + r.uploadedAt + "\n\n摘要:\n" + r.summary + "\n"],
+            { type: "text/plain;charset=utf-8" }
+          );
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = r.name.replace(/\s+/g, "_") + ".txt";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        }
       },
     },
+
     computed: {
-      totalPages() {
-        return Math.max(1, Math.ceil((this.totalCount||0) / this.pageSize));
+      totalPages: function () {
+        return Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));
       },
-      pageReports() {
-        const page = this.reports.slice();
+      pageReports: function () {
+        var page = this.reports.slice();
         if (page.length < this.pageSize) {
-          const need = this.pageSize - page.length;
-          for (let i = 0; i < need; i++) {
-            page.push({
-              id: `ph-${i + 1}`,
-              placeholder: true,
-            });
+          var need = this.pageSize - page.length;
+          for (var i = 0; i < need; i++) {
+            page.push({ id: "ph-" + (i + 1), placeholder: true });
           }
         }
         return page;

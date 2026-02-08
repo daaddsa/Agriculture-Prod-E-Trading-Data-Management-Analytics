@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>Mock 测试 - geo + geoIndex + FUN formatter 模拟大屏</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a1a3a; color: #fff; font-family: "Microsoft YaHei", sans-serif; }
+    .header { text-align: center; padding: 12px 0 6px; }
+    .header h2 { font-size: 20px; color: #00f7ff; letter-spacing: 3px; }
+    .header p { font-size: 12px; color: #8ab4f8; margin-top: 4px; }
+    .toolbar {
+      display: flex; justify-content: center; gap: 12px;
+      padding: 8px 0; flex-wrap: wrap;
+    }
+    .toolbar button {
+      padding: 8px 20px; border: 1px solid #00f7ff; border-radius: 4px;
+      background: rgba(0, 80, 200, 0.3); color: #00f7ff; cursor: pointer;
+      font-size: 13px; transition: all 0.2s;
+    }
+    .toolbar button:hover { background: rgba(0, 120, 255, 0.5); }
+    .toolbar button.active { background: rgba(0, 200, 255, 0.4); color: #fff; font-weight: bold; }
+    #chart { width: 100%; height: calc(100vh - 110px); min-height: 500px; }
+    #log {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.85); color: #0f0; font-size: 12px;
+      padding: 6px 12px; max-height: 80px; overflow-y: auto;
+      font-family: monospace; border-top: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Mock 模拟大屏架构：geo + geoIndex + FUN formatter</h2>
+    <p>完全模拟 app.data.readable.js 中的 geo.label.formatter 闭包查找方案，点击下方按钮切换数据</p>
+  </div>
+
+  <div class="toolbar">
+    <button onclick="loadData('partial')" id="btn-partial" class="active">部分省份（11个）</button>
+    <button onclick="loadData('full')" id="btn-full">全部省份（34个）</button>
+    <button onclick="loadData('empty')" id="btn-empty">无数据</button>
+    <button onclick="loadData('api')" id="btn-api">模拟后端接口</button>
+  </div>
+
+  <div id="chart"></div>
+  <div id="log"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script>
+    // ========== Mock 数据集 ==========
+    var DATA_PARTIAL = [
+      { name: "北京", value: 590 },
+      { name: "上海", value: 1038 },
+      { name: "河南", value: 612 },
+      { name: "安徽", value: 860 },
+      { name: "山东", value: 939 },
+      { name: "江苏", value: 1131 },
+      { name: "浙江", value: 904 },
+      { name: "湖北", value: 552 },
+      { name: "福建", value: 618 },
+      { name: "广东", value: 1298 },
+      { name: "四川", value: 544 }
+    ];
+
+    var DATA_FULL = [
+      {name:"北京",value:154},{name:"天津",value:113},{name:"上海",value:140},
+      {name:"重庆",value:275},{name:"河北",value:213},{name:"河南",value:183},
+      {name:"云南",value:111},{name:"辽宁",value:19},{name:"黑龙江",value:15},
+      {name:"湖南",value:169},{name:"安徽",value:860},{name:"山东",value:539},
+      {name:"新疆",value:4},{name:"江苏",value:1131},{name:"浙江",value:904},
+      {name:"江西",value:336},{name:"湖北",value:252},{name:"广西",value:133},
+      {name:"甘肃",value:117},{name:"山西",value:119},{name:"内蒙古",value:27},
+      {name:"陕西",value:122},{name:"吉林",value:14},{name:"福建",value:418},
+      {name:"贵州",value:35},{name:"广东",value:998},{name:"青海",value:14},
+      {name:"西藏",value:20},{name:"四川",value:44},{name:"宁夏",value:24},
+      {name:"海南",value:22},{name:"台湾",value:13},{name:"香港",value:5},
+      {name:"澳门",value:5}
+    ];
+
+    // ========== 模拟后端 API ==========
+    // 模拟 tradeDataProvinces 接口，随机返回 5~15 个省份
+    function mockApiResponse() {
+      var allProvinces = [
+        "北京","天津","上海","重庆","河北","河南","云南","辽宁","黑龙江",
+        "湖南","安徽","山东","新疆","江苏","浙江","江西","湖北","广西",
+        "甘肃","山西","内蒙古","陕西","吉林","福建","贵州","广东","青海",
+        "西藏","四川","宁夏","海南","台湾","香港","澳门"
+      ];
+      // 随机选 5~15 个
+      var count = 5 + Math.floor(Math.random() * 11);
+      var shuffled = allProvinces.sort(function() { return 0.5 - Math.random(); });
+      var selected = shuffled.slice(0, count);
+      return selected.map(function(name) {
+        return { name: name, value: Math.floor(Math.random() * 1500) + 10 };
+      });
+    }
+
+    // ========== 日志 ==========
+    function log(msg) {
+      var el = document.getElementById('log');
+      var time = new Date().toLocaleTimeString();
+      el.innerHTML = '<div>[' + time + '] ' + msg + '</div>' + el.innerHTML;
+      if (el.children.length > 8) el.removeChild(el.lastChild);
+      console.log('[Mock]', msg);
+    }
+
+    // ========== 图表 ==========
+    var myChart = null;
+
+    function buildGeoLabelFormatter(data) {
+      // 完全模拟大屏 FUN: 闭包的逻辑
+      var m = {};
+      (data || []).forEach(function(d) { m[d.name] = d.value; });
+      return function(p) {
+        var v = m[p.name];
+        if (v == null || isNaN(v)) return '';
+        return p.name + '\n' + v;
+      };
+    }
+
+    function buildEmphasisFormatter(data) {
+      var m = {};
+      (data || []).forEach(function(d) { m[d.name] = d.value; });
+      return function(p) {
+        var v = m[p.name];
+        if (v == null || isNaN(v)) return p.name;
+        return p.name + '\n交易量：' + v;
+      };
+    }
+
+    function initChart(geoJson) {
+      echarts.registerMap('china', geoJson);
+      myChart = echarts.init(document.getElementById('chart'));
+      window.addEventListener('resize', function() { myChart.resize(); });
+      loadData('partial');
+    }
+
+    function loadData(type) {
+      if (!myChart) return;
+
+      // 切换按钮样式
+      document.querySelectorAll('.toolbar button').forEach(function(b) { b.classList.remove('active'); });
+      var btnId = 'btn-' + type;
+      var btn = document.getElementById(btnId);
+      if (btn) btn.classList.add('active');
+
+      var data;
+      switch (type) {
+        case 'partial': data = DATA_PARTIAL; break;
+        case 'full':    data = DATA_FULL; break;
+        case 'empty':   data = []; break;
+        case 'api':     data = mockApiResponse(); break;
+        default:        data = DATA_PARTIAL;
+      }
+
+      var maxVal = data.length > 0 ? Math.max.apply(null, data.map(function(d) { return d.value; })) : 100;
+      var provinceNames = data.map(function(d) { return d.name; }).join('、');
+
+      log('加载 [' + type + '] 数据：' + data.length + ' 个省份' +
+          (data.length <= 15 ? ' → ' + provinceNames : ''));
+
+      // ====== 完全模拟大屏架构：geo + series[geoIndex=0] ======
+      var option = {
+        geo: {
+          map: "china",
+          roam: false,
+          show: true,
+          zoom: 1.15,
+          label: {
+            normal: {
+              show: true,
+              color: "#fff",
+              fontSize: 11,
+              // 核心：闭包 formatter，从 data 中查找值，无数据返回空字符串
+              formatter: buildGeoLabelFormatter(data),
+              textBorderColor: "rgba(0, 0, 0, 0.6)",
+              textBorderWidth: 2
+            },
+            emphasis: {
+              show: true,
+              color: "#00f7ff",
+              fontSize: 14,
+              fontWeight: "bold",
+              formatter: buildEmphasisFormatter(data)
+            }
+          },
+          silent: false,
+          itemStyle: {
+            normal: {
+              areaColor: "#0a2e5c",
+              borderColor: "rgba(0,255,255,.4)",
+              borderWidth: 1
+            },
+            emphasis: {
+              areaColor: "rgba(0, 200, 255, 0.35)",
+              borderColor: "rgba(0, 255, 255, 0.9)",
+              borderWidth: 2
+            }
+          },
+          regions: [{
+            name: "南海诸岛",
+            itemStyle: {
+              normal: {
+                areaColor: "rgba(0, 20, 60, 0.8)",
+                borderColor: "rgba(0,255,255,.6)",
+                borderWidth: 1
+              }
+            },
+            label: { normal: { show: false }, emphasis: { show: false } }
+          }],
+          layoutSize: "100%",
+          layoutCenter: ["50%", "52%"]
+        },
+
+        series: [{
+          name: "交易量",
+          type: "map",
+          geoIndex: 0,
+          data: data
+        }],
+
+        tooltip: {
+          trigger: "item",
+          show: true,
+          padding: 12,
+          backgroundColor: "rgba(0, 80, 209, 0.85)",
+          borderColor: "rgba(99, 138, 255, 1)",
+          borderWidth: 2,
+          textStyle: { color: "#fff", fontSize: 15, fontWeight: "bolder",
+                       textBorderColor: "#000", textBorderWidth: 2 },
+          formatter: "{b}<br/>交易量：{c}"
+        },
+
+        visualMap: {
+          top: 60, left: 26, show: true,
+          min: 0, max: maxVal,
+          text: ["高", "低"], orient: "vertical",
+          inRange: { color: ["#0a2e5c", "#1a5ca8", "#3a9cdd", "#7dd6a0", "#A5CC82"] },
+          textStyle: { color: "#fff", fontSize: 14 },
+          seriesIndex: [0]
+        }
+      };
+
+      // 使用 notMerge 确保完整替换 option
+      myChart.setOption(option, true);
+    }
+
+    // ========== 加载地图 ==========
+    fetch('./js/china.json')
+      .then(function(r) { return r.json(); })
+      .then(function(geoJson) {
+        log('本地 china.json 加载成功');
+        initChart(geoJson);
+      })
+      .catch(function(err) {
+        log('本地加载失败，尝试 CDN...');
+        fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+          .then(function(r) { return r.json(); })
+          .then(function(geoJson) {
+            log('CDN china.json 加载成功');
+            initChart(geoJson);
+          });
+      });
+  </script>
+</body>
+</html>
