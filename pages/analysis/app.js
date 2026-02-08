@@ -50,6 +50,7 @@
         ],
         provinces: [],
         province16: "河南",
+        provinceSkeleton: true,
         reportKeyword: "",
         minDate: "",
         maxDate: "",
@@ -189,6 +190,7 @@
           xAxisData = [];
           amtData = [];
         }
+        const hasData = Array.isArray(amtData) && amtData.some(v=>Number.isFinite(v));
         const maxY = Math.max(1000, ...amtData);
         const niceMax = Math.ceil(maxY / 100) * 100;
         const option = {
@@ -210,7 +212,7 @@
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
-            axisLabel: { show: true },
+            axisLabel: { show: hasData },
             splitLine: { show: true },
           },
           series: [{
@@ -246,6 +248,7 @@
           xAxisData = [];
           avgData = [];
         }
+        const hasData = Array.isArray(avgData) && avgData.some(v=>Number.isFinite(v));
         const maxY = Math.max(30, ...avgData);
         const niceMax = Math.ceil(maxY / 10) * 10;
         const option = {
@@ -267,7 +270,7 @@
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
-            axisLabel: { show: true },
+            axisLabel: { show: hasData },
             splitLine: { show: true },
           },
           series: [
@@ -310,6 +313,7 @@
           rateData = [];
           feeData = [];
         }
+        const hasData = (Array.isArray(rateData) && rateData.some(v=>Number.isFinite(v))) || (Array.isArray(feeData) && feeData.some(v=>Number.isFinite(v)));
         const option = {
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: true, data: ["交易佣金费率", "交易佣金费"], top: 8, right: 8 },
@@ -325,7 +329,7 @@
               type: "value",
               axisLine: { show: true },
               axisTick: { show: true },
-              axisLabel: { show: true },
+              axisLabel: { show: hasData },
               splitLine: { show: true },
               name: "单位：‰",
               nameTextStyle: { color: "#64748b" },
@@ -334,7 +338,7 @@
               type: "value",
               axisLine: { show: true },
               axisTick: { show: true },
-              axisLabel: { show: true },
+              axisLabel: { show: hasData },
               splitLine: { show: false },
               name: "单位：元",
               nameTextStyle: { color: "#64748b" },
@@ -377,22 +381,38 @@
         let xAxisData = [];
         let factoryData = [];
         let marketCleanData = [];
-        try{
+        if(this.provinceSkeleton){
           const month = String(this.date || "").slice(0,7);
-          const res = await AnalysisAPI.getProvincePrice(this.province16, month, { market: this.market });
-          const series = (res && res.series) || [];
-          const sA = series[0] || { points: [] };
-          const sB = series[1] || { points: [] };
-          const base = (sA.points || []).length ? sA.points : (sB.points || []);
-          xAxisData = this._toMD((base || []).map(p=>p.date));
-          factoryData = (sA.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
-          marketCleanData = (sB.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
-        }catch(e){
-          xAxisData = [];
-          marketCleanData = [];
+          const y = Number(month.slice(0,4));
+          const m = Number(month.slice(5,7));
+          const days = new Date(y, m, 0).getDate();
+          const dates = [];
+          for(let d=1; d<=days; d++){
+            const dd = String(d).padStart(2,"0");
+            dates.push(`${y}-${String(m).padStart(2,"0")}-${dd}`);
+          }
+          xAxisData = this._toMD(dates);
           factoryData = [];
+          marketCleanData = [];
+        }else{
+          try{
+            const month = String(this.date || "").slice(0,7);
+            const res = await AnalysisAPI.getProvincePrice(this.province16, month, { market: this.market });
+            const series = (res && res.series) || [];
+            const sA = series[0] || { points: [] };
+            const sB = series[1] || { points: [] };
+            const base = (sA.points || []).length ? sA.points : (sB.points || []);
+            xAxisData = this._toMD((base || []).map(p=>p.date));
+            factoryData = (sA.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
+            marketCleanData = (sB.points || []).map(p=>p.value===null || p.value==="" ? null : Number(p.value));
+          }catch(e){
+            xAxisData = [];
+            marketCleanData = [];
+            factoryData = [];
+          }
         }
-        const maxY = Math.max(30, ...(factoryData.filter(v=>v!=null)), ...(marketCleanData.filter(v=>v!=null)));
+        const hasData = (Array.isArray(factoryData) && factoryData.some(v=>v!=null)) || (Array.isArray(marketCleanData) && marketCleanData.some(v=>v!=null));
+        const maxY = this.provinceSkeleton ? 30 : Math.max(30, ...(factoryData.filter(v=>v!=null)), ...(marketCleanData.filter(v=>v!=null)));
         const niceMax = Math.ceil(maxY / 10) * 10;
         const option = {
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
@@ -401,8 +421,9 @@
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { interval: 0 },
-            axisTick: { alignWithLabel: true, interval: 0 },
+            axisLabel: { show: hasData, interval: 0 },
+            axisTick: { show: true, alignWithLabel: true, interval: 0 },
+            axisLine: { show: true }
           },
           yAxis: {
             type: "value",
@@ -413,10 +434,10 @@
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
-            axisLabel: { show: true },
+            axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: [
+          series: this.provinceSkeleton ? [] : [
             {
               name: "该省平均出厂价",
               type: "line",
