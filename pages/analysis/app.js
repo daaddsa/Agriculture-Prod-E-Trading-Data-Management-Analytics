@@ -136,6 +136,7 @@
                 self.market = ids[0];
               }
               self.$nextTick(self._refreshCurrentChart.bind(self));
+              self.$nextTick(self.fetchReports.bind(self));
             }
           })
           .catch(function () {
@@ -216,6 +217,7 @@
         this.activeMenu = key;
         var self = this;
         this.$nextTick(function () {
+          if (key === "reports")    self.fetchReports();
           if (key === "volume")     self.initChart();
           if (key === "amount")     self.initAmountChart();
           if (key === "avgprice")   self.initAvgPriceChart();
@@ -637,8 +639,8 @@
           if (rt !== "") {
             // ---- 具体类型：服务端分页 ----
             var res = await AnalysisAPI.getCustomReports(this.market, pageNum, pageSize, rt, title);
-            var rows = (res && res.rows) || [];
-            var total = Number((res && res.total) || 0);
+            var rows = (res && (res.rows || (res.data && res.data.rows))) || [];
+            var total = Number((res && (res.total || (res.data && res.data.total))) || 0);
             this.totalCount = Number.isFinite(total) ? total : 0;
             this._allReportsCache = null; // 清除缓存
             this.reports = this._mapReportRows(rows, pageNum);
@@ -680,7 +682,7 @@
         // 合并所有结果
         var allRows = [];
         results.forEach(function (res) {
-          var rows = (res && res.rows) || [];
+          var rows = (res && (res.rows || (res.data && res.data.rows))) || [];
           allRows = allRows.concat(rows);
         });
 
