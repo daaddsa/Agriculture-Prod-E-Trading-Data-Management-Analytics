@@ -6174,7 +6174,7 @@ const DS_CONFIG = {
     }
   },
   "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f": {
-    "x": 1590,
+    "x": 1572,
     "y": 108,
     "isWarning": false,
     "_key": "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f",
@@ -6210,7 +6210,7 @@ const DS_CONFIG = {
     }
   },
   "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7": {
-    "x": 1624,
+    "x": 1606,
     "y": 117,
     "isWarning": false,
     "_key": "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7",
@@ -6259,7 +6259,7 @@ const DS_CONFIG = {
     }
   },
   "cpm366b3d38-0dff-487b-9cde-b962629f6466": {
-    "x": 1757,
+    "x": 1739,
     "y": 107,
     "isWarning": false,
     "_key": "cpm366b3d38-0dff-487b-9cde-b962629f6466",
@@ -6295,14 +6295,14 @@ const DS_CONFIG = {
     }
   },
   "cpm72cfdd7d-6978-415a-8a20-caa827a7d277": {
-    "x": 1394,
-    "y": 100,
+    "x": 1406,
+    "y": 108,
     "isWarning": false,
     "_key": "cpm72cfdd7d-6978-415a-8a20-caa827a7d277",
     "creater": "DecorationElement",
     "render": "DecorationEl",
-    "width": 190,
-    "height": 78,
+    "width": 167,
+    "height": 64,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -6319,8 +6319,8 @@ const DS_CONFIG = {
     "title": null,
     "decorationType": "11",
     "style": {
-      "width": 235,
-      "height": 74,
+      "width": 200,
+      "height": 60,
       "colors": [],
       "fontSize": 16,
       "color": "#fff",
@@ -6331,7 +6331,7 @@ const DS_CONFIG = {
     }
   },
   "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20": {
-    "x": 1793,
+    "x": 1775,
     "y": 117,
     "isWarning": false,
     "_key": "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20",
@@ -6378,14 +6378,14 @@ const DS_CONFIG = {
     }
   },
   "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f": {
-    "x": 1430,
-    "y": 112,
+    "x": 1442,
+    "y": 117,
     "isWarning": false,
     "_key": "cpm1fa337a8-031e-4dc4-8dd6-cc04cda45b4f",
     "creater": "TextElement",
     "render": "TextEl",
-    "width": 170,
-    "height": 56,
+    "width": 148,
+    "height": 50,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -6398,15 +6398,15 @@ const DS_CONFIG = {
     "isLocal": true,
     "style": {
       "text": "实时交易",
-      "fontSize": 28,
+      "fontSize": 24,
       "url": "",
       "localFilePath": "",
-      "fontWeight": "bold",
+      "fontWeight": "normal",
       "fontFamily": "DouyinSansBold",
       "color": "rgba(250, 251, 252, 1)",
       "background": "rgba(40, 44, 52,0)",
       "textAlign": "left",
-      "_lineHeight": 54,
+      "_lineHeight": 48,
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0,
@@ -6422,8 +6422,8 @@ const DS_CONFIG = {
       "isTextStroke": false,
       "textStrokeColor": "#ff0000ff",
       "textStrokeBlur": 1,
-      "lineHeight": 54,
-      "height": 56
+      "lineHeight": 48,
+      "height": 50
     }
   }
 };
