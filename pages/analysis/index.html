@@ -27,7 +27,7 @@
           </div>
         </div>
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab">实时交易</a>
+          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab nav-tab-primary">实时交易</a>
           <a :href="'../history/index.html?marketId=' + market" class="nav-tab">历史查询</a>
           <a href="#" class="nav-tab active">数据分析</a>
         </nav>
@@ -58,6 +58,13 @@
 
           <div class="chart-card" v-if="activeMenu==='avgprice'">
             <h3 class="chart-title">交易均价趋势图（近30天）</h3>
+            <div class="chart-toolbar">
+              <div></div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon avgprice-solid"></span>交易均价</div>
+                <div class="legend-item"><span class="legend-icon avgprice-dashed"></span>交易均价（不含异常交易）</div>
+              </div>
+            </div>
             <div id="avgPriceChart"></div>
             <div class="insights">暂无解读</div>
           </div>

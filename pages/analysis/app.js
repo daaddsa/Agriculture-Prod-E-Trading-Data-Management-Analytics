@@ -97,7 +97,7 @@
         currentPage: 1,
         showPreview: false,
         previewReport: null,
-        activeMenu: "reports",
+        activeMenu: "volume",
       };
     },
 
@@ -115,6 +115,13 @@
         .catch(function () { self.fetchReports(); });
       this.calcPageSize();
       window.addEventListener("resize", this.calcPageSize);
+
+      // 默认显示交易量走势图表
+      this.$nextTick(function () {
+        requestAnimationFrame(function () {
+          self.initChart();
+        });
+      });
     },
 
     methods: {
@@ -213,12 +220,16 @@
       selectMenu: function (key) {
         this.activeMenu = key;
         var self = this;
+        // $nextTick 确保 Vue 完成 DOM 更新（v-if 插入元素）
+        // requestAnimationFrame 确保浏览器完成布局计算，容器拥有正确尺寸
         this.$nextTick(function () {
-          if (key === "volume")     self.initChart();
-          if (key === "amount")     self.initAmountChart();
-          if (key === "avgprice")   self.initAvgPriceChart();
-          if (key === "commission") self.initCommissionChart();
-          if (key === "province16") self.initProvinceChart();
+          requestAnimationFrame(function () {
+            if (key === "volume")     self.initChart();
+            if (key === "amount")     self.initAmountChart();
+            if (key === "avgprice")   self.initAvgPriceChart();
+            if (key === "commission") self.initCommissionChart();
+            if (key === "province16") self.initProvinceChart();
+          });
         });
       },
 
@@ -264,7 +275,7 @@
           },
           yAxis: {
             type: "value",
-            name: "单位：吨",
+            name: "单位：公斤",
             nameTextStyle: { color: "#64748b" },
             axisLine: { show: true },
             axisTick: { show: true },
@@ -282,6 +293,7 @@
             data: aData,
           }],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 交易额走势 (countType=2) ====================
@@ -334,9 +346,10 @@
             data: amtData,
           }],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
-      // ==================== 交易均价走势 (countType=3) ====================
+      // ==================== 交易均价走势 (countType=3 交易均价 + countType=4 交易均价剔除异常交易) ====================
 
       initAvgPriceChart: async function () {
         var el = document.getElementById("avgPriceChart");
@@ -345,20 +358,47 @@
 
         var xAxisData = [];
         var avgData = [];
+        var avgCleanData = [];
         try {
-          var res = await AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 });
-          var d = (res && res.data) || {};
-          var trimmed = this._lastN(d.xList, d.yList, 30);
-          xAxisData = this._toMD(trimmed.xList);
-          avgData = this._toNums(trimmed.yList);
+          // 并行请求：交易均价(countType=3) + 交易均价剔除异常交易(countType=4)
+          // 每个 Promise 独立 catch，避免一个失败导致另一个数据也丢失
+          var results = await Promise.all([
+            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 })
+              .catch(function (e) { console.warn("交易均价(countType=3)请求失败:", e); return null; }),
+            AnalysisAPI.getCountTrend(this.market, 4, this.date, { countDay: 30 })
+              .catch(function (e) { console.warn("交易均价剔除异常(countType=4)请求失败:", e); return null; }),
+          ]);
+
+          var avgD      = (results[0] && results[0].data) || {};
+          var avgCleanD = (results[1] && results[1].data) || {};
+          console.log("[交易均价] countType=3 响应 data:", JSON.stringify(avgD));
+          console.log("[交易均价] countType=4 响应 data:", JSON.stringify(avgCleanD));
+
+          // 优先用 countType=3 的 xList，备用 countType=4 的
+          var rawX = avgD.xList || avgCleanD.xList || [];
+          var rawAvgY      = avgD.yList || [];
+          var rawAvgCleanY = avgCleanD.yList || [];
+
+          // 如果两个接口返回不同长度的 xList，用较长的那个做对齐
+          if (avgCleanD.xList && avgCleanD.xList.length > rawX.length) {
+            rawX = avgCleanD.xList;
+          }
+
+          var trimmed = this._lastNMulti(rawX, [rawAvgY, rawAvgCleanY], 30);
+          xAxisData    = this._toMD(trimmed.xList);
+          avgData      = this._toNums(trimmed.yLists[0]);
+          avgCleanData = this._toNums(trimmed.yLists[1]);
+
+          console.log("[交易均价] avgData长度:", avgData.length, "avgCleanData长度:", avgCleanData.length);
         } catch (e) {
           console.error("交易均价走势加载失败:", e);
         }
 
-        var hasData = avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); });
+        var hasData = (avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); }))
+                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));
         chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-          legend: { show: true, data: ["交易均价"], top: 8, right: 8 },
+          legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
@@ -375,17 +415,30 @@
             axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: [{
-            name: "交易均价",
-            type: "line",
-            smooth: true,
-            showSymbol: false,
-            sampling: "lttb",
-            lineStyle: { width: 2, color: "#1f8a98" },
-            itemStyle: { color: "#1f8a98" },
-            data: avgData,
-          }],
+          series: [
+            {
+              name: "交易均价",
+              type: "line",
+              smooth: true,
+              showSymbol: false,
+              sampling: "lttb",
+              lineStyle: { width: 2, color: "#1f8a98" },
+              itemStyle: { color: "#1f8a98" },
+              data: avgData,
+            },
+            {
+              name: "交易均价剔除异常交易",
+              type: "line",
+              smooth: true,
+              showSymbol: false,
+              sampling: "lttb",
+              lineStyle: { width: 2, color: "#f97316", type: "dashed" },
+              itemStyle: { color: "#f97316" },
+              data: avgCleanData,
+            },
+          ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 佣金费率与佣金费走势 ====================
@@ -399,10 +452,10 @@
         var rateData = [];
         var feeData = [];
         try {
-          // 并行请求：佣金费率 + 佣金费(countType=4)
+          // 并行请求：佣金费率 + 交易佣金费(countType=5)
           var results = await Promise.all([
             AnalysisAPI.getCommissionFeeLvTrend(this.market, this.date, { countDay: 30 }),
-            AnalysisAPI.getCountTrend(this.market, 4, this.date, { countDay: 30 }),
+            AnalysisAPI.getCountTrend(this.market, 5, this.date, { countDay: 30 }),
           ]);
           var rateD = (results[0] && results[0].data) || {};
           var feeD  = (results[1] && results[1].data) || {};
@@ -442,7 +495,7 @@
             },
             {
               type: "value",
-              name: "单位：元",
+              name: "单位：万元",
               nameTextStyle: { color: "#64748b" },
               axisLine: { show: true },
               axisTick: { show: true },
@@ -475,6 +528,7 @@
             },
           ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 16省出厂价与市场均价走势 ====================
@@ -548,6 +602,7 @@
             },
           ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 报告时间类型 ====================

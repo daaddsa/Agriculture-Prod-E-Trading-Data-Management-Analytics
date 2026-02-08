@@ -7,7 +7,7 @@
   var get = ApiHelper.get;
 
   window.AnalysisAPI = {
-    /** 交易量/交易额趋势（countType: 1=交易量, 2=交易额, 3=均价, 4=交易佣金费） */
+    /** 交易量/交易额趋势（countType: 1=交易量, 2=交易额, 3=交易均价, 4=交易均价剔除异常交易, 5=交易佣金费） */
     getCountTrend: function (marketId, countType, paramsDate, extra) {
       return get("/analysisData/countTrend", Object.assign(
         { marketId: marketId, countType: countType, paramsDate: paramsDate },

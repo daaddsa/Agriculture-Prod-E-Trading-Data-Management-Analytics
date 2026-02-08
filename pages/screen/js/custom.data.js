@@ -447,52 +447,50 @@ function injectUnits() {
         if (old) old.remove();
     }
 
-    UNIT_LABELS.forEach(({ dataSetName, unit }) => {
-        const value = dataSet[dataSetName];
-        if (value == null) return;
+    // ---- 精确定位策略 ----
+    // 框架 NumElement 渲染为 .number-el > .val 结构
+    // 页面共 6 个 NumElement，按 Y 坐标从上到下依次对应 UNIT_LABELS 中的 6 个指标
+    // 不再使用文本匹配（同值指标、地图标签等会导致误匹配），改用位置排序
 
-        const valueStr = String(value);
+    const numberEls = Array.from(app.querySelectorAll('.number-el'));
+    if (numberEls.length === 0) return;
 
-        // 遍历所有可能包含数字的元素
-        const candidates = app.querySelectorAll('div, span, p');
-        for (const el of candidates) {
-            // 只看"叶子"元素：排除我们注入的 span 后，不应再有其他子元素
-            const realChildren = Array.from(el.children).filter(
-                child => !child.classList.contains(UNIT_MARKER_CLASS)
-            );
-            if (realChildren.length > 0) continue;
+    // 按视觉位置（Y 坐标）排序，对应从上到下的指标顺序
+    numberEls.sort((a, b) => {
+        const ra = a.getBoundingClientRect();
+        const rb = b.getBoundingClientRect();
+        return ra.top - rb.top;
+    });
 
-            // 提取纯文本（排除已注入的 unit span）
-            let rawText = '';
-            for (const node of el.childNodes) {
-                if (node.nodeType === 3) { // TEXT_NODE
-                    rawText += node.textContent;
-                }
-            }
-            rawText = rawText.trim();
+    // 逐一匹配：UNIT_LABELS 已按从上到下顺序定义
+    UNIT_LABELS.forEach(({ dataSetName, unit }, idx) => {
+        if (idx >= numberEls.length) return;
 
-            if (rawText !== valueStr) continue;
+        const numEl = numberEls[idx];
+        // .val 是框架渲染数字的子元素
+        const valEl = numEl.querySelector('.val') || numEl;
 
-            // 匹配成功！检查是否已存在正确的 unit span
-            let unitSpan = el.querySelector('.' + UNIT_MARKER_CLASS);
-            if (unitSpan && unitSpan.textContent === unit) return; // 已经是正确的
+        // 检查是否已存在正确的 unit span
+        let unitSpan = valEl.querySelector('.' + UNIT_MARKER_CLASS);
+        if (unitSpan && unitSpan.textContent === unit) return; // 已正确，无需重复操作
 
-            // 通过 CSS class 强制左对齐 + 允许溢出（!important 保证不被框架覆盖）
-            el.classList.add(NUM_LEFT_ALIGN_CLASS);
-            if (el.parentElement) el.parentElement.classList.add(NUM_LEFT_ALIGN_CLASS);
-            if (el.parentElement && el.parentElement.parentElement) {
-                el.parentElement.parentElement.classList.add(NUM_LEFT_ALIGN_CLASS);
-            }
-
-            // 创建或更新 unit span
-            if (!unitSpan) {
-                unitSpan = document.createElement('span');
-                unitSpan.className = UNIT_MARKER_CLASS;
-                el.appendChild(unitSpan);
-            }
-            unitSpan.textContent = unit;
-            return; // 这个指标处理完毕
+        // 通过 CSS class 强制左对齐 + 允许溢出（!important 保证不被框架覆盖）
+        valEl.classList.add(NUM_LEFT_ALIGN_CLASS);
+        numEl.classList.add(NUM_LEFT_ALIGN_CLASS);
+        if (numEl.parentElement) {
+            numEl.parentElement.classList.add(NUM_LEFT_ALIGN_CLASS);
         }
+        if (numEl.parentElement && numEl.parentElement.parentElement) {
+            numEl.parentElement.parentElement.classList.add(NUM_LEFT_ALIGN_CLASS);
+        }
+
+        // 创建或更新 unit span
+        if (!unitSpan) {
+            unitSpan = document.createElement('span');
+            unitSpan.className = UNIT_MARKER_CLASS;
+            valEl.appendChild(unitSpan);
+        }
+        unitSpan.textContent = unit;
     });
 }
 
