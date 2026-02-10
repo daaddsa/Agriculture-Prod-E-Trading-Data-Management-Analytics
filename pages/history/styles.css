@@ -155,6 +155,18 @@ body[data-pattern="off"] {
   margin-bottom: 24px;
 }
 
+.chart-card {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent grid item from growing with content */
+  overflow: hidden;
+}
+
 .price-card {
   background: var(--color-surface);
   border-radius: 8px;
@@ -163,6 +175,8 @@ body[data-pattern="off"] {
   height: var(--top-card-height);
   display: flex;
   flex-direction: column;
+  min-width: 0; /* Prevent grid item from growing with content */
+  overflow: hidden; /* Ensure content stays inside */
 }
 
 .price-list-container {
@@ -178,6 +192,8 @@ body[data-pattern="off"] {
   display: flex;
   flex-direction: column;
   height: var(--top-card-height);
+  min-width: 0; /* Prevent grid item from growing with content */
+  overflow: hidden;
 }
 
 .abnormal-table-scroll {

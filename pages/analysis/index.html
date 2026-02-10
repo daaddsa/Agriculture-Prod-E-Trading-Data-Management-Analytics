@@ -6,8 +6,8 @@
     <title>批发市场采购分析仪表板</title>
     <link rel="icon" href="../../shared/assets/logo/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="../../shared/vendor/vue.global.js"></script>
+    <script src="../../shared/vendor/echarts.min.js"></script>
   </head>
   <body data-pattern="on">
     <div id="app">
@@ -23,11 +23,11 @@
           
           <div class="filter-group">
             <span class="filter-label">日期</span>
-            <input type="date" class="nav-datepicker-header" v-model="date" @change="handleDateChange" :min="minDate" :max="maxDate" />
+            <div class="nav-datepicker-header readonly-date">{{ date }}</div>
           </div>
         </div>
         <nav class="nav-tabs" aria-label="顶部导航">
-          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab">实时交易</a>
+          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab nav-tab-primary">实时交易</a>
           <a :href="'../history/index.html?marketId=' + market" class="nav-tab">历史查询</a>
           <a href="#" class="nav-tab active">数据分析</a>
         </nav>
@@ -47,24 +47,50 @@
           <div class="chart-card" v-if="activeMenu==='volume'">
             <h3 class="chart-title">交易量趋势图（近30天）</h3>
             <div id="trendChart"></div>
+          </div>
+          <div class="chart-card" v-if="activeMenu==='volume'">
+            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='amount'">
             <h3 class="chart-title">交易额趋势图（近30天）</h3>
             <div id="amountChart"></div>
+          </div>
+          <div class="chart-card" v-if="activeMenu==='amount'">
+            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='avgprice'">
             <h3 class="chart-title">交易均价趋势图（近30天）</h3>
+            <div class="chart-toolbar">
+              <div></div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon avgprice-solid"></span>交易均价</div>
+                <div class="legend-item"><span class="legend-icon avgprice-dashed"></span>交易均价（不含异常交易）</div>
+              </div>
+            </div>
             <div id="avgPriceChart"></div>
+          </div>
+          <div class="chart-card" v-if="activeMenu==='avgprice'">
+            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='commission'">
             <h3 class="chart-title">交易佣金费率与交易佣金费走势图（近30天）</h3>
+            <div class="chart-toolbar">
+              <div></div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon rate"></span>交易佣金费率</div>
+                <div class="legend-item"><span class="legend-icon fee"></span>交易佣金费</div>
+              </div>
+            </div>
             <div id="commissionChart"></div>
+          </div>
+          <div class="chart-card" v-if="activeMenu==='commission'">
+            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
 
@@ -83,6 +109,9 @@
               </div>
             </div>
             <div id="provinceChart"></div>
+          </div>
+          <div class="chart-card" v-if="activeMenu==='province16'">
+            <h3 class="chart-title">解读</h3>
             <div class="insights">暂无解读</div>
           </div>
 

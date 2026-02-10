@@ -18,10 +18,10 @@
     var base = String(BASE_URL).replace(/\/$/, "");
     var p = String(path).startsWith("/") ? path : ("/" + path);
     if (!params) return base + p;
-    // 过滤掉 undefined / null / "" 的参数
+    // 过滤掉 undefined / null 的参数（保留空字符串 ""，因日交易查询接口需要 productCode=&sellCode= 表示全部）
     var filtered = {};
     Object.entries(params).forEach(function (kv) {
-      if (kv[1] !== undefined && kv[1] !== null && kv[1] !== "") {
+      if (kv[1] !== undefined && kv[1] !== null) {
         filtered[kv[0]] = kv[1];
       }
     });

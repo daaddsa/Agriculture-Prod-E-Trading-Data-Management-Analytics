@@ -6,8 +6,8 @@
     <title>批发市场白条猪系统</title>
     <link rel="icon" href="../../shared/assets/logo/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="../../shared/vendor/vue.global.js"></script>
+    <script src="../../shared/vendor/echarts.min.js"></script>
   </head>
   <body data-stat-skin="a" data-pattern="on">
     <div id="app">
@@ -177,24 +177,32 @@
               <h3 class="card-title">日交易信息查询</h3>
               <div class="query-filters">
                 <div class="filter-item">
-                  <label for="origin-input">产地：</label>
-                  <input 
-                    type="text" 
-                    id="origin-input" 
+                  <label for="origin-select">产地：</label>
+                  <select 
+                    id="origin-select" 
                     v-model="query.origin" 
-                    class="nav-input" 
-                    placeholder="输入产地关键词"
-                  />
+                    class="nav-select" 
+                    @change="handleFilterChange"
+                  >
+                    <option value="">全部产地</option>
+                    <option v-for="opt in originOptions" :key="opt.value" :value="opt.value">
+                      {{ opt.label }}
+                    </option>
+                  </select>
                 </div>
                 <div class="filter-item">
-                  <label for="dest-input">销地：</label>
-                  <input 
-                    type="text" 
-                    id="dest-input" 
+                  <label for="dest-select">销地：</label>
+                  <select 
+                    id="dest-select" 
                     v-model="query.dest" 
-                    class="nav-input" 
-                    placeholder="输入销地关键词"
-                  />
+                    class="nav-select" 
+                    @change="handleFilterChange"
+                  >
+                    <option value="">全部销地</option>
+                    <option v-for="opt in destOptions" :key="opt.value" :value="opt.value">
+                      {{ opt.label }}
+                    </option>
+                  </select>
                 </div>
                 <button class="search-btn" @click="handleSearch">查询</button>
                 <button class="reset-btn" @click="resetQuery">重置</button>
@@ -212,7 +220,7 @@
                     <th style="width: 23%">销地</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody :key="transactionTableKey">
                   <tr 
                     v-for="item in displayTransactions" 
                     :key="item.id" 

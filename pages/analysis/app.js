@@ -80,15 +80,19 @@
 
   createApp({
     data: function () {
+      var today = new Date();
+      var yyyy = today.getFullYear();
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var dd = String(today.getDate()).padStart(2, '0');
+      var todayStr = yyyy + "-" + mm + "-" + dd;
+
       return {
         market: parseUrlMarketId(),
-        date: new Date().toISOString().split("T")[0],
+        date: todayStr,
         markets: MARKET_LIST,
         provinces: PROVINCE_LIST,
         province16: "410000",         // 默认河南省
         reportKeyword: "",
-        minDate: "2024-01-01",        // 放宽：允许查询历史数据
-        maxDate: "",
         reports: [],
         reportTypes: [],
         reportTypeValue: "",          // 空字符串 = 全部
@@ -103,11 +107,6 @@
 
     mounted: function () {
       var self = this;
-      var today = new Date();
-      var future7 = new Date(today);
-      future7.setDate(today.getDate() + 7);
-      this.maxDate = future7.toISOString().split("T")[0];
-
       this.loadMarkets();
       // 先加载报告类型（含默认选中日报），完成后再拉取报告列表
       this.loadReportTypes()
@@ -115,7 +114,14 @@
         .catch(function () { self.fetchReports(); });
       this.calcPageSize();
       window.addEventListener("resize", this.calcPageSize);
-      this.$nextTick(this._refreshCurrentChart.bind(this));
+
+      // 默认显示交易量走势图表
+      this.$nextTick(function () {
+        requestAnimationFrame(function () {
+          self.initChart();
+        });
+      });
+
     },
 
     methods: {
@@ -163,6 +169,32 @@
       /** 字符串数组 → 数字数组（空值 → null，用于出厂价有空缺的场景） */
       _toNumsNullable: function (list) {
         return (list || []).map(function (v) {
+          if (v === undefined || v === null || v === "") return null;
+          return Number(v);
+        });
+      },
+
+      _lastNDates: function (dateStr, n) {
+        var res = [];
+        var d = new Date(dateStr);
+        for (var i = n - 1; i >= 0; i--) {
+          var t = new Date(d);
+          t.setDate(d.getDate() - i);
+          var yyyy = t.getFullYear();
+          var mm = String(t.getMonth() + 1).padStart(2, '0');
+          var dd = String(t.getDate()).padStart(2, '0');
+          res.push(yyyy + "-" + mm + "-" + dd);
+        }
+        return res;
+      },
+
+      _alignByDates: function (sourceDates, sourceY, targetDates) {
+        var map = {};
+        (sourceDates || []).forEach(function (d, i) {
+          map[String(d)] = sourceY ? sourceY[i] : null;
+        });
+        return (targetDates || []).map(function (d) {
+          var v = map[String(d)];
           if (v === undefined || v === null || v === "") return null;
           return Number(v);
         });
@@ -216,13 +248,23 @@
       selectMenu: function (key) {
         this.activeMenu = key;
         var self = this;
+        // $nextTick 确保 Vue 完成 DOM 更新（v-if 插入元素）
+        // requestAnimationFrame 确保浏览器完成布局计算，容器拥有正确尺寸
         this.$nextTick(function () {
-          if (key === "reports")    self.fetchReports();
-          if (key === "volume")     self.initChart();
-          if (key === "amount")     self.initAmountChart();
-          if (key === "avgprice")   self.initAvgPriceChart();
-          if (key === "commission") self.initCommissionChart();
-          if (key === "province16") self.initProvinceChart();
+          requestAnimationFrame(function () {
+            if (key === "volume")     self.initChart();
+            if (key === "amount")     self.initAmountChart();
+            if (key === "avgprice")   self.initAvgPriceChart();
+            if (key === "commission") self.initCommissionChart();
+            if (key === "province16") self.initProvinceChart();
+            if (key === "reports")    {
+              if (!Array.isArray(self.reportTypes) || self.reportTypes.length === 0) {
+                self.loadReportTypes().then(function(){ self.fetchReports(); }).catch(function(){ self.fetchReports(); });
+              } else {
+                self.fetchReports();
+              }
+            }
+          });
         });
       },
 
@@ -234,6 +276,7 @@
         if (m === "avgprice")   this.initAvgPriceChart();
         if (m === "commission") this.initCommissionChart();
         if (m === "province16") this.initProvinceChart();
+        if (m === "reports")    this.fetchReports();
       },
 
       // ==================== 交易量走势 (countType=1) ====================
@@ -248,9 +291,9 @@
         try {
           var res = await AnalysisAPI.getCountTrend(this.market, 1, this.date, { countDay: 30 });
           var d = (res && res.data) || {};
-          var trimmed = this._lastN(d.xList, d.yList, 30);
-          xAxisData = this._toMD(trimmed.xList);
-          aData = this._toNums(trimmed.yList);
+          var targetDates = this._lastNDates(this.date, 30);
+          xAxisData = this._toMD(targetDates);
+          aData = this._alignByDates(d.xList || [], d.yList || [], targetDates);
         } catch (e) {
           console.error("交易量走势加载失败:", e);
         }
@@ -263,8 +306,9 @@
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { fontSize: 11 },
+            axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
+            boundaryGap: true,
           },
           yAxis: {
             type: "value",
@@ -286,6 +330,7 @@
             data: aData,
           }],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 交易额走势 (countType=2) ====================
@@ -300,9 +345,9 @@
         try {
           var res = await AnalysisAPI.getCountTrend(this.market, 2, this.date, { countDay: 30 });
           var d = (res && res.data) || {};
-          var trimmed = this._lastN(d.xList, d.yList, 30);
-          xAxisData = this._toMD(trimmed.xList);
-          amtData = this._toNums(trimmed.yList);
+          var targetDates = this._lastNDates(this.date, 30);
+          xAxisData = this._toMD(targetDates);
+          amtData = this._alignByDates(d.xList || [], d.yList || [], targetDates);
         } catch (e) {
           console.error("交易额走势加载失败:", e);
         }
@@ -315,8 +360,9 @@
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { fontSize: 11 },
+            axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
+            boundaryGap: true,
           },
           yAxis: {
             type: "value",
@@ -338,9 +384,10 @@
             data: amtData,
           }],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
-      // ==================== 交易均价走势 (countType=3) ====================
+      // ==================== 交易均价走势 (countType=3 交易均价 + countType=4 交易均价剔除异常交易) ====================
 
       initAvgPriceChart: async function () {
         var el = document.getElementById("avgPriceChart");
@@ -351,57 +398,37 @@
         var avgData = [];
         var avgCleanData = [];
         try {
+          // 并行请求：交易均价(countType=3) + 交易均价剔除异常交易(countType=4)
+          // 每个 Promise 独立 catch，避免一个失败导致另一个数据也丢失
           var results = await Promise.all([
-            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 }),
-            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30, isRemoveAbnormal: 1 }),
+            AnalysisAPI.getCountTrend(this.market, 3, this.date, { countDay: 30 })
+              .catch(function (e) { console.warn("交易均价(countType=3)请求失败:", e); return null; }),
+            AnalysisAPI.getCountTrend(this.market, 4, this.date, { countDay: 30 })
+              .catch(function (e) { console.warn("交易均价剔除异常(countType=4)请求失败:", e); return null; }),
           ]);
-          var normalD = (results[0] && results[0].data) || {};
-          var cleanD  = (results[1] && results[1].data) || {};
-          var rawX = normalD.xList || cleanD.xList || [];
-          var trimmed = this._lastNMulti(rawX, [normalD.yList || [], cleanD.yList || []], 30);
-          xAxisData    = this._toMD(trimmed.xList);
-          avgData      = this._toNums(trimmed.yLists[0]);
-          avgCleanData = this._toNums(trimmed.yLists[1]);
+
+          var avgD      = (results[0] && results[0].data) || {};
+          var avgCleanD = (results[1] && results[1].data) || {};
+          var targetDates = this._lastNDates(this.date, 30);
+          xAxisData    = this._toMD(targetDates);
+          avgData      = this._alignByDates(avgD.xList || [], avgD.yList || [], targetDates);
+          avgCleanData = this._alignByDates(avgCleanD.xList || [], avgCleanD.yList || [], targetDates);
         } catch (e) {
           console.error("交易均价走势加载失败:", e);
         }
 
         var hasData = (avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); }))
-                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));
-        var legendData = ["交易均价"];
-        var seriesData = [{
-          name: "交易均价",
-          type: "line",
-          smooth: true,
-          showSymbol: false,
-          sampling: "lttb",
-          lineStyle: { width: 2, color: "#1f8a98" },
-          itemStyle: { color: "#1f8a98" },
-          data: avgData,
-        }];
-        var cleanHasValues = avgCleanData.some(function (v) { return Number.isFinite(v); });
-        if (cleanHasValues) {
-          legendData.push("交易均价（不含异常数据）");
-          seriesData.push({
-            name: "交易均价（不含异常数据）",
-            type: "line",
-            smooth: true,
-            showSymbol: false,
-            sampling: "lttb",
-            lineStyle: { width: 2, color: "#fbbf24" },
-            itemStyle: { color: "#fbbf24" },
-            data: avgCleanData,
-          });
-        }
+                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));  
         chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-          legend: { show: true, data: legendData, top: 8, right: 8 },
+          legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
             data: xAxisData,
-            axisLabel: { fontSize: 11 },
+            axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
+            boundaryGap: true,
           },
           yAxis: {
             type: "value",
@@ -412,8 +439,30 @@
             axisLabel: { show: hasData },
             splitLine: { show: true },
           },
-          series: seriesData,
+          series: [
+            {
+              name: "交易均价",
+              type: "line",
+              smooth: true,
+              showSymbol: false,
+              sampling: "lttb",
+              lineStyle: { width: 2, color: "#1f8a98" },
+              itemStyle: { color: "#1f8a98" },
+              data: avgData,
+            },
+            {
+              name: "交易均价剔除异常交易",
+              type: "line",
+              smooth: true,
+              showSymbol: false,
+              sampling: "lttb",
+              lineStyle: { width: 2, color: "#fbbf24" },
+              itemStyle: { color: "#fbbf24" },
+              data: avgCleanData,
+            },
+          ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 佣金费率与佣金费走势 ====================
@@ -427,10 +476,10 @@
         var rateData = [];
         var feeData = [];
         try {
-          // 并行请求：佣金费率 + 佣金费(countType=4)
+          // 并行请求：佣金费率 + 交易佣金费(countType=5)
           var results = await Promise.all([
             AnalysisAPI.getCommissionFeeLvTrend(this.market, this.date, { countDay: 30 }),
-            AnalysisAPI.getCountTrend(this.market, 4, this.date, { countDay: 30 }),
+            AnalysisAPI.getCountTrend(this.market, 5, this.date, { countDay: 30 }),
           ]);
           var rateD = (results[0] && results[0].data) || {};
           var feeD  = (results[1] && results[1].data) || {};
@@ -441,6 +490,25 @@
           xAxisData = this._toMD(trimmed.xList);
           rateData  = this._toNums(trimmed.yLists[0]);
           feeData   = this._toNums(trimmed.yLists[1]).map(function(v){ return Number(v)/10000; });
+          (function(){
+            var f = (rateData || []).filter(function(v){ return Number.isFinite(v); });
+            if (f.length > 0) {
+              var maxAbs = Math.max.apply(null, f.map(function(v){ return Math.abs(v); }));
+              if (maxAbs <= 0.001) {
+                rateData = rateData.map(function(v){ return Number.isFinite(v) ? v * 10000 : v; });
+              } else if (maxAbs <= 1) {
+                rateData = rateData.map(function(v){ return Number.isFinite(v) ? v * 1000 : v; });
+              }
+            }
+          })();
+          (function(){
+            var l = Math.min(xAxisData.length, rateData.length, feeData.length);
+            if (l > 0) {
+              xAxisData = xAxisData.slice(-l);
+              rateData  = rateData.slice(-l);
+              feeData   = feeData.slice(-l);
+            }
+          })();
         } catch (e) {
           console.error("佣金费走势加载失败:", e);
         }
@@ -450,7 +518,7 @@
 
         chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
-          legend: { show: true, data: ["交易佣金费率", "交易佣金费"], top: 8, right: 8 },
+          legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
             type: "category",
@@ -503,6 +571,7 @@
             },
           ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 16省出厂价与市场均价走势 ====================
@@ -525,6 +594,21 @@
           xAxisData       = this._toMD(trimmed.xList);
           factoryData     = this._toNumsNullable(trimmed.yLists[0]);
           marketCleanData = this._toNumsNullable(trimmed.yLists[1]);
+          (function(){
+            var len = Math.min(xAxisData.length, factoryData.length, marketCleanData.length);
+            var end = len - 1;
+            for (var i = len - 1; i >= 0; i--) {
+              var a = factoryData[i];
+              var b = marketCleanData[i];
+              if (a != null && b != null && Number.isFinite(a) && Number.isFinite(b)) { end = i; break; }
+            }
+            var l = end + 1;
+            if (l > 0) {
+              xAxisData       = xAxisData.slice(0, l);
+              factoryData     = factoryData.slice(0, l);
+              marketCleanData = marketCleanData.slice(0, l);
+            }
+          })();
         } catch (e) {
           console.error("省份价格走势加载失败:", e);
         }
@@ -559,7 +643,7 @@
               smooth: true,
               showSymbol: false,
               sampling: "lttb",
-              connectNulls: false,
+              connectNulls: true,
               lineStyle: { width: 2, color: "#1f8a98" },
               itemStyle: { color: "#1f8a98" },
               data: factoryData,
@@ -570,12 +654,14 @@
               smooth: true,
               showSymbol: false,
               sampling: "lttb",
+              connectNulls: true,
               lineStyle: { width: 2, color: "#fbbf24" },
               itemStyle: { color: "#fbbf24" },
               data: marketCleanData,
             },
           ],
         });
+        chart.resize(); // 强制刷新尺寸，修复 v-if 导致的容器尺寸异常
       },
 
       // ==================== 报告时间类型 ====================
@@ -636,12 +722,14 @@
         var title = (this.reportKeyword || "").trim();
 
         try {
+          if (rt === "" && (!Array.isArray(this.reportTypes) || this.reportTypes.length === 0)) {
+            await this.loadReportTypes();
+          }
           if (rt !== "") {
             // ---- 具体类型：服务端分页 ----
             var res = await AnalysisAPI.getCustomReports(this.market, pageNum, pageSize, rt, title);
             var rows = (res && (res.rows || (res.data && res.data.rows))) || [];
             var total = Number((res && (res.total || (res.data && res.data.total))) || 0);
-            this.totalCount = Number.isFinite(total) ? total : 0;
             this._allReportsCache = null; // 清除缓存
             this.reports = this._mapReportRows(rows, pageNum);
           } else {

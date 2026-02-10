@@ -5,7 +5,13 @@
 // =====================================================
 ;(function () {
   var get = ApiHelper.get;
-  var DEFAULT_PARAMS_DATE = "2024-12-31";
+  
+  // 动态生成当天日期作为默认值
+  var today = new Date();
+  var yyyy = today.getFullYear();
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var dd = String(today.getDate()).padStart(2, '0');
+  var DEFAULT_PARAMS_DATE = yyyy + "-" + mm + "-" + dd;
 
   /** 标准化公共参数 marketId + paramsDate */
   function normalizeCommonParams(params) {
@@ -31,8 +37,9 @@
     },
 
     /** 省份下拉数据 */
-    getProvinceData: function () {
-      return get("/tradeInfoData/getProvinceData");
+    getProvinceData: function (params) {
+      var common = normalizeCommonParams(params);
+      return get("/tradeInfoData/getProvinceData", common);
     },
 
     /** 区县数据 */

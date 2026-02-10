@@ -456,7 +456,7 @@ const DS_CONFIG = {
     "locked": false,
     "lockAspectRatio": false,
     "zindex": 16,
-    "visibility": true,
+    "visibility": false,
     "id": 1769960067666,
     "type": "type",
     "contentType": "time",
@@ -476,6 +476,45 @@ const DS_CONFIG = {
       "rotateX": 0,
       "rotateZ": 0,
       "height": 50
+    }
+  },
+  "custom_time_header": {
+    "x": 1516,
+    "y": 21,
+    "isWarning": false,
+    "_key": "custom_time_header",
+    "creater": "TextElement",
+    "render": "TextEl",
+    "width": 483,
+    "height": 50,
+    "active": false,
+    "locked": false,
+    "lockAspectRatio": false,
+    "zindex": 16,
+    "visibility": true,
+    "id": 9999999999999,
+    "type": "text",
+    "contentType": "text",
+    "name": "自定义日期时间",
+    "isLocal": false,
+    "style": {
+      "text": "Loading...",
+      "fontSize": 25,
+      "fontWeight": "normal",
+      "fontFamily": "AlimamaAgileVF-Thin",
+      "color": "#fff",
+      "background": "rgba(40, 44, 52,0)",
+      "textAlign": "left",
+      "_lineHeight": 48,
+      "rotateY": 0,
+      "rotateX": 0,
+      "rotateZ": 0
+    },
+    "data": {
+       "dataType": "text",
+       "value": "Loading...",
+       "default": "Loading...",
+       "dataSetName": "系统时间"
     }
   },
   "cpmf6ae5b40-c28a-4a9b-a21e-442a7c02f71a": {
@@ -2495,8 +2534,8 @@ const DS_CONFIG = {
     "_key": "cpm7b3a596e-6e36-4b7e-8e75-ac33b464e646",
     "creater": "BorderElement",
     "render": "BorderEl",
-    "width": 598,
-    "height": 297,
+    "width": 593,
+    "height": 292,
     "active": false,
     "locked": false,
     "lockAspectRatio": false,
@@ -5676,7 +5715,7 @@ const DS_CONFIG = {
     }
   },
   "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a": {
-    "x": 657,
+    "x": 653,
     "y": 830,
     "isWarning": false,
     "_key": "cpm85cd8c0d-1830-4331-a1e1-674b7b89af9a",
@@ -5708,8 +5747,8 @@ const DS_CONFIG = {
     }
   },
   "cpme7612333-ba11-4dc7-8cb8-e82dfb629692": {
-    "x": 692,
-    "y": 840,
+    "x": 688,
+    "y": 843,
     "isWarning": false,
     "_key": "cpme7612333-ba11-4dc7-8cb8-e82dfb629692",
     "creater": "TextElement",
@@ -5755,8 +5794,8 @@ const DS_CONFIG = {
     }
   },
   "cpm17b89f9f-94ab-436f-acd1-12ea189ace09": {
-    "x": 73,
-    "y": 846,
+    "x": 68,
+    "y": 843,
     "isWarning": false,
     "_key": "cpm17b89f9f-94ab-436f-acd1-12ea189ace09",
     "creater": "TextElement",
@@ -6229,6 +6268,7 @@ const DS_CONFIG = {
     "name": "文本 Copy",
     "isLocal": true,
     "style": {
+      "cursor": "pointer",
       "text": "历史查询",
       "fontSize": 24,
       "url": "",
@@ -6397,6 +6437,7 @@ const DS_CONFIG = {
     "name": "文本 Copy",
     "isLocal": true,
     "style": {
+      "cursor": "pointer",
       "text": "实时交易",
       "fontSize": 24,
       "url": "",
