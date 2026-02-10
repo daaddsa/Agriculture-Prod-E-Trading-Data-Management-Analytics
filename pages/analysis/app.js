@@ -121,6 +121,7 @@
           self.initChart();
         });
       });
+
     },
 
     methods: {
@@ -140,6 +141,7 @@
               if (ids.indexOf(self.market) === -1) {
                 self.market = ids[0];
               }
+              self.$nextTick(self._refreshCurrentChart.bind(self));
             }
           })
           .catch(function () {
@@ -388,13 +390,13 @@
           avgData      = this._toNums(trimmed.yLists[0]);
           avgCleanData = this._toNums(trimmed.yLists[1]);
 
-          console.log("[交易均价] avgData长度:", avgData.length, "avgCleanData长度:", avgCleanData.length);
+          console.log("[交易均价] avgData长度:", avgData.length, "avgCleanData长度:", avgCleanData.length); 
         } catch (e) {
           console.error("交易均价走势加载失败:", e);
         }
 
         var hasData = (avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); }))
-                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));
+                   || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));  
         chart.setOption({
           tooltip: { trigger: "axis", axisPointer: { type: "line" } },
           legend: { show: false },
@@ -464,7 +466,7 @@
           var trimmed = this._lastNMulti(rawX, [rawRateY, rawFeeY], 30);
           xAxisData = this._toMD(trimmed.xList);
           rateData  = this._toNums(trimmed.yLists[0]);
-          feeData   = this._toNums(trimmed.yLists[1]);
+          feeData   = this._toNums(trimmed.yLists[1]).map(function(v){ return Number(v)/10000; });
         } catch (e) {
           console.error("佣金费走势加载失败:", e);
         }
