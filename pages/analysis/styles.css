@@ -195,29 +195,13 @@ body[data-pattern="off"] {
   line-height: 1.2;
 }
 
-#trendChart {
-  width: 100%;
-  height: 400px;
-}
-
-#amountChart {
-  width: 100%;
-  height: 400px;
-}
-
-#avgPriceChart {
-  width: 100%;
-  height: 400px;
-}
-
-#commissionChart {
-  width: 100%;
-  height: 400px;
-}
-
+#trendChart,
+#amountChart,
+#avgPriceChart,
+#commissionChart,
 #provinceChart {
   width: 100%;
-  height: 400px;
+  height: clamp(260px, 40vh, 440px);
 }
 
 .chart-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
