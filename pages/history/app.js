@@ -92,21 +92,29 @@
       };
       const s = qaMap[qa] || qaMap[0];
 
+      // 计算当天日期
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
       return {
         qaLevel: qa,
         market: parseUrlMarketId(),
-        date: "2024-12-31",
+        date: todayStr,
         markets: [
           { value: 1, label: "上海西郊国际农产品交易中心" },
           { value: 2, label: "上海农产品中心批发市场" },
           { value: 3, label: "江苏无锡朝阳农产品大市场" },
           { value: 4, label: "江苏苏州农产品大市场" },
         ],
-        minDate: "2024-12-31",
-        maxDate: "2024-12-31",
+        minDate: "2020-01-01",
+        maxDate: todayStr,
         priceData: [],
         transactionRows: [],
         transactionTotal: 0,
+        transactionTableKey: 0, // 每次成功拉取数据后 +1，强制表格重新渲染
         transactionLoading: false,
         abnormalData: [],
         pieChart: null,
@@ -134,6 +142,8 @@
           page: 1,
           limit: 5, // Fixed to 5 rows per page
         },
+        originOptions: [], // 产地下拉选项
+        destOptions: [],   // 销地下拉选项
         viewMode: "price", // 'price' | 'activity'
         activityChart: null,
         pieViewMode: "volume", // 'volume' | 'flow'
@@ -251,11 +261,10 @@
     watch: {
     },
     mounted() {
-      this.minDate = "2024-12-31";
-      this.maxDate = "2024-12-31";
-
       this.loadMarkets();
       this.initPieChart();
+      this.loadOriginOptions();
+      this.loadDestOptions();
       this.refreshAll();
       this.resizeHandler = () => {
         if (this.pieChart) this.pieChart.resize();
@@ -294,10 +303,51 @@
             // API 失败时保留静态兜底列表
           });
       },
+      /** 加载产地下拉数据 */
+      async loadOriginOptions() {
+        try {
+          // 产地接口依赖 marketId，虽然 API 文档只说 marketId，但为了保险还是都传
+          const res = await window.historyApi.getProvinceData({
+            marketId: this.market
+          });
+          if (res.code === 200 && Array.isArray(res.data)) {
+            // 根据接口文档：productCode 是产地编号；兼容 name_prov/code_prov 或 provinceName/provinceCode 等常见命名
+            this.originOptions = res.data.map(item => ({
+              label: item.name_prov || item.provinceName || item.name || "",
+              value: String(item.code_prov || item.provinceCode || item.code || "")
+            })).filter(opt => opt.value !== "");
+          }
+        } catch (e) {
+          console.error("加载产地数据失败", e);
+        }
+      },
+      /** 加载销地下拉数据 */
+      async loadDestOptions() {
+        try {
+          const res = await window.historyApi.getCountyData({
+            marketId: this.market,
+            paramsDate: this.date
+          });
+          if (res.code === 200 && Array.isArray(res.data)) {
+            // 根据接口文档：sellCode 是销地编号
+            // getCountyData 返回: countyName (如 "闵行区"), countyCode (如 "310112")
+            // 因此下拉框 value 应该存 countyCode
+            this.destOptions = res.data.map(item => ({
+              label: item.countyName,
+              value: item.countyCode
+            }));
+          }
+        } catch (e) {
+          console.error("加载销地数据失败", e);
+        }
+      },
       handleMarketChange() {
+        this.loadOriginOptions(); // 市场变化可能影响产地列表（虽然通常省份是固定的，但接口要求传 marketId）
+        this.loadDestOptions();   // 市场变化肯定影响销地列表
         this.refreshAll();
       },
       handleDateChange() {
+        this.loadDestOptions();   // 日期变化影响销地列表（不同日期交易的销地可能不同）
         this.refreshAll();
       },
       /** market 现在直接是数字 1/2/3，无需映射 */
@@ -381,19 +431,24 @@
        */
       async fetchTransactions() {
         this.transactionLoading = true;
+        // 读取当前筛选条件，确保点击「查询」时使用最新值
+        const productCode = this.query.origin || "";
+        const sellCode = this.query.dest || "";
         try {
           const res = await window.historyApi.getTradeList({
             marketId: this.market,
             paramsDate: this.date,
-            productCode: this.query.origin,
-            sellCode: this.query.dest,
+            productCode: productCode,
+            sellCode: sellCode,
             pageNum: this.query.page,
             pageSize: this.query.limit,
           });
 
-          if (res.code === 200 && Array.isArray(res.rows)) {
-            this.transactionTotal = Number(res.total || 0);
-            this.transactionRows = res.rows.map((it, idx) => {
+          // 兼容接口返回 rows 或 data 两种格式
+          const rows = Array.isArray(res.rows) ? res.rows : (Array.isArray(res.data) ? res.data : []);
+          if (res.code === 200) {
+            this.transactionTotal = Number(res.total != null ? res.total : 0);
+            this.transactionRows = rows.map((it, idx) => {
               const price = Number(it.businessPrice || 0);
               const volume = Number(it.businessUnit || 0);
               const amount = (price * volume).toFixed(2);
@@ -407,6 +462,7 @@
                 destination: it.sellAdd,
               };
             });
+            this.transactionTableKey += 1;
           } else {
             this.transactionRows = [];
             this.transactionTotal = 0;
@@ -414,6 +470,7 @@
         } catch (e) {
           this.transactionRows = [];
           this.transactionTotal = 0;
+          console.error("日交易信息查询失败", e);
         } finally {
           this.transactionLoading = false;
         }
@@ -641,12 +698,14 @@
       },
       /** 查询按钮：将筛选条件传给后端并重新加载第一页 */
       handleSearch() {
-        if (this.query.page === 1) {
-          this.fetchTransactions();
-        } else {
-          this.query.page = 1;
-          this.fetchTransactions();
-        }
+        // 无论当前在第几页，点击查询或筛选变化时，都应重置回第一页并重新加载
+        this.query.page = 1;
+        this.fetchTransactions();
+      },
+      /** 下拉框变化事件，自动触发查询 */
+      handleFilterChange() {
+        // 用户要求：不用下拉就刷新，点击再查询即可。
+        // 所以这里不再自动调用 handleSearch
       },
       /** 重置筛选条件并重新加载 */
       resetQuery() {

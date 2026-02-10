@@ -318,7 +318,7 @@ async function getData() {
             } catch(e) {}
 
             // 数据更新后，延迟注入单位文本
-            setTimeout(injectUnits, 1500);
+            setTimeout(injectUnits, 200);
         } else {
             console.warn('[CustomData] No data prepared to update!');
         }
@@ -419,10 +419,36 @@ const NUM_LEFT_ALIGN_CLASS = 'ds-num-left-align';
         '}',
         // 注入的单位文本样式
         '.' + UNIT_MARKER_CLASS + ' {',
-        '  font-size: 0.5em;',
+        '  font-size: 20px;',
         '  color: #ffffff;',
+        '  font-weight: bold;',
         '  font-family: AlimamaAgileVF-Thin, sans-serif;',
         '  white-space: nowrap;',
+        '}',
+        // 右侧菜单卡片高亮（选中态）
+        '.ds-menu-active-card {',
+        '  filter: brightness(1.8) drop-shadow(0 0 6px rgba(0, 200, 255, 0.6)) !important;',
+        '  cursor: pointer !important;',
+        '  user-select: none !important;',
+        '}',
+        '.ds-menu-card-bg {',
+        '  cursor: pointer !important;',
+        '  user-select: none !important;',
+        '}',
+        '.ds-menu-card, .ds-menu-card * {',
+        '  cursor: pointer !important;',
+        '  user-select: none !important;',
+        '}',
+        '.ds-menu-active-text {',
+        '  color: #00e4ff !important;',
+        '  text-shadow: 0 0 10px rgba(0, 228, 255, 0.7), 0 0 20px rgba(0, 228, 255, 0.3) !important;',
+        '  cursor: pointer !important;',
+        '  user-select: none !important;',
+        '}',
+        '.ds-menu-inactive-text {',
+        '  opacity: 0.65 !important;',
+        '  cursor: pointer !important;',
+        '  user-select: none !important;',
         '}',
     ].join('\n');
     document.head.appendChild(style);
@@ -491,6 +517,81 @@ function injectUnits() {
             valEl.appendChild(unitSpan);
         }
         unitSpan.textContent = unit;
+    });
+}
+
+// =====================================================
+// 右侧菜单卡片高亮：将"实时交易"标记为选中状态
+// 通过 DOM 查找文本元素 + 其背后的装饰卡片，分别加高亮/暗淡样式
+// =====================================================
+const MENU_LABELS = ['实时交易', '历史查询', '数据分析'];
+const ACTIVE_MENU = '实时交易';
+
+function highlightActiveMenu() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    // 收集所有叶子文本节点（.text-el 内的文本）
+    const textEls = app.querySelectorAll('.text-el');
+    const menuMap = {}; // { '实时交易': textElWrapper, ... }
+
+    textEls.forEach(el => {
+        // 排除已注入的 span 等，取纯文本
+        const raw = el.textContent.trim();
+        if (MENU_LABELS.includes(raw)) {
+            menuMap[raw] = el;
+        }
+    });
+
+    // 对每个菜单文本元素应用样式
+    MENU_LABELS.forEach(label => {
+        const textEl = menuMap[label];
+        if (!textEl) return;
+
+        if (label === ACTIVE_MENU) {
+            textEl.classList.add('ds-menu-active-text');
+            textEl.classList.remove('ds-menu-inactive-text');
+        } else {
+            textEl.classList.add('ds-menu-inactive-text');
+            textEl.classList.remove('ds-menu-active-text');
+        }
+
+        // 找到对应的装饰卡片背景（同级的上一个兄弟组件，或通过位置匹配）
+        // DataShow 框架中，组件 wrapper 是 textEl 的祖先 absolute div
+        let wrapper = textEl.closest('[style*="position"]') || textEl.parentElement;
+        // 往上找到组件最外层 wrapper（一般 3 层）
+        for (let i = 0; i < 5 && wrapper && wrapper.id !== 'app'; i++) {
+            if (wrapper.parentElement && wrapper.parentElement.id === 'app') break;
+            wrapper = wrapper.parentElement;
+        }
+        if (!wrapper || wrapper.id === 'app') return;
+
+        // wrapper 是文字组件的最外层，找相邻的装饰组件（位置重叠的前一个兄弟）
+        const wrapperRect = wrapper.getBoundingClientRect();
+        let decorationWrapper = null;
+
+        // 向前遍历兄弟节点，找位置重叠的装饰元素
+        let sibling = wrapper.previousElementSibling;
+        for (let i = 0; i < 5 && sibling; i++) {
+            const sr = sibling.getBoundingClientRect();
+            // 位置重叠判断：水平距离 < 40px 且垂直距离 < 30px
+            if (Math.abs(sr.left - wrapperRect.left) < 60 &&
+                Math.abs(sr.top - wrapperRect.top) < 30) {
+                decorationWrapper = sibling;
+                break;
+            }
+            sibling = sibling.previousElementSibling;
+        }
+
+        if (decorationWrapper) {
+            decorationWrapper.classList.add('ds-menu-card-bg');
+            if (label === ACTIVE_MENU) {
+                decorationWrapper.classList.add('ds-menu-active-card');
+            } else {
+                decorationWrapper.classList.remove('ds-menu-active-card');
+            }
+        }
+        wrapper.classList.add('ds-menu-card');
     });
 }
 
@@ -565,16 +666,16 @@ function updateFactoryPriceDate() {
 }
 
 // 立即调用一次
-setTimeout(getData, 1000);
+setTimeout(getData, 100);
 
 // 定时轮询 (每10秒)
 setInterval(getData, 10000);
 
-// 持续注入单位文本 + 日期更新（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
-setInterval(function () { injectUnits(); updateFactoryPriceDate(); }, 1500);
+// 持续注入单位文本 + 日期更新 + 菜单高亮（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
+setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); }, 1500);
 
 // 首次延迟注入（等 Vue 渲染 + 首次数据加载完成）
-setTimeout(function () { injectUnits(); updateFactoryPriceDate(); }, 3500);
+setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); }, 500);
 
 // 启动市场切换监听（等 DOM 渲染后）
 setTimeout(setupMarketSwitcher, 2000);
@@ -585,3 +686,74 @@ setTimeout(setupPageNavigation, 2000);
 // 调试：打印当前 marketId
 console.log('[CustomData] 页面 URL:', window.location.href);
 console.log('[CustomData] marketId:', new URLSearchParams(window.location.search).get('marketId') || '1(默认)');
+
+// --- 自定义时间更新逻辑 ---
+// 此部分代码用于更新右上角的自定义日期时间显示 (yyyy-MM-dd HH:mm:ss)
+(function startCustomTimer() {
+    function updateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const weekDay = weekDays[now.getDay()];
+        
+        const timeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${weekDay}`;
+        
+        // 更新数据集
+         if (window._DS_DATA && window._DS_DATA.dataSet) {
+             // 尝试多种绑定方式
+             window._DS_DATA.dataSet['系统时间'] = timeStr;
+             window._DS_DATA.dataSet['custom_time_header'] = timeStr;
+             // 部分组件可能需要对象格式
+             window._DS_DATA.dataSet['系统时间'] = { value: timeStr };
+         }
+         
+         // DOM 直接操作 (Fallback)
+         // 查找内容为 Loading... 或符合时间格式的 TextElement
+         const app = document.getElementById('app');
+         if (app) {
+             // 查找 text-el 类的元素
+             const textEls = app.querySelectorAll('.text-el');
+             let updated = false;
+             for (const el of textEls) {
+                 const text = el.textContent.trim();
+                 // 匹配 "Loading..." 或者 已经是时间格式 "2026-..." (包含可能的星期几)
+                 // 允许包含中文
+                 if (text === 'Loading...' || /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/.test(text)) {
+                     // 只有当内容确实变化时才更新，避免闪烁
+                     if (el.textContent !== timeStr) {
+                         el.textContent = timeStr;
+                         // 强制样式 (参考 custom.data.js 中的其他 hacks)
+                         el.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
+                         el.style.fontSize = '25px';
+                     }
+                     updated = true;
+                     break; // 假设只有一个
+                 }
+             }
+             
+             // 如果没找到 .text-el，尝试查找所有包含 Loading... 的 div
+             if (!updated) {
+                 const allDivs = app.querySelectorAll('div');
+                 for (const div of allDivs) {
+                     if (div.textContent.trim() === 'Loading...' && div.children.length === 0) {
+                          div.textContent = timeStr;
+                          div.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
+                          div.style.fontSize = '25px';
+                          break;
+                     }
+                 }
+             }
+         }
+     }
+    
+    // 立即执行一次
+    updateTime();
+    // 每秒执行
+    setInterval(updateTime, 1000);
+})();

@@ -80,15 +80,19 @@
 
   createApp({
     data: function () {
+      var today = new Date();
+      var yyyy = today.getFullYear();
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var dd = String(today.getDate()).padStart(2, '0');
+      var todayStr = yyyy + "-" + mm + "-" + dd;
+
       return {
         market: parseUrlMarketId(),
-        date: new Date().toISOString().split("T")[0],
+        date: todayStr,
         markets: MARKET_LIST,
         provinces: PROVINCE_LIST,
         province16: "410000",         // 默认河南省
         reportKeyword: "",
-        minDate: "2024-01-01",        // 放宽：允许查询历史数据
-        maxDate: "",
         reports: [],
         reportTypes: [],
         reportTypeValue: "",          // 空字符串 = 全部
@@ -103,11 +107,6 @@
 
     mounted: function () {
       var self = this;
-      var today = new Date();
-      var future7 = new Date(today);
-      future7.setDate(today.getDate() + 7);
-      this.maxDate = future7.toISOString().split("T")[0];
-
       this.loadMarkets();
       // 先加载报告类型（含默认选中日报），完成后再拉取报告列表
       this.loadReportTypes()
@@ -432,8 +431,8 @@
               smooth: true,
               showSymbol: false,
               sampling: "lttb",
-              lineStyle: { width: 2, color: "#f97316", type: "dashed" },
-              itemStyle: { color: "#f97316" },
+              lineStyle: { width: 2, color: "#fbbf24", type: "dashed" },
+              itemStyle: { color: "#fbbf24" },
               data: avgCleanData,
             },
           ],

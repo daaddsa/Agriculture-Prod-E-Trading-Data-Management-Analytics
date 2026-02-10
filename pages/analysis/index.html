@@ -6,8 +6,8 @@
     <title>批发市场采购分析仪表板</title>
     <link rel="icon" href="../../shared/assets/logo/logo.png" />
     <link rel="stylesheet" href="./styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <script src="../../shared/vendor/vue.global.js"></script>
+    <script src="../../shared/vendor/echarts.min.js"></script>
   </head>
   <body data-pattern="on">
     <div id="app">
@@ -23,7 +23,7 @@
           
           <div class="filter-group">
             <span class="filter-label">日期</span>
-            <input type="date" class="nav-datepicker-header" v-model="date" @change="handleDateChange" :min="minDate" :max="maxDate" />
+            <div class="nav-datepicker-header readonly-date">{{ date }}</div>
           </div>
         </div>
         <nav class="nav-tabs" aria-label="顶部导航">
