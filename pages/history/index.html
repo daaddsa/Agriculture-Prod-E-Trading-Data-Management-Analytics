@@ -37,7 +37,7 @@
 
       <div class="main-content">
         <div class="top-section">
-          <div class="price-card">
+          <div class="price-card top-equal" style="position: relative;">
             <div class="card-tabs">
               <button 
                 class="tab-btn" 
@@ -56,7 +56,7 @@
             </div>
             
             <div v-show="viewMode === 'price'" class="price-list-container">
-              <table class="price-table">
+              <table class="price-table" v-if="priceData.length > 0">
                 <thead>
                   <tr>
                     <th>地区</th>
@@ -72,6 +72,9 @@
                   </tr>
                 </tbody>
               </table>
+              <div class="no-data" v-else-if="!priceLoading">
+                暂无数据
+              </div>
             </div>
 
             <div v-show="viewMode === 'activity'" class="chart-container-wrapper">
@@ -83,9 +86,15 @@
                 <span class="info-value">{{ maxActivityVolume }} 公斤</span>
               </div>
             </div>
+
+            <!-- Loading Overlay for Price Card -->
+            <div class="loading-overlay" v-if="priceLoading">
+              <div class="spinner"></div>
+              <div class="loading-text">数据加载中...</div>
+            </div>
           </div>
 
-          <div class="stats-grid">
+          <div class="stats-grid top-equal">
             <template v-for="item in stats.data" :key="item.id">
               <div class="stat-card" :class="item.color" @click="stats.error ? retryStats() : null">
                 <div class="stat-label">{{ item.label }}</div>
@@ -101,42 +110,48 @@
             </template>
           </div>
 
-          <div class="abnormal-card">
+          <div class="abnormal-card top-equal" style="position: relative;">
             <h3 class="card-title">
               <span class="title-icon"></span>
               异常交易信息
             </h3>
-            <div class="abnormal-table-scroll">
-              <table class="abnormal-table">
-                <thead>
-                  <tr>
-                    <th>交易时间</th>
-                    <th>货源省份</th>
-                    <th>流向地区</th>
-                    <th>交易单价</th>
-                    <th>复核情况</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in abnormalData" :key="index">
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.origin }}</td>
-                    <td>{{ item.dest }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>
-                      <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
-                        {{ item.reviewStatus }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="abnormal-table-scroll" ref="abnormalScrollContainer">
+        <table class="abnormal-table">
+          <thead>
+            <tr>
+              <th>交易时间</th>
+              <th>货源省份</th>
+              <th>流向地区</th>
+              <th>交易单价</th>
+              <th>复核情况</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in abnormalData" :key="index">
+              <td>{{ item.time }}</td>
+              <td>{{ item.origin }}</td>
+              <td>{{ item.dest }}</td>
+              <td>{{ item.price }}</td>
+              <td>
+                <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
+                  {{ item.reviewStatus }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+            
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" v-if="abnormalLoading">
+              <div class="spinner"></div>
+              <div class="loading-text">数据加载中...</div>
             </div>
           </div>
         </div>
 
         <div class="bottom-section">
-          <div class="chart-card pie-card">
+          <div class="chart-card pie-card bottom-equal">
             <div class="card-tabs small-tabs">
               <button 
                 class="tab-btn" 
@@ -172,7 +187,7 @@
             </div>
           </div>
 
-          <div class="chart-card query-card">
+          <div class="chart-card query-card bottom-equal">
             <div class="card-header">
               <h3 class="card-title">日交易信息查询</h3>
               <div class="query-filters">

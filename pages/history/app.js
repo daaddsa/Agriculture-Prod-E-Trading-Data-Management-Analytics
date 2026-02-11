@@ -21,44 +21,6 @@
     return 1;
   }
 
-  function generateTransactionData(count) {
-    const arr = [];
-    const origins = ["山东省聊城市东平县", "河北省石家庄市正定县", "河南省郑州市中牟县", "安徽省合肥市长丰县", "江苏省徐州市铜山区"];
-    const destinations = ["河南...平顶山888号金华猪肉铺117号", "北京...新发地市场A区102号", "上海...曹安市场B区55号", "浙江...杭州农批C区22号"];
-    
-    for (let i = 1; i <= count; i++) {
-      const m = (11 + i) % 60;
-      const s = (55 + i * 3) % 60;
-      const mStr = m.toString().padStart(2, '0');
-      const sStr = s.toString().padStart(2, '0');
-      
-      arr.push({ 
-        id: i, 
-        time: `2023-12-31 21:${mStr}:${sStr}`,
-        volume: (18.85 + (i % 5) * 1.2).toFixed(2),
-        amount: (618 + (i % 5) * 45).toString(),
-        price: (11649.3 + (i % 3) * 50 - 25).toFixed(1),
-        origin: origins[(i - 1) % origins.length],
-        destination: destinations[(i - 1) % destinations.length]
-      });
-    }
-    return arr;
-  }
-
-  function generatePriceData(count) {
-    const regions = ["北京", "天津", "河北", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "山东", "河南", "安徽", "湖北", "湖南", "四川", "重庆", "广东"];
-    const arr = [];
-    for (let i = 0; i < count; i++) {
-      const region = regions[i % regions.length] + (count > regions.length ? `-${Math.floor(i / regions.length) + 1}` : "");
-      arr.push({
-        region,
-        factory: (22 + (i % 9) * 0.37).toFixed(2),
-        wholesale: (24 + (i % 9) * 0.41).toFixed(2),
-      });
-    }
-    return arr;
-  }
-
   createApp({
     /**
      * Source Transaction Volume Component
@@ -103,12 +65,7 @@
         qaLevel: qa,
         market: parseUrlMarketId(),
         date: todayStr,
-        markets: [
-          { value: 1, label: "上海西郊国际农产品交易中心" },
-          { value: 2, label: "上海农产品中心批发市场" },
-          { value: 3, label: "江苏无锡朝阳农产品大市场" },
-          { value: 4, label: "江苏苏州农产品大市场" },
-        ],
+        markets: [],
         minDate: "2020-01-01",
         maxDate: todayStr,
         priceData: [],
@@ -117,6 +74,8 @@
         transactionTableKey: 0, // 每次成功拉取数据后 +1，强制表格重新渲染
         transactionLoading: false,
         abnormalData: [],
+        abnormalLoading: false,
+        priceLoading: false,
         pieChart: null,
         resizeHandler: null,
         pieDetailsData: [],
@@ -140,7 +99,7 @@
           origin: "",
           dest: "",
           page: 1,
-          limit: 5, // Fixed to 5 rows per page
+          limit: 6, // Fixed to 6 rows per page
         },
         originOptions: [], // 产地下拉选项
         destOptions: [],   // 销地下拉选项
@@ -366,6 +325,7 @@
         }
       },
       async fetchPriceData() {
+        this.priceLoading = true;
         try {
           const res = await window.historyApi.getFactoryTradePrice({
             marketId: this.market,
@@ -382,9 +342,12 @@
           }
         } catch (e) {
           this.priceData = [];
+        } finally {
+          this.priceLoading = false;
         }
       },
       async fetchAbnormalData() {
+        this.abnormalLoading = true;
         try {
           const res = await window.historyApi.getAbnormal({
             marketId: this.market,
@@ -409,20 +372,13 @@
                 reviewStatus,
               };
             });
-            if (this.qaLevel >= 1 && this.abnormalData.length > 0) {
-              const target = this.qaLevel >= 2 ? 80 : 30;
-              const base = [...this.abnormalData];
-              const expanded = [];
-              while (expanded.length < target) {
-                expanded.push(...base);
-              }
-              this.abnormalData = expanded.slice(0, target);
-            }
           } else {
             this.abnormalData = [];
           }
         } catch (e) {
           this.abnormalData = [];
+        } finally {
+          this.abnormalLoading = false;
         }
       },
       /**
