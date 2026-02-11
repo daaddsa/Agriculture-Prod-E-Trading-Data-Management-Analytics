@@ -125,6 +125,10 @@ async function getData() {
                 if (len < titles.length) titles = titles.slice(0, len);
                 if (len < values.length) values = values.slice(0, len);
 
+                // REVERSE ORDER: Display highest value at the top (Index 4) instead of bottom (Index 0)
+                titles.reverse();
+                values.reverse();
+
                 const factoryData = {
                     titles: titles,
                     values: [{ data: values, name: "产地销售量排名" }]
@@ -144,6 +148,10 @@ async function getData() {
                 const len = Math.min(titles.length, values.length);
                 if (len < titles.length) titles = titles.slice(0, len);
                 if (len < values.length) values = values.slice(0, len);
+
+                // REVERSE ORDER: Display highest value at the top
+                titles.reverse();
+                values.reverse();
 
                 const purchaseData = {
                     titles: titles,
@@ -178,9 +186,11 @@ async function getData() {
                     parseFloat(item.businessPrice).toFixed(2) + '元/公斤'
                 ]);
                 
+                // 列宽总和需 ≤ 表格组件宽度 568px，否则最后一列「交易单价」会被挤出看不见
                 const abnormalData = {
                     body: body,
-                    header: ["交易时间", "货源省份", "流向地区", "交易单价"]
+                    header: ["交易时间", "货源省份", "流向地区", "交易单价"],
+                    columnWidth: [168, 110, 110, 180]
                 };
                 
                 newDataSet['异常交易数据'] = abnormalData;
@@ -265,7 +275,7 @@ async function getData() {
                     value: isNaN(item.value) ? 0 : item.value
                 }));
                 
-                // 补全所有省份：API 未返回的省份 value 设为 0，避免地图缺失数据导致显示深蓝色
+                // 补全所有省份：API 未返回的省份 value 设为 0，特定省份设为 4.38 以显示底色
                 const allProvinces = [
                     '北京', '天津', '上海', '重庆', '河北', '河南', '云南', '辽宁',
                     '黑龙江', '湖南', '安徽', '山东', '新疆', '江苏', '浙江', '江西',
@@ -273,10 +283,19 @@ async function getData() {
                     '贵州', '广东', '青海', '西藏', '四川', '宁夏', '海南', '台湾',
                     '香港', '澳门'
                 ];
+                
+                // 需要高亮显示底色的省份列表
+                const highlightProvinces = [
+                    '河南', '山东', '河北', '天津', '北京', '湖北', '辽宁', '吉林',
+                    '黑龙江', '湖南', '四川', '广东', '浙江', '福建', '安徽', '江苏'
+                ];
+
                 const existingNames = new Set(provinceMapData.map(item => item.name));
                 allProvinces.forEach(name => {
                     if (!existingNames.has(name)) {
-                        provinceMapData.push({ name: name, value: 0 });
+                        // 如果是需要高亮的省份，设置特定值 9.49；否则设为 0
+                        const defaultVal = highlightProvinces.includes(name) ? 9.49 : 0;
+                        provinceMapData.push({ name: name, value: defaultVal });
                     }
                 });
                 
@@ -400,56 +419,110 @@ const UNIT_LABELS = [
 const UNIT_MARKER_CLASS = 'ds-injected-unit';
 const NUM_LEFT_ALIGN_CLASS = 'ds-num-left-align';
 
+/** 地图容器 id（热力地图 含省市） */
+const MAP_CONTAINER_ID = 'cpmbd3a7549-e208-42e1-a158-fa080262956e';
+
+/**
+ * 在地图容器上覆盖山川纹理层，通过 mix-blend-mode 只在地图有颜色区域显示
+ * 纹理图：shared/assets/image/background.png
+ */
+function injectMapTexture() {
+    const mapEl = document.getElementById(MAP_CONTAINER_ID);
+    if (!mapEl) return;
+    if (mapEl.querySelector('.map-texture')) return; // 已存在则不重复添加
+    const texture = document.createElement('div');
+    texture.className = 'map-texture';
+    texture.setAttribute('aria-hidden', 'true');
+    mapEl.appendChild(texture);
+}
+
 // 注入全局 CSS（只执行一次），通过 !important 强制左对齐 + 允许溢出
 (function injectGlobalStyle() {
     if (document.getElementById('ds-custom-style')) return;
     const style = document.createElement('style');
     style.id = 'ds-custom-style';
     style.textContent = [
-        // 覆盖 .number-el 的 flexbox 居中 → 左对齐
+        // 1. 全局重置，防止误伤
+        'body, #app { cursor: default !important; }',
+
+        // 2. 覆盖 .number-el 的 flexbox 居中 → 左对齐
         '.' + NUM_LEFT_ALIGN_CLASS + ' {',
         '  text-align: left !important;',
         '  justify-content: flex-start !important;',
-        '  align-items: center !important;',
+        '  align-items: baseline !important;',
         '  overflow: visible !important;',
         '}',
         '.' + NUM_LEFT_ALIGN_CLASS + ' > * {',
         '  text-align: left !important;',
         '  overflow: visible !important;',
         '}',
-        // 注入的单位文本样式
+
+        // 3. 注入的单位文本样式
         '.' + UNIT_MARKER_CLASS + ' {',
         '  font-size: 20px;',
         '  color: #ffffff;',
         '  font-weight: bold;',
         '  font-family: AlimamaAgileVF-Thin, sans-serif;',
         '  white-space: nowrap;',
+        '  margin-left: 8px;',
+        '  position: relative;',
+        '  top: -1px;',
         '}',
-        // 右侧菜单卡片高亮（选中态）
+
+        // 4. 右侧菜单高亮 & 手型鼠标（精确控制）
+        // 背景框：只给特定的背景框加手型
+        '.ds-menu-active-card, .ds-menu-card-bg {',
+        '  cursor: pointer !important;',
+        '}',
         '.ds-menu-active-card {',
         '  filter: brightness(1.8) drop-shadow(0 0 6px rgba(0, 200, 255, 0.6)) !important;',
-        '  cursor: pointer !important;',
-        '  user-select: none !important;',
         '}',
-        '.ds-menu-card-bg {',
+        // 文本：只给特定的菜单文本加手型
+        '.ds-menu-active-text, .ds-menu-inactive-text {',
         '  cursor: pointer !important;',
-        '  user-select: none !important;',
-        '}',
-        '.ds-menu-card, .ds-menu-card * {',
-        '  cursor: pointer !important;',
-        '  user-select: none !important;',
         '}',
         '.ds-menu-active-text {',
         '  color: #00e4ff !important;',
         '  text-shadow: 0 0 10px rgba(0, 228, 255, 0.7), 0 0 20px rgba(0, 228, 255, 0.3) !important;',
-        '  cursor: pointer !important;',
-        '  user-select: none !important;',
         '}',
         '.ds-menu-inactive-text {',
         '  opacity: 0.65 !important;',
-        '  cursor: pointer !important;',
-        '  user-select: none !important;',
         '}',
+
+        // 5. 修复异常交易表格的表头对齐
+        '[id="cpm817f187b-80cb-47eb-b250-a6a559a3cc8d"] .header-row .cell {',
+        '  display: flex !important;',
+        '  justify-content: center !important;',
+        '  align-items: center !important;',
+        '}',
+        '[id="cpm817f187b-80cb-47eb-b250-a6a559a3cc8d"] .header-row .cell:nth-child(2) .text-box,',
+        '[id="cpm817f187b-80cb-47eb-b250-a6a559a3cc8d"] .header-row .cell:nth-child(3) .text-box {',
+        '  text-indent: 2em !important;',
+        '}',
+
+        // 6. 指定组件手型鼠标：地图 & 下拉框
+        '[id="cpmbd3a7549-e208-42e1-a158-fa080262956e"],', // 地图
+        '[id="cpme41cb160-0568-4114-90c8-c847a9d8aa0b"] {', // 下拉框
+        '  cursor: pointer !important;',
+        '}',
+        // 7. 地图 2.5D：整图投影，加强可见度（深色阴影 + 大模糊 + box-shadow 兜底）
+        '[id="cpmbd3a7549-e208-42e1-a158-fa080262956e"] {',
+        '  position: relative !important;',
+        '  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55)) drop-shadow(0 6px 14px rgba(0, 35, 90, 0.5));',
+        '  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0, 30, 70, 0.4);',
+        '}',
+        // 8. 地图山川纹理层：mix-blend-mode 让纹理只在地图有颜色区域显示
+        '.map-texture {',
+        '  position: absolute !important;',
+        '  top: 0 !important; left: 0 !important;',
+        '  width: 100% !important; height: 100% !important;',
+        '  pointer-events: none !important;',
+        '  background-image: url("../../shared/assets/image/background.png") !important;',
+        '  background-size: 400px !important;',
+        '  background-repeat: repeat !important;',
+        '  mix-blend-mode: overlay !important;',
+        '  opacity: 0.3 !important;',
+        '}'
     ].join('\n');
     document.head.appendChild(style);
 })();
@@ -671,11 +744,11 @@ setTimeout(getData, 100);
 // 定时轮询 (每10秒)
 setInterval(getData, 10000);
 
-// 持续注入单位文本 + 日期更新 + 菜单高亮（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
-setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); }, 1500);
+// 持续注入单位文本 + 日期更新 + 菜单高亮 + 地图纹理（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
+setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 1500);
 
 // 首次延迟注入（等 Vue 渲染 + 首次数据加载完成）
-setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); }, 500);
+setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 500);
 
 // 启动市场切换监听（等 DOM 渲染后）
 setTimeout(setupMarketSwitcher, 2000);

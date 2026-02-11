@@ -584,8 +584,8 @@ const DS_CONFIG = {
     "name": "数值",
     "data": {
       "dataType": "number",
-      "value": "18756.98",
-      "default": 18756.98,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -724,7 +724,7 @@ const DS_CONFIG = {
       "config": {
         "gridB": 10,
         "gridL": 10,
-        "gridR": 10,
+        "gridR": 25,
         "gridT": 10,
         "title": "横向柱状图",
         "colors": [
@@ -1627,7 +1627,7 @@ const DS_CONFIG = {
       "config": {
         "gridB": 10,
         "gridL": 10,
-        "gridR": 10,
+        "gridR": 20,
         "gridT": 10,
         "title": "横向柱状图",
         "colors": [
@@ -2496,13 +2496,13 @@ const DS_CONFIG = {
     }
   },
   "cpm4f49fbea-c692-4178-b8c6-f698a829612e": {
-    "x": 1433,
+    "x": 1430,
     "y": 478,
     "isWarning": false,
     "_key": "cpm4f49fbea-c692-4178-b8c6-f698a829612e",
     "creater": "BorderElement",
     "render": "BorderEl",
-    "width": 434,
+    "width": 438,
     "height": 325,
     "active": false,
     "locked": false,
@@ -2761,8 +2761,8 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": "35.04",
-      "default": 35.04,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -2805,8 +2805,8 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": "18.68",
-      "default": 18.68,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -2849,8 +2849,8 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": "18.65",
-      "default": 18.65,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -2962,7 +2962,7 @@ const DS_CONFIG = {
     }
   },
   "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f": {
-    "x": 1436,
+    "x": 1440,
     "y": 202,
     "isWarning": false,
     "_key": "cpme9af1839-ea89-4c7d-8163-afb4bdbe0c5f",
@@ -2996,30 +2996,8 @@ const DS_CONFIG = {
       },
       "value": "{\n  \"titles\": [\n    \"202303\",\n    \"202305\",\n    \"202307\",\n    \"202309\",\n    \"202311\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        82,\n        60,\n        70,\n        72,\n        85,\n        100,\n        70,\n        80,\n        100,\n        102\n      ],\n      \"name\": \"销量1\"\n    }\n  ]\n}",
       "default": {
-        "titles": [
-          "202303",
-          "202305",
-          "202307",
-          "202309",
-          "202311"
-        ],
-        "values": [
-          {
-            "data": [
-              82,
-              60,
-              70,
-              72,
-              85,
-              100,
-              70,
-              80,
-              100,
-              102
-            ],
-            "name": "销量1"
-          }
-        ]
+        "titles": [],
+        "values": []
       },
       "getType": 1,
       "dataSetName": "堆叠折线图"
@@ -4576,142 +4554,40 @@ const DS_CONFIG = {
       "value": [],
       "__value_was_string__": true,
       "default": [
-        {
-          "name": "北京",
-          "value": 44
-        },
-        {
-          "name": "天津",
-          "value": 44
-        },
-        {
-          "name": "上海",
-          "value": 14
-        },
-        {
-          "name": "重庆",
-          "value": 14
-        },
-        {
-          "name": "河北",
-          "value": 44
-        },
-        {
-          "name": "河南",
-          "value": 44
-        },
-        {
-          "name": "云南",
-          "value": 14
-        },
-        {
-          "name": "辽宁",
-          "value": 44
-        },
-        {
-          "name": "黑龙江",
-          "value": 44
-        },
-        {
-          "name": "湖南",
-          "value": 44
-        },
-        {
-          "name": "安徽",
-          "value": 44
-        },
-        {
-          "name": "山东",
-          "value": 44
-        },
-        {
-          "name": "新疆",
-          "value": 14
-        },
-        {
-          "name": "江苏",
-          "value": 44
-        },
-        {
-          "name": "浙江",
-          "value": 44
-        },
-        {
-          "name": "江西",
-          "value": 14
-        },
-        {
-          "name": "湖北",
-          "value": 44
-        },
-        {
-          "name": "广西",
-          "value": 14
-        },
-        {
-          "name": "甘肃",
-          "value": 14
-        },
-        {
-          "name": "山西",
-          "value": 14
-        },
-        {
-          "name": "内蒙古",
-          "value": 14
-        },
-        {
-          "name": "陕西",
-          "value": 14
-        },
-        {
-          "name": "吉林",
-          "value": 44
-        },
-        {
-          "name": "福建",
-          "value": 44
-        },
-        {
-          "name": "贵州",
-          "value": 14
-        },
-        {
-          "name": "广东",
-          "value": 44
-        },
-        {
-          "name": "青海",
-          "value": 14
-        },
-        {
-          "name": "西藏",
-          "value": 14
-        },
-        {
-          "name": "四川",
-          "value": 44
-        },
-        {
-          "name": "宁夏",
-          "value": 14
-        },
-        {
-          "name": "海南",
-          "value": 14
-        },
-        {
-          "name": "台湾",
-          "value": 14
-        },
-        {
-          "name": "香港",
-          "value": 14
-        },
-        {
-          "name": "澳门",
-          "value": 14
-        }
+        { "name": "北京", "value": 0 },
+        { "name": "天津", "value": 0 },
+        { "name": "上海", "value": 0 },
+        { "name": "重庆", "value": 0 },
+        { "name": "河北", "value": 0 },
+        { "name": "河南", "value": 0 },
+        { "name": "云南", "value": 0 },
+        { "name": "辽宁", "value": 0 },
+        { "name": "黑龙江", "value": 0 },
+        { "name": "湖南", "value": 0 },
+        { "name": "安徽", "value": 0 },
+        { "name": "山东", "value": 0 },
+        { "name": "新疆", "value": 0 },
+        { "name": "江苏", "value": 0 },
+        { "name": "浙江", "value": 0 },
+        { "name": "江西", "value": 0 },
+        { "name": "湖北", "value": 0 },
+        { "name": "广西", "value": 0 },
+        { "name": "甘肃", "value": 0 },
+        { "name": "山西", "value": 0 },
+        { "name": "内蒙古", "value": 0 },
+        { "name": "陕西", "value": 0 },
+        { "name": "吉林", "value": 0 },
+        { "name": "福建", "value": 0 },
+        { "name": "贵州", "value": 0 },
+        { "name": "广东", "value": 0 },
+        { "name": "青海", "value": 0 },
+        { "name": "西藏", "value": 0 },
+        { "name": "四川", "value": 0 },
+        { "name": "宁夏", "value": 0 },
+        { "name": "海南", "value": 0 },
+        { "name": "台湾", "value": 0 },
+        { "name": "香港", "value": 0 },
+        { "name": "澳门", "value": 0 }
       ],
       "getType": 1,
       "dataSetName": "省份均价数据"
@@ -4760,7 +4636,7 @@ const DS_CONFIG = {
         "labelPadding": 4,
         "mapAreaColor": "rgba(0,255,255,.02)",
         "tooltipTitle": "门店数量",
-        "showVisualMap": false,
+        "showVisualMap": true,
         "visualMapSize": 16,
         "labelFontStyle": "normal",
         "mapBorderColor": "rgba(0, 0, 0, 0.2)",
@@ -4784,7 +4660,23 @@ const DS_CONFIG = {
         "tooltipTextFontWeight": "bolder",
         "tooltipBackgroundColor": "rgba(73, 133, 229, 0.8)",
         "tooltipTextBorderColor": "#000",
-        "tooltipTextBorderWidth": 2
+        "tooltipTextBorderWidth": 2,
+        "d25dShadowDx": 0.8,
+        "d25dShadowDy": 2,
+        "d25dShadowFillColor": "#000000",
+        "d25dShadowFillOpacity": 0.35,
+        "d25dShadowShadowColor": "#000000",
+        "d25dShadowShadowOpacity": 0.55,
+        "d25dShadowShadowBlur": 32,
+        "d25dShadowShadowOffsetX": 0,
+        "d25dShadowShadowOffsetY": 18,
+        "d25dThickDx": 0.4,
+        "d25dThickDy": 1,
+        "d25dThickFillColor": "#00285a",
+        "d25dThickFillOpacity": 0.55,
+        "d25dThickBorderColor": "#00ffff",
+        "d25dThickBorderOpacity": 0.18,
+        "d25dThickBorderWidth": 1
       },
       "setConfig": [
         {
@@ -4871,6 +4763,160 @@ const DS_CONFIG = {
               "span": 24,
               "type": "boolean",
               "inputType": "switch"
+            }
+          ]
+        },
+        {
+          "key": 7,
+          "groupName": "2.5D",
+          "groupConfigs": [
+            {
+              "key": "d25dShadowDx",
+              "max": 10,
+              "min": -10,
+              "name": "阴影层X位移(%)",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowDy",
+              "max": 10,
+              "min": -10,
+              "name": "阴影层Y位移(%)",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowFillColor",
+              "name": "阴影层填充色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "d25dShadowFillOpacity",
+              "max": 1,
+              "min": 0,
+              "name": "阴影层透明度",
+              "span": 24,
+              "step": 0.01,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowShadowColor",
+              "name": "阴影投影色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "d25dShadowShadowOpacity",
+              "max": 1,
+              "min": 0,
+              "name": "投影透明度",
+              "span": 24,
+              "step": 0.01,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowShadowBlur",
+              "max": 200,
+              "min": 0,
+              "name": "投影模糊",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowShadowOffsetX",
+              "max": 100,
+              "min": -100,
+              "name": "投影偏移X(px)",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dShadowShadowOffsetY",
+              "max": 100,
+              "min": -100,
+              "name": "投影偏移Y(px)",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dThickDx",
+              "max": 10,
+              "min": -10,
+              "name": "厚度层X位移(%)",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dThickDy",
+              "max": 10,
+              "min": -10,
+              "name": "厚度层Y位移(%)",
+              "span": 24,
+              "step": 0.1,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dThickFillColor",
+              "name": "厚度层填充色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "d25dThickFillOpacity",
+              "max": 1,
+              "min": 0,
+              "name": "厚度层透明度",
+              "span": 24,
+              "step": 0.01,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dThickBorderColor",
+              "name": "厚度层边框色",
+              "span": 24,
+              "type": "string",
+              "inputType": "color"
+            },
+            {
+              "key": "d25dThickBorderOpacity",
+              "max": 1,
+              "min": 0,
+              "name": "边框透明度",
+              "span": 24,
+              "step": 0.01,
+              "type": "number",
+              "inputType": "slider"
+            },
+            {
+              "key": "d25dThickBorderWidth",
+              "max": 20,
+              "min": 0,
+              "name": "边框宽度",
+              "span": 24,
+              "step": 1,
+              "type": "number",
+              "inputType": "slider"
             }
           ]
         },
@@ -5486,53 +5532,137 @@ const DS_CONFIG = {
         "dataSetName": "省份均价数据"
       },
       "option": {
-        "geo": {
-          "map": "map",
-          "roam": false,
-          "show": true,
-          "zoom": 1,
-          "label": {
-            "normal": {
-              "show": true,
-              "color": "#fff",
-              "fontSize": 12
+        "geo": [
+          {
+            "map": "map",
+            "roam": false,
+            "show": true,
+            "zoom": 1,
+            "zlevel": 0,
+            "label": {
+              "normal": { "show": false },
+              "emphasis": { "show": false }
             },
-            "emphasis": {
-              "show": true,
-              "color": "#fff",
-              "fontSize": 14
-            }
-          },
-          "silent": false,
-          "itemStyle": {
-            "normal": {
-              "areaColor": "#0a2e5c",
-              "borderColor": "rgba(0,255,255,.4)",
-              "borderWidth": 1
-            },
-            "emphasis": {
-              "areaColor": "rgba(0, 200, 255, 0.35)",
-              "borderColor": "rgba(0, 255, 255, 0.9)",
-              "borderWidth": 2
-            }
-          },
-          "regions": [{
-            "name": "南海诸岛",
+            "silent": true,
             "itemStyle": {
               "normal": {
-                "areaColor": "rgba(0, 20, 60, 0.8)",
-                "borderColor": "rgba(0,255,255,.6)",
+                "areaColor": "rgba(0, 0, 0, 0.35)",
+                "borderColor": "rgba(0, 0, 0, 0)",
+                "borderWidth": 0,
+                "shadowBlur": 32,
+                "shadowColor": "rgba(0, 0, 0, 0.55)",
+                "shadowOffsetX": 0,
+                "shadowOffsetY": 18
+              },
+              "emphasis": {
+                "areaColor": "rgba(0, 0, 0, 0.35)",
+                "borderColor": "rgba(0, 0, 0, 0)",
+                "borderWidth": 0
+              }
+            },
+            "regions": [{
+              "name": "南海诸岛",
+              "itemStyle": {
+                "normal": {
+                  "opacity": 0
+                },
+                "emphasis": {
+                  "opacity": 0
+                }
+              },
+              "label": { "normal": { "show": false }, "emphasis": { "show": false } }
+            }],
+            "layoutSize": "100%",
+            "layoutCenter": ["50%", "52%"]
+          },
+          {
+            "map": "map",
+            "roam": false,
+            "show": true,
+            "zoom": 1,
+            "zlevel": 1,
+            "label": {
+              "normal": { "show": false },
+              "emphasis": { "show": false }
+            },
+            "silent": true,
+            "itemStyle": {
+              "normal": {
+                "areaColor": "rgba(0, 40, 90, 0.55)",
+                "borderColor": "rgba(0, 255, 255, 0.18)",
+                "borderWidth": 1
+              },
+              "emphasis": {
+                "areaColor": "rgba(0, 40, 90, 0.55)",
+                "borderColor": "rgba(0, 255, 255, 0.18)",
                 "borderWidth": 1
               }
             },
-            "label": { "normal": { "show": false }, "emphasis": { "show": false } }
-          }],
-          "layoutSize": "100%",
-          "layoutCenter": [
-            "50%",
-            "50%"
-          ]
-        },
+            "regions": [{
+              "name": "南海诸岛",
+              "itemStyle": {
+                "normal": {
+                  "opacity": 0
+                },
+                "emphasis": {
+                  "opacity": 0
+                }
+              },
+              "label": { "normal": { "show": false }, "emphasis": { "show": false } }
+            }],
+            "layoutSize": "100%",
+            "layoutCenter": ["50%", "51%"]
+          },
+          {
+            "map": "map",
+            "roam": false,
+            "show": true,
+            "zoom": 1,
+            "zlevel": 2,
+            "label": {
+              "normal": {
+                "show": true,
+                "color": "#fff",
+                "fontSize": 12
+              },
+              "emphasis": {
+                "show": true,
+                "color": "#fff",
+                "fontSize": 14
+              }
+            },
+            "silent": false,
+            "itemStyle": {
+              "normal": {
+                "areaColor": "#0a2e5c",
+                "borderColor": "rgba(0,255,255,.4)",
+                "borderWidth": 1
+              },
+              "emphasis": {
+                "areaColor": "rgba(0, 200, 255, 0.35)",
+                "borderColor": "rgba(0, 255, 255, 0.9)",
+                "borderWidth": 2,
+                "shadowBlur": 22,
+                "shadowColor": "rgba(0, 30, 80, 0.5)",
+                "shadowOffsetX": 2,
+                "shadowOffsetY": 6
+              }
+            },
+            "regions": [{
+              "name": "南海诸岛",
+              "itemStyle": {
+                "normal": {
+                  "areaColor": "rgba(0, 20, 60, 0.8)",
+                  "borderColor": "rgba(0,255,255,.6)",
+                  "borderWidth": 1
+                }
+              },
+              "label": { "normal": { "show": false }, "emphasis": { "show": false } }
+            }],
+            "layoutSize": "100%",
+            "layoutCenter": ["50%", "50%"]
+          }
+        ],
         "title": {
           "text": "",
           "textStyle": {
@@ -5545,7 +5675,8 @@ const DS_CONFIG = {
             "data": [],
             "name": "门店数量",
             "type": "map",
-            "geoIndex": 0
+            "geoIndex": 2,
+            "zlevel": 4
           }
         ],
         "tooltip": {
@@ -5589,11 +5720,15 @@ const DS_CONFIG = {
         }
       },
       "setOption": {
-        "geo.map": "config.adcode",
-        "geo.zoom": "config.zoom",
+        "geo[0].map": "config.adcode",
+        "geo[1].map": "config.adcode",
+        "geo[2].map": "config.adcode",
+        "geo[0].zoom": "config.zoom",
+        "geo[1].zoom": "config.zoom",
+        "geo[2].zoom": "config.zoom",
         "title.show": "config.titleShow",
         "title.text": "config.title",
-        "visualMap.max": "FUN:  Math.max(...this.element.data.default.map(item => item.value))",
+        "visualMap.max": "FUN:  Math.max(0, ...this.element.data.default.map(item => item.value))",
         "visualMap.top": "config.top+%",
         "series[0].data": "data.default",
         "series[0].name": "config.tooltipTitle",
@@ -5603,29 +5738,42 @@ const DS_CONFIG = {
         "visualMap.orient": "config.orient",
         "visualMap.text[0]": "config.highText",
         "visualMap.text[1]": "config.lowText",
-        "geo.layoutCenter[0]": "config.centerX+%",
-        "geo.layoutCenter[1]": "config.centerY+%",
+        "geo[0].layoutCenter[0]": "FUN: (function(){var c=(this.element&&this.element.config)||{};return (Number(c.centerX||0)+Number(c.d25dShadowDx||0))+'%';}).call(this)",
+        "geo[1].layoutCenter[0]": "FUN: (function(){var c=(this.element&&this.element.config)||{};return (Number(c.centerX||0)+Number(c.d25dThickDx||0))+'%';}).call(this)",
+        "geo[2].layoutCenter[0]": "config.centerX+%",
+        "geo[0].layoutCenter[1]": "FUN: (function(){var c=(this.element&&this.element.config)||{};return (Number(c.centerY||0)+Number(c.d25dShadowDy||0))+'%';}).call(this)",
+        "geo[1].layoutCenter[1]": "FUN: (function(){var c=(this.element&&this.element.config)||{};return (Number(c.centerY||0)+Number(c.d25dThickDy||0))+'%';}).call(this)",
+        "geo[2].layoutCenter[1]": "config.centerY+%",
+        "geo[0].itemStyle.normal.areaColor": "FUN: (function(){var c=(this.element&&this.element.config)||{};var hex=c.d25dShadowFillColor||'#000000';var a=Number(c.d25dShadowFillOpacity);if(isNaN(a))a=0.35;var fn=this.__ds_hexToRgba;if(!fn){fn=this.__ds_hexToRgba=function(h,alpha){h=String(h||'').trim();if(h[0]==='#')h=h.slice(1);if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);if(isNaN(r)||isNaN(g)||isNaN(b))return 'rgba(0,0,0,'+alpha+')';return 'rgba('+r+','+g+','+b+','+alpha+')';};}return fn(hex,a);}).call(this)",
+        "geo[0].itemStyle.normal.shadowColor": "FUN: (function(){var c=(this.element&&this.element.config)||{};var hex=c.d25dShadowShadowColor||'#000000';var a=Number(c.d25dShadowShadowOpacity);if(isNaN(a))a=0.55;var fn=this.__ds_hexToRgba;if(!fn){fn=this.__ds_hexToRgba=function(h,alpha){h=String(h||'').trim();if(h[0]==='#')h=h.slice(1);if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);if(isNaN(r)||isNaN(g)||isNaN(b))return 'rgba(0,0,0,'+alpha+')';return 'rgba('+r+','+g+','+b+','+alpha+')';};}return fn(hex,a);}).call(this)",
+        "geo[0].itemStyle.normal.shadowBlur": "config.d25dShadowShadowBlur",
+        "geo[0].itemStyle.normal.shadowOffsetX": "config.d25dShadowShadowOffsetX",
+        "geo[0].itemStyle.normal.shadowOffsetY": "config.d25dShadowShadowOffsetY",
+        "geo[1].itemStyle.normal.areaColor": "FUN: (function(){var c=(this.element&&this.element.config)||{};var hex=c.d25dThickFillColor||'#00285a';var a=Number(c.d25dThickFillOpacity);if(isNaN(a))a=0.55;var fn=this.__ds_hexToRgba;if(!fn){fn=this.__ds_hexToRgba=function(h,alpha){h=String(h||'').trim();if(h[0]==='#')h=h.slice(1);if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);if(isNaN(r)||isNaN(g)||isNaN(b))return 'rgba(0,0,0,'+alpha+')';return 'rgba('+r+','+g+','+b+','+alpha+')';};}return fn(hex,a);}).call(this)",
+        "geo[1].itemStyle.normal.borderColor": "FUN: (function(){var c=(this.element&&this.element.config)||{};var hex=c.d25dThickBorderColor||'#00ffff';var a=Number(c.d25dThickBorderOpacity);if(isNaN(a))a=0.18;var fn=this.__ds_hexToRgba;if(!fn){fn=this.__ds_hexToRgba=function(h,alpha){h=String(h||'').trim();if(h[0]==='#')h=h.slice(1);if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];var r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);if(isNaN(r)||isNaN(g)||isNaN(b))return 'rgba(0,0,0,'+alpha+')';return 'rgba('+r+','+g+','+b+','+alpha+')';};}return fn(hex,a);}).call(this)",
+        "geo[1].itemStyle.normal.borderWidth": "config.d25dThickBorderWidth",
         "tooltip.borderColor": "config.tooltipBorderColor",
         "tooltip.borderWidth": "config.tooltipBorderWidth",
-        "geo.label.normal.show": "config.showLabel",
-        "geo.label.normal.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0)return '';return p.name+'\\n'+v;};}).call(this)",
-        "geo.label.emphasis.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0)return p.name;return p.name+'\\n'+v;};}).call(this)",
-        "geo.label.normal.color": "config.labelColor",
-        "geo.label.normal.padding": "config.labelPadding",
-        "geo.label.normal.fontSize": "config.labelSize",
-        "geo.label.normal.fontStyle": "config.labelFontStyle",
-        "geo.label.normal.fontFamily": "config.labelFontFamily",
-        "geo.label.normal.fontWeight": "config.labelFontWeight",
-        "geo.label.normal.borderType": "config.labelBorderType",
-        "geo.label.normal.borderColor": "config.labelBorderColor",
-        "geo.label.normal.borderWidth": "config.labelBorderWidth",
-        "geo.label.normal.borderRadius": "config.labelBorderRadius",
-        "geo.label.normal.backgroundColor": "config.labelBgColor",
-        "geo.label.normal.textBorderType": "config.labelTextBorderType",
-        "geo.label.normal.textBorderColor": "config.labelTextBorderColor",
-        "geo.label.normal.textBorderWidth": "config.labelTextBorderWidth",
-        "geo.itemStyle.normal.borderColor": "config.mapBorderColor",
-        "geo.itemStyle.normal.borderWidth": "config.borderWidth",
+        "geo[2].label.normal.show": "config.showLabel",
+        "geo[2].label.normal.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||v===9.49)return '';return p.name+'\\n'+v;};}).call(this)",
+        "geo[2].label.emphasis.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||v===9.49)return p.name;return p.name+'\\n'+v;};}).call(this)",
+        "geo[2].label.normal.color": "config.labelColor",
+        "geo[2].label.normal.padding": "config.labelPadding",
+        "geo[2].label.normal.fontSize": "config.labelSize",
+        "geo[2].label.normal.fontStyle": "config.labelFontStyle",
+        "geo[2].label.normal.fontFamily": "config.labelFontFamily",
+        "geo[2].label.normal.fontWeight": "config.labelFontWeight",
+        "geo[2].label.normal.borderType": "config.labelBorderType",
+        "geo[2].label.normal.borderColor": "config.labelBorderColor",
+        "geo[2].label.normal.borderWidth": "config.labelBorderWidth",
+        "geo[2].label.normal.borderRadius": "config.labelBorderRadius",
+        "geo[2].label.normal.backgroundColor": "config.labelBgColor",
+        "geo[2].label.normal.textBorderType": "config.labelTextBorderType",
+        "geo[2].label.normal.textBorderColor": "config.labelTextBorderColor",
+        "geo[2].label.normal.textBorderWidth": "config.labelTextBorderWidth",
+        "geo[2].itemStyle.normal.areaColor": "config.mapAreaColor",
+        "geo[2].itemStyle.normal.borderColor": "config.mapBorderColor",
+        "geo[2].itemStyle.normal.borderWidth": "config.borderWidth",
         "title.textStyle.color": "config.titleColor",
         "tooltip.backgroundColor": "config.tooltipBackgroundColor",
         "tooltip.textStyle.color": "config.tooltipTextColor",
@@ -5645,8 +5793,8 @@ const DS_CONFIG = {
       "baseConfig": null
     },
     "config": {
-      "top": 44,
-      "left": 2,
+      "top": 62,
+      "left": 20,
       "zoom": 0.95,
       "title": "省份均价数据",
       "adcode": "100000",
@@ -5684,7 +5832,7 @@ const DS_CONFIG = {
       "mapAreaColor": "rgba(0,255,255,.02)",
       "tooltipTitle": "省份数据",
       "tooltipPadding": 12,
-      "showVisualMap": false,
+      "showVisualMap": true,
       "visualMapSize": 16,
       "labelFontStyle": "normal",
       "mapBorderColor": "rgba(0, 0, 0, 0.2)",
@@ -5709,6 +5857,22 @@ const DS_CONFIG = {
       "tooltipBackgroundColor": "rgba(0, 40, 100, 0.9)",
       "tooltipTextBorderColor": "#000",
       "tooltipTextBorderWidth": 2,
+      "d25dShadowDx": 0.8,
+      "d25dShadowDy": 2,
+      "d25dShadowFillColor": "#000000",
+      "d25dShadowFillOpacity": 0.35,
+      "d25dShadowShadowColor": "#000000",
+      "d25dShadowShadowOpacity": 0.55,
+      "d25dShadowShadowBlur": 32,
+      "d25dShadowShadowOffsetX": 0,
+      "d25dShadowShadowOffsetY": 18,
+      "d25dThickDx": 0.4,
+      "d25dThickDy": 1,
+      "d25dThickFillColor": "#00285a",
+      "d25dThickFillOpacity": 0.55,
+      "d25dThickBorderColor": "#00ffff",
+      "d25dThickBorderOpacity": 0.18,
+      "d25dThickBorderWidth": 1,
       "rotateY": 0,
       "rotateX": 0,
       "rotateZ": 0
@@ -5912,7 +6076,8 @@ const DS_CONFIG = {
           "货源省份",
           "流向地区",
           "交易单价"
-        ]
+        ],
+        "columnWidth": [168, 110, 110, 180]
       },
       "getType": 1,
       "dataSetName": "异常交易数据"
@@ -6181,7 +6346,7 @@ const DS_CONFIG = {
     }
   },
   "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9": {
-    "x": 1429,
+    "x": 1430,
     "y": 192,
     "isWarning": false,
     "_key": "cpm1775f06d-f70d-4c98-a9e7-30ede47631d9",
@@ -6219,7 +6384,7 @@ const DS_CONFIG = {
     "_key": "cpm4be3e9a4-f41b-4645-adac-bcdb8aa1618f",
     "creater": "DecorationElement",
     "render": "DecorationEl",
-    "width": 167,
+    "width": 158,
     "height": 64,
     "active": false,
     "locked": false,
@@ -6249,7 +6414,7 @@ const DS_CONFIG = {
     }
   },
   "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7": {
-    "x": 1606,
+    "x": 1604,
     "y": 117,
     "isWarning": false,
     "_key": "cpm36730edf-2a70-4352-b49a-8afb55ecbdb7",
@@ -6299,13 +6464,13 @@ const DS_CONFIG = {
     }
   },
   "cpm366b3d38-0dff-487b-9cde-b962629f6466": {
-    "x": 1739,
+    "x": 1731,
     "y": 107,
     "isWarning": false,
     "_key": "cpm366b3d38-0dff-487b-9cde-b962629f6466",
     "creater": "DecorationElement",
     "render": "DecorationEl",
-    "width": 167,
+    "width": 158,
     "height": 64,
     "active": false,
     "locked": false,
@@ -6371,7 +6536,7 @@ const DS_CONFIG = {
     }
   },
   "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20": {
-    "x": 1775,
+    "x": 1764,
     "y": 117,
     "isWarning": false,
     "_key": "cpm2e903d42-d3fe-4497-a7f7-01f8c4108a20",

@@ -66,8 +66,8 @@
   }
 </style>
 <style>
-  html, body { width: 100%; height: 100%; }
-  #app { width: 100%; min-height: 100vh; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  #app { width: 1920px; height: 1080px; position: absolute; left: 0; top: 0; transform-origin: 0 0; }
   @media (max-width: 1280px) {
     :root { font-size: 14px; }
   }
@@ -75,7 +75,32 @@
     :root { font-size: 13px; }
   }
 </style>
-<link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="../../shared/api/config.js"></script><script src="../../shared/api/modules/screen.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
+<link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script>
+(function() {
+  var BASE_W = 1920;
+  var BASE_H = 1080;
+  var rafId = 0;
+  function applyScale() {
+    rafId = 0;
+    var el = document.getElementById('app');
+    if (!el) return;
+    var vw = window.innerWidth || document.documentElement.clientWidth || BASE_W;
+    var vh = window.innerHeight || document.documentElement.clientHeight || BASE_H;
+    var s = Math.min(vw / BASE_W, vh / BASE_H);
+    var left = Math.max(0, (vw - BASE_W * s) / 2);
+    var top = Math.max(0, (vh - BASE_H * s) / 2);
+    el.style.transform = 'scale(' + s + ')';
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+  }
+  function schedule() {
+    if (rafId) return;
+    rafId = window.requestAnimationFrame(applyScale);
+  }
+  window.addEventListener('resize', schedule);
+  applyScale();
+})();
+</script><script src="js/datashow.utils.js"></script><script src="../../shared/api/config.js"></script><script src="../../shared/api/modules/screen.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
 <!-- 热力图依赖：先加载中国地图 GeoJSON 到 window.DS_GEO["100000"]，再启动应用 -->
 <script>
 (function() {

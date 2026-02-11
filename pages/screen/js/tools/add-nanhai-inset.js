@@ -28,8 +28,8 @@ const SRC_BOX = {
 
 // 目标缩略框位置（大陆右下方，缩小版）
 const DST_BOX = {
-  minLng: 126, maxLng: 131,
-  minLat: 17, maxLat: 25
+  minLng: 126.7, maxLng: 130.2,
+  minLat: 18.2, maxLat: 23.5
 };
 
 // 边框内边距

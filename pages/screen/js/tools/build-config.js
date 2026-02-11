@@ -43,7 +43,9 @@ try {
     
     // 使用 vm 执行代码以获取 window.DS_DATA
     const sandbox = { 
-        window: {},
+        window: { location: { search: '' } },
+        location: { search: '' },
+        URLSearchParams: URLSearchParams,
         localStorage: {
             getItem: () => null,
             setItem: () => {},
