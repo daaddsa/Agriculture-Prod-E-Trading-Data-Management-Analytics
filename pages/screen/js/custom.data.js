@@ -1,5 +1,4 @@
 
-//自定义获取数据代码, 详细教程请参考https://www.data-show.cn/newsDetail.html?no=92
 window._DS_DATA = {
     enable: true, // 是否开启数据自定义,如果要自定义请设置为true
     dataSet: {} // 数据集: 大屏中每个组件的数据，key为编辑器中设置的数据集名称，value为组件数据必须和编辑器中静态数据格式一致
@@ -8,6 +7,75 @@ window._DS_DATA = {
 // 数据集名称请在编辑器中设置
 
 // 这里自定义你的数据更新逻辑，window._DS_DATA.dataSet 里的数据发生改变时，页面上会自动触发数据更新
+
+const DS_VISUAL_READY_ATTR = 'data-ds-visual-ready';
+const DS_RANK_READY_ATTR = 'data-ds-rank-ready';
+const DS_FACTORY_READY_ATTR = 'data-ds-factory-ready';
+const DS_ABNORMAL_READY_ATTR = 'data-ds-abnormal-ready';
+const DS_PENDING_STYLE_ID = 'ds-pending-visual-style';
+const DS_PROVINCE_MAP_COMPONENT_KEY = 'cpmbd3a7549-e208-42e1-a158-fa080262956e';
+const DS_PROVINCE_HIGHLIGHT_FILL_FALLBACK = 9.49;
+const DS_PENDING_HIDE_IDS = [
+    'cpm8672efb1-ee30-4e48-acf8-23f0f26a7c29',
+    'cpme55a84fd-cf3a-483b-adf8-301d6a611f22',
+    'cpm14289986-335c-4e4f-a0c9-37f4cf6a82c0',
+    'cpm8cbbc08a-cc47-42e5-b0c7-1c22b090f14a',
+    'cpm18e89d42-8641-40e8-8884-db5ce5da24dc',
+    'cpm9ce068f3-90b3-4556-a306-58c47635d1a2'
+];
+const DS_PENDING_HIDE_RANK_IDS = [
+    'cpm46a6db0a-dae1-42f4-a476-e5be47b52121',
+    'cpm392223cb-81f8-4803-8377-3d3661ebf467',
+    'cpm17b89f9f-94ab-436f-acd1-12ea189ace09',
+    'cpme7612333-ba11-4dc7-8cb8-e82dfb629692'
+];
+const DS_PENDING_HIDE_FACTORY_IDS = [
+    'cpm5znQAaRPBgPONPpN0ce87',
+    'cpmf3591fa9-ff54-48f7-bdd4-7d3bf5fab755',
+    'cpmdf32aab5-1afb-455c-ac76-848a0b6fb189'
+];
+const DS_PENDING_HIDE_ABNORMAL_IDS = [
+    'cpm817f187b-80cb-47eb-b250-a6a559a3cc8d',
+    'cpmfaf24b6b-642d-4c12-80a3-f3f1009eb5d5'
+];
+
+function getProvinceHighlightFillValue() {
+    try {
+        const v = DS_CONFIG?.[DS_PROVINCE_MAP_COMPONENT_KEY]?.option?.config?.highlightFillValue;
+        const n = Number(v);
+        return Number.isFinite(n) ? n : DS_PROVINCE_HIGHLIGHT_FILL_FALLBACK;
+    } catch (e) {
+        return DS_PROVINCE_HIGHLIGHT_FILL_FALLBACK;
+    }
+}
+
+function ensurePendingVisualStyle() {
+    if (document.getElementById(DS_PENDING_STYLE_ID)) return;
+    const s = document.createElement('style');
+    s.id = DS_PENDING_STYLE_ID;
+    const visSel = DS_PENDING_HIDE_IDS.map(id => 'html:not([' + DS_VISUAL_READY_ATTR + '="1"]) [id="' + id + '"]').join(',\n');
+    const rankSel = DS_PENDING_HIDE_RANK_IDS.map(id => 'html:not([' + DS_RANK_READY_ATTR + '="1"]) [id="' + id + '"]').join(',\n');
+    const factorySel = DS_PENDING_HIDE_FACTORY_IDS.map(id => 'html:not([' + DS_FACTORY_READY_ATTR + '="1"]) [id="' + id + '"]').join(',\n');
+    const abnormalSel = DS_PENDING_HIDE_ABNORMAL_IDS.map(id => 'html:not([' + DS_ABNORMAL_READY_ATTR + '="1"]) [id="' + id + '"]').join(',\n');
+    s.textContent = [
+        visSel + ' { visibility: hidden !important; }',
+        rankSel + ' { visibility: hidden !important; }',
+        factorySel + ' { visibility: hidden !important; }',
+        abnormalSel + ' { visibility: hidden !important; }'
+    ].join('\n');
+    document.head.appendChild(s);
+}
+
+function setAttrFlag(attr, ready) {
+    if (ready) document.documentElement.setAttribute(attr, '1');
+    else document.documentElement.removeAttribute(attr);
+}
+
+ensurePendingVisualStyle();
+setAttrFlag(DS_VISUAL_READY_ATTR, false);
+setAttrFlag(DS_RANK_READY_ATTR, false);
+setAttrFlag(DS_FACTORY_READY_ATTR, false);
+setAttrFlag(DS_ABNORMAL_READY_ATTR, false);
 
 async function getData() {
     // 优先从 URL 参数中获取 marketId，如果没有则默认为 1
@@ -41,6 +109,15 @@ async function getData() {
                 console.error(`[CustomData] Error ${key}:`, settled[i].reason);
             }
         });
+
+        const hasVisualData = Object.prototype.hasOwnProperty.call(rawResults, 'visualData');
+        const hasAbnormalData = Object.prototype.hasOwnProperty.call(rawResults, 'abnormalData');
+
+        const visualData = rawResults.visualData;
+        setAttrFlag(DS_VISUAL_READY_ATTR, hasVisualData);
+        setAttrFlag(DS_RANK_READY_ATTR, hasVisualData);
+        setAttrFlag(DS_FACTORY_READY_ATTR, !!(hasVisualData && visualData && Object.prototype.hasOwnProperty.call(visualData, 'tradeFactoryPrices')));
+        setAttrFlag(DS_ABNORMAL_READY_ATTR, hasAbnormalData);
 
         // 更新数据集
         const newDataSet = {};
@@ -290,11 +367,12 @@ async function getData() {
                     '黑龙江', '湖南', '四川', '广东', '浙江', '福建', '安徽', '江苏'
                 ];
 
+                const highlightFillValue = getProvinceHighlightFillValue();
                 const existingNames = new Set(provinceMapData.map(item => item.name));
                 allProvinces.forEach(name => {
                     if (!existingNames.has(name)) {
                         // 如果是需要高亮的省份，设置特定值 9.49；否则设为 0
-                        const defaultVal = highlightProvinces.includes(name) ? 9.49 : 0;
+                        const defaultVal = highlightProvinces.includes(name) ? highlightFillValue : 0;
                         provinceMapData.push({ name: name, value: defaultVal });
                     }
                 });

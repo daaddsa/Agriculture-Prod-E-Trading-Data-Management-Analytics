@@ -135,58 +135,9 @@ const DS_CONFIG = {
           "disabled": true
         }
       ],
-      "value": "{\n  \"body\": [\n    [\n      \"北京\",\n      \"23.13\",\n      \"湖北\",\n      \"23.49\"\n    ],\n    [\n      \"天津\",\n      \"22.26\",\n      \"湖南\",\n      \"22.53\"\n    ],\n    [\n      \"河北\",\n      \"23.46\",\n      \"广东\",\n      \"24.13\"\n    ],\n    [\n      \"辽宁\",\n      \"23.32\",\n      \"四川\",\n      \"23.58\"\n    ],\n    [\n      \"吉林\",\n      \"24.90\",\n      \"安徽\",\n      \"23.44\"\n    ],\n    [\n      \"黑龙江\",\n      \"23.23\",\n      \"福建\",\n      \"23.23\"\n    ],\n    [\n      \"江苏\",\n      \"23.56\",\n      \"山东\",\n      \"23.31\"\n    ],\n    [\n      \"浙江\",\n      \"23.40\",\n      \"河南\",\n      \"23.46\"\n    ]\n  ]\n}",
+      "value": "{\n  \"body\": []\n}",
       "default": {
-        "body": [
-          [
-            "北京",
-            "23.13",
-            "湖北",
-            "23.49"
-          ],
-          [
-            "天津",
-            "22.26",
-            "湖南",
-            "22.53"
-          ],
-          [
-            "河北",
-            "23.46",
-            "广东",
-            "24.13"
-          ],
-          [
-            "辽宁",
-            "23.32",
-            "四川",
-            "23.58"
-          ],
-          [
-            "吉林",
-            "24.90",
-            "安徽",
-            "23.44"
-          ],
-          [
-            "黑龙江",
-            "23.23",
-            "福建",
-            "23.23"
-          ],
-          [
-            "江苏",
-            "23.56",
-            "山东",
-            "23.31"
-          ],
-          [
-            "浙江",
-            "23.40",
-            "河南",
-            "23.46"
-          ]
-        ]
+        "body": []
       },
       "getType": 1,
       "dataSetName": "商品销售排行"
@@ -690,24 +641,12 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
       },
-      "value": "{\n  \"titles\": [\n    \"河南\",\n    \"山东\",\n    \"浙江\",\n    \"江苏\",\n    \"安徽\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1872,\n        2011,\n        2598,\n        3025,\n        3832\n      ],\n      \"name\": \"产地销售量排名\"\n    }\n  ]\n}",
+      "value": "{\n  \"titles\": [],\n  \"values\": [\n    {\n      \"data\": [],\n      \"name\": \"产地销售量排名\"\n    }\n  ]\n}",
       "default": {
-        "titles": [
-          "河南",
-          "山东",
-          "浙江",
-          "江苏",
-          "安徽"
-        ],
+        "titles": [],
         "values": [
           {
-            "data": [
-              1872,
-              2011,
-              2598,
-              3025,
-              3832
-            ],
+            "data": [],
             "name": "产地销售量排名"
           }
         ]
@@ -1491,8 +1430,8 @@ const DS_CONFIG = {
     },
     "config": {
       "gridB": 25,
-      "gridL": 10,
-      "gridR": 10,
+      "gridL": 12,
+      "gridR": 12,
       "gridT": 12,
       "title": "产地销售量排名TOP5",
       "colors": [
@@ -1593,24 +1532,12 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"data\":{\"titles\":[\"周一\",\"周二\"],\"values\":[{\"data\":[1000,1500],\"name\":\"收入\"}]}}"
       },
-      "value": "{\n  \"titles\": [\n    \"虹虹区\",\n    \"静安区\",\n    \"黄埔区\",\n    \"普陀区\",\n    \"徐汇区\"\n  ],\n  \"values\": [\n    {\n      \"data\": [\n        1530,\n        1880,\n        2330,\n        2870,\n        3210\n      ],\n      \"name\": \"销地采购量排名11\"\n    }\n  ]\n}",
+      "value": "{\n  \"titles\": [],\n  \"values\": [\n    {\n      \"data\": [],\n      \"name\": \"销地采购量排名\"\n    }\n  ]\n}",
       "default": {
-        "titles": [
-          "虹口区",
-          "静安区",
-          "黄埔区",
-          "普陀区",
-          "徐汇区"
-        ],
+        "titles": [],
         "values": [
           {
-            "data": [
-              1530,
-              1880,
-              2330,
-              2870,
-              3210
-            ],
+            "data": [],
             "name": "销地采购量排名"
           }
         ]
@@ -2893,8 +2820,8 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": "10",
-      "default": 10,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -2937,8 +2864,8 @@ const DS_CONFIG = {
     "name": "数值 Copy",
     "data": {
       "dataType": "number",
-      "value": "40",
-      "default": 40,
+      "value": "0",
+      "default": 0,
       "getType": 1,
       "api": {
         "url": "",
@@ -5728,9 +5655,10 @@ const DS_CONFIG = {
         "geo[2].zoom": "config.zoom",
         "title.show": "config.titleShow",
         "title.text": "config.title",
-        "visualMap.max": "FUN:  Math.max(0, ...this.element.data.default.map(item => item.value))",
+        "visualMap.max": "FUN: (function(){var c=(this.element&&this.element.config)||{};var base=Number(c.highlightFillValue);if(!isFinite(base))base=9.49;var arr=(this.element.data.default||[]).map(function(it){return Number(it.value);}).filter(function(v){return isFinite(v)&&v!==0&&Math.abs(v-base)>1e-9;});if(!arr.length)return 0;return Math.max.apply(Math,arr);}).call(this)",
+        "visualMap.min": "FUN: 0",
         "visualMap.top": "config.top+%",
-        "series[0].data": "data.default",
+        "series[0].data": "FUN: (function(){var c=(this.element&&this.element.config)||{};var p=Number(c.valuePower);if(!isFinite(p)||p<=0)p=3;var base=Number(c.highlightFillValue);if(!isFinite(base))base=9.49;var data=(this.element.data.default||[]).map(function(d){return {name:d.name,value:Number(d.value)};});var arr=data.map(function(it){return it.value;}).filter(function(v){return isFinite(v)&&v!==0&&Math.abs(v-base)>1e-9;});if(!arr.length)return data;var vmax=Math.max.apply(Math,arr);if(!isFinite(vmax)||vmax<=0)return data;return data.map(function(d){var v=d.value;if(!isFinite(v)||v===0||Math.abs(v-base)<=1e-9)return d;var x=v/vmax;var y=Math.pow(x,p);return {name:d.name,value:vmax*y};});}).call(this)",
         "series[0].name": "config.tooltipTitle",
         "visualMap.left": "config.left+%",
         "visualMap.show": "config.showVisualMap",
@@ -5755,8 +5683,8 @@ const DS_CONFIG = {
         "tooltip.borderColor": "config.tooltipBorderColor",
         "tooltip.borderWidth": "config.tooltipBorderWidth",
         "geo[2].label.normal.show": "config.showLabel",
-        "geo[2].label.normal.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||v===9.49)return '';return p.name+'\\n'+v;};}).call(this)",
-        "geo[2].label.emphasis.formatter": "FUN: (function(){var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||v===9.49)return p.name;return p.name+'\\n'+v;};}).call(this)",
+        "geo[2].label.normal.formatter": "FUN: (function(){var c=(this.element&&this.element.config)||{};var base=Number(c.highlightFillValue);if(!isFinite(base))base=9.49;var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||Math.abs(Number(v)-base)<=1e-9)return '';return p.name+'\\n'+v;};}).call(this)",
+        "geo[2].label.emphasis.formatter": "FUN: (function(){var c=(this.element&&this.element.config)||{};var base=Number(c.highlightFillValue);if(!isFinite(base))base=9.49;var m={};(this.element.data.default||[]).forEach(function(d){m[d.name]=d.value;});return function(p){var v=m[p.name];if(v==null||isNaN(v)||v===0||Math.abs(Number(v)-base)<=1e-9)return p.name;return p.name+'\\n'+v;};}).call(this)",
         "geo[2].label.normal.color": "config.labelColor",
         "geo[2].label.normal.padding": "config.labelPadding",
         "geo[2].label.normal.fontSize": "config.labelSize",
@@ -5827,6 +5755,8 @@ const DS_CONFIG = {
         "#5AABD4",
         "#2478B5"
       ],
+      "valuePower": 9,
+      "highlightFillValue": 9.49,
       "labelBgColor": "rgba(0, 0, 0, 0)",
       "labelPadding": 4,
       "mapAreaColor": "rgba(0,255,255,.02)",
@@ -6037,40 +5967,9 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"data\": {\"body\": [[\"改进消息\",\"2023年4月20日 12:00:00\"]],\"header\": [\"消息\",\"时间\"]}}"
       },
-      "value": "{\n  \"body\": [\n    [\n      \"2023-03-05 01:13:00\",\n      \"河南省\",\n      \"普陀区\",\n      \"8.97元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:44:00\",\n      \"江苏省\",\n      \"虹口区\",\n      \"8.67元/公斤\"\n    ],\n    [\n      \"2023-03-05 01:55:00\",\n      \"安徽省\",\n      \"徐汇区\",\n      \"9.27元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:13:00\",\n      \"山东省\",\n      \"嘉定区\",\n      \"8.81元/公斤\"\n    ],\n    [\n      \"2023-03-05 02:43:00\",\n      \"浙江省\",\n      \"黄浦区\",\n      \"8.83元/公斤\"\n    ]\n  ],\n  \"header\": [\n    \"交易时间\",\n    \"货源省份\",\n    \"流向地区\",\n    \"交易单价\"\n  ]\n}",
+      "value": "{\n  \"body\": [],\n  \"header\": [\n    \"交易时间\",\n    \"货源省份\",\n    \"流向地区\",\n    \"交易单价\"\n  ],\n  \"columnWidth\": [\n    168,\n    110,\n    110,\n    180\n  ]\n}",
       "default": {
-        "body": [
-          [
-            "2023-03-05 01:13:00",
-            "河南省",
-            "普陀区",
-            "8.97元/公斤"
-          ],
-          [
-            "2023-03-05 01:44:00",
-            "江苏省",
-            "虹口区",
-            "8.67元/公斤"
-          ],
-          [
-            "2023-03-05 01:55:00",
-            "安徽省",
-            "徐汇区",
-            "9.27元/公斤"
-          ],
-          [
-            "2023-03-05 02:13:00",
-            "山东省",
-            "嘉定区",
-            "8.81元/公斤"
-          ],
-          [
-            "2023-03-05 02:43:00",
-            "浙江省",
-            "黄浦区",
-            "8.83元/公斤"
-          ]
-        ],
+        "body": [],
         "header": [
           "交易时间",
           "货源省份",
