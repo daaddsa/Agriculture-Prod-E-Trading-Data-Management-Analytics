@@ -207,7 +207,7 @@ async function getData() {
                 values.reverse();
 
                 const factoryData = {
-                    titles: titles,
+                    titles: titles.map(t => truncateRightKeepHead(t, RANK_LABEL_MAX_UNITS)),
                     values: [{ data: values, name: "产地销售量排名" }]
                 };
                 newDataSet['产地销售量排名'] = factoryData;
@@ -231,7 +231,7 @@ async function getData() {
                 values.reverse();
 
                 const purchaseData = {
-                    titles: titles,
+                    titles: titles.map(t => truncateRightKeepHead(t, RANK_LABEL_MAX_UNITS)),
                     values: [{ data: values, name: "销地采购量排名" }]
                 };
                 newDataSet['销地采购量排名'] = purchaseData;
@@ -244,16 +244,14 @@ async function getData() {
         if (rawResults.activityData) {
             const { xList, yList } = rawResults.activityData;
             const titles = (xList || []).map(v => {
-                if (typeof v !== 'string') return v;
-                const s = v.trim();
-                const idx = s.indexOf(' ');
-                if (idx === -1) return s;
-                const datePart = s.slice(0, idx);
-                const timePart = s.slice(idx + 1);
-                if (datePart.length >= 10) {
-                    return datePart.slice(5, 10) + ' ' + timePart;
-                }
-                return s;
+                const s = String(v || '').trim();
+                const p = s.split(' ');
+                if (p.length < 2) return s;
+                const d = p[0];
+                const t = p[1];
+                const mmdd = d.length >= 10 ? d.slice(5, 10) : d;
+                const hhmm = t.length >= 5 ? t.slice(0, 5) : t;
+                return mmdd + ' ' + hhmm;
             });
             const lineData = {
                 titles: titles,
@@ -279,7 +277,7 @@ async function getData() {
                 const abnormalData = {
                     body: body,
                     header: ["交易时间", "货源省份", "流向地区", "交易单价"],
-                    columnWidth: [160, 110, 110, 180]
+                    columnWidth: [190, 100, 100, 170]
                 };
                 
                 newDataSet['异常交易数据'] = abnormalData;
@@ -428,12 +426,47 @@ async function getData() {
 
             // 数据更新后，延迟注入单位文本
             setTimeout(injectUnits, 200);
+        
+        // 如果左侧6项仍为 0 或非数值，则自动启用演示
+        try {
+            const ds = window._DS_DATA.dataSet || {};
+            const leftVals = UNIT_LABELS.map(u => Number(unwrapDataSetValue(ds[u.dataSetName])));
+            const allZeroOrNaN = leftVals.length > 0 && leftVals.every(v => !Number.isFinite(v) || v === 0);
+            if (allZeroOrNaN) startLeftFlipDemoOnce();
+        } catch(e){}
         } else {
             console.warn('[CustomData] No data prepared to update!');
+            startLeftFlipDemoOnce();
         }
     } catch (error) {
         console.error('[CustomData] Global Error:', error);
     }
+}
+
+let _leftFlipDemoTimer = null;
+function startLeftFlipDemoOnce() {
+    if (_leftFlipDemoTimer) return;
+    if (!LEFT_METRIC_FLIP_ENABLED) return;
+    const dataSet = window._DS_DATA && window._DS_DATA.dataSet;
+    if (!dataSet) return;
+    setAttrFlag(DS_VISUAL_READY_ATTR, true);
+    const seeds = {};
+    UNIT_LABELS.forEach(({ dataSetName }) => {
+        const base = Math.floor(1000 + Math.random() * 9000);
+        seeds[dataSetName] = base;
+        dataSet[dataSetName] = base;
+    });
+    try { window._DS_DATA.dataSet = JSON.parse(JSON.stringify(window._DS_DATA.dataSet)); } catch(e){}
+    _leftFlipDemoTimer = setInterval(() => {
+        UNIT_LABELS.forEach(({ dataSetName }) => {
+            const delta = Math.floor((Math.random() * 200 - 100));
+            seeds[dataSetName] = Math.max(0, seeds[dataSetName] + delta);
+            dataSet[dataSetName] = seeds[dataSetName];
+        });
+        try { window._DS_DATA.dataSet = JSON.parse(JSON.stringify(window._DS_DATA.dataSet)); } catch(e){}
+        setTimeout(injectUnits, 50);
+    }, 1500);
+    console.log('[CustomData] Left flip demo started');
 }
 
 // =====================================================
@@ -465,6 +498,11 @@ function updateMarketDropdownText() {
 function setupMarketSwitcher() {
     const urlParams = new URLSearchParams(window.location.search);
     const currentId = String(urlParams.get('marketId') || '1');
+    const flipDemoParam = urlParams.get('flipdemo') || urlParams.get('demo');
+    if (flipDemoParam === '1' || flipDemoParam === 'true') {
+        try { startLeftFlipDemoOnce(); } catch(e){}
+    }
+    // 动画模式改为代码内配置 LEFT_ANIM_MODE
 
     document.addEventListener('click', function (e) {
         const clickedText = e.target.textContent.trim();
@@ -517,7 +555,19 @@ const LEFT_FLIP_CARD_CLASS = 'ds-left-flip-card';
 const LEFT_FLIP_ANIM_CLASS = 'ds-left-flip-anim';
 const LEFT_FLIP_FRONT_CLASS = 'ds-left-flip-front';
 const LEFT_FLIP_BACK_CLASS = 'ds-left-flip-back';
+const LEFT_FLIP_TOP_CLASS = 'ds-left-flip-top';
+const LEFT_FLIP_BOTTOM_CLASS = 'ds-left-flip-bottom';
+const LEFT_FLIP_TOP_ANIM_CLASS = 'ds-left-flip-top-anim';
+const LEFT_FLIP_BOTTOM_ANIM_CLASS = 'ds-left-flip-bottom-anim';
 const LEFT_FLIP_DIGITS_FONT_SCALE = 1.70;
+const TIME_WRAP_CLASS = 'ds-time-wrap';
+const TIME_MAIN_CLASS = 'ds-time-main';
+const TIME_WEEK_CLASS = 'ds-time-week';
+const LEFT_ROLL_CELL_CLASS = 'ds-roll-cell';
+const LEFT_ROLL_LIST_CLASS = 'ds-roll-list';
+const LEFT_ANIM_MODE = 'roll';
+const LEFT_ROLL_DURATION_MS = 850;
+const LEFT_PER_DIGIT_WIDTH = true;
 
 function unwrapDataSetValue(v) {
     if (v && typeof v === 'object' && Object.prototype.hasOwnProperty.call(v, 'value')) return v.value;
@@ -541,6 +591,38 @@ function padLeft(text, len) {
 function isDigitChar(ch) {
     return ch >= '0' && ch <= '9';
 }
+
+function calcTextUnits(text) {
+    let units = 0;
+    const s = text == null ? '' : String(text);
+    for (let i = 0; i < s.length; i++) {
+        const code = s.charCodeAt(i);
+        if ((code >= 0x4E00 && code <= 0x9FFF) || (code >= 0x3400 && code <= 0x4DBF)) units += 2;
+        else units += 1;
+    }
+    return units;
+}
+
+function truncateRightKeepHead(text, maxUnits) {
+    const s = text == null ? '' : String(text);
+    if (!s) return s;
+    let units = 0;
+    let out = '';
+    for (let i = 0; i < s.length; i++) {
+        const ch = s[i];
+        const code = s.charCodeAt(i);
+        const step = ((code >= 0x4E00 && code <= 0x9FFF) || (code >= 0x3400 && code <= 0x4DBF)) ? 2 : 1;
+        if (units + step > maxUnits) {
+            out += '…';
+            return out;
+        }
+        out += ch;
+        units += step;
+    }
+    return out;
+}
+
+const RANK_LABEL_MAX_UNITS = 12;
 
 function scaleComputedSize(value, scale) {
     if (!value) return value;
@@ -580,6 +662,35 @@ function snapshotTypography(el) {
     };
 }
 
+function computeDigitMetrics(typography) {
+    const measurer = document.createElement('span');
+    measurer.style.position = 'absolute';
+    measurer.style.visibility = 'hidden';
+    measurer.style.left = '-99999px';
+    measurer.style.top = '-99999px';
+    measurer.style.fontFamily = typography.fontFamily;
+    measurer.style.fontSize = typography.fontSize;
+    measurer.style.fontWeight = typography.fontWeight;
+    measurer.style.fontStyle = typography.fontStyle;
+    measurer.style.lineHeight = typography.lineHeight;
+    measurer.style.letterSpacing = typography.letterSpacing;
+    measurer.style.fontVariantNumeric = 'tabular-nums';
+    measurer.style.fontFeatureSettings = '"tnum" 1, "lnum" 1';
+    document.body.appendChild(measurer);
+    let maxDigit = 0;
+    for (let d = 0; d <= 9; d++) {
+        measurer.textContent = String(d);
+        maxDigit = Math.max(maxDigit, measurer.offsetWidth || 0);
+    }
+    const digitPx = maxDigit || 0;
+    measurer.textContent = '.';
+    const dotPx = measurer.offsetWidth || Math.max(1, Math.round(digitPx * 0.35));
+    measurer.textContent = '-';
+    const dashPx = measurer.offsetWidth || Math.max(1, Math.round(digitPx * 0.5));
+    document.body.removeChild(measurer);
+    return { digitPx, dotPx, dashPx };
+}
+
 function ensureLeftFlipOverlay(containerEl) {
     let overlay = containerEl.querySelector('.' + LEFT_FLIP_OVERLAY_CLASS);
     if (!overlay) {
@@ -609,11 +720,25 @@ function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
         digitsWrap.style.fontWeight = String(Number.isFinite(baseW) ? Math.max(baseW, 800) : 800);
         digitsWrap.style.fontStyle = typography.fontStyle;
         digitsWrap.style.lineHeight = scaleComputedSize(typography.lineHeight, LEFT_FLIP_DIGITS_FONT_SCALE);
-        digitsWrap.style.letterSpacing = typography.letterSpacing;
-        digitsWrap.style.fontVariantNumeric = typography.fontVariantNumeric;
-        digitsWrap.style.fontFeatureSettings = typography.fontFeatureSettings;
+        // 统一间距：翻牌容器内禁用字距，全部由固定位宽控制
+        digitsWrap.style.letterSpacing = '0px';
+        digitsWrap.style.fontVariantNumeric = 'tabular-nums';
+        digitsWrap.style.fontFeatureSettings = '"tnum" 1, "lnum" 1';
         digitsWrap.style.fontKerning = typography.fontKerning;
         digitsWrap.style.textTransform = typography.textTransform;
+    }
+    const metrics = typography ? computeDigitMetrics(typography) : null;
+    const scale = LEFT_FLIP_DIGITS_FONT_SCALE || 1;
+    const scaledDigitPx = metrics ? Math.ceil(metrics.digitPx * scale + 1) : null;
+    const scaledDotPx = metrics ? Math.ceil(metrics.dotPx * scale + 1) : null;
+    function widthOfDigit(ch) {
+        if (!metrics) return null;
+        if (ch === '.') return scaledDotPx;
+        if (LEFT_PER_DIGIT_WIDTH && ch >= '0' && ch <= '9' && metrics.digits) {
+            const base = metrics.digits[ch] || metrics.digitPx;
+            return Math.ceil(base * scale + 1);
+        }
+        return scaledDigitPx;
     }
     overlayEl.appendChild(digitsWrap);
 
@@ -632,6 +757,55 @@ function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
         unitSpan.style.textTransform = typography.textTransform;
     }
     overlayEl.appendChild(unitSpan);
+
+    const mode = String(LEFT_ANIM_MODE || '').toLowerCase();
+    if (mode === 'roll') {
+        const a = padLeft(fromText == null ? '' : String(fromText), to.length);
+        const b = padLeft(to, Math.max((fromText || '').length, to.length));
+        const hProbe = document.createElement('span');
+        hProbe.textContent = '8';
+        hProbe.style.position = 'absolute';
+        hProbe.style.visibility = 'hidden';
+        hProbe.style.whiteSpace = 'nowrap';
+        digitsWrap.appendChild(hProbe);
+        const cellH = Math.max(1, hProbe.offsetHeight);
+        digitsWrap.removeChild(hProbe);
+        for (let i = 0; i < b.length; i++) {
+            const oldCh = a[i] || ' ';
+            const newCh = b[i] || ' ';
+            const cell = document.createElement('span');
+            cell.className = LEFT_ROLL_CELL_CLASS;
+            const w = widthOfDigit(newCh);
+            if (w != null) cell.style.width = w + 'px';
+            if (!isDigitChar(oldCh) || !isDigitChar(newCh) || oldCh === newCh) {
+                cell.textContent = newCh;
+                digitsWrap.appendChild(cell);
+                continue;
+            }
+            const list = document.createElement('span');
+            list.className = LEFT_ROLL_LIST_CLASS;
+            for (let d = 0; d <= 9; d++) {
+                const item = document.createElement('span');
+                item.className = 'ds-roll-item';
+                item.textContent = String(d);
+                item.style.height = cellH + 'px';
+                item.style.lineHeight = cellH + 'px';
+                list.appendChild(item);
+            }
+            list.style.transform = 'translate3d(0,' + (-parseInt(oldCh, 10) * cellH) + 'px,0)';
+            cell.style.height = cellH + 'px';
+            cell.appendChild(list);
+            digitsWrap.appendChild(cell);
+            requestAnimationFrame(() => {
+                list.style.transform = 'translate3d(0,' + (-parseInt(newCh, 10) * cellH) + 'px,0)';
+            });
+            list.addEventListener('transitionend', () => {
+                cell.textContent = newCh;
+            }, { once: true });
+        }
+        lastMap[key] = to;
+        return;
+    }
 
     if (fromText == null) {
         digitsWrap.textContent = to;
@@ -660,34 +834,63 @@ function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
 
         if (!isDigitChar(oldCh) || !isDigitChar(newCh) || oldCh === newCh) {
             cell.textContent = newCh;
+            const w = widthOfDigit(newCh);
+            if (w != null) cell.style.width = w + 'px';
             digitsWrap.appendChild(cell);
             continue;
         }
 
-        const card = document.createElement('span');
-        card.className = LEFT_FLIP_CARD_CLASS;
+        const topHalf = document.createElement('span');
+        topHalf.className = LEFT_FLIP_TOP_CLASS;
+        const bottomHalf = document.createElement('span');
+        bottomHalf.className = LEFT_FLIP_BOTTOM_CLASS;
 
-        const front = document.createElement('span');
-        front.className = LEFT_FLIP_FRONT_CLASS;
-        front.textContent = oldCh;
+        const topFront = document.createElement('span');
+        topFront.className = LEFT_FLIP_FRONT_CLASS;
+        topFront.textContent = oldCh;
+        const topBack = document.createElement('span');
+        topBack.className = LEFT_FLIP_BACK_CLASS;
+        topBack.textContent = newCh;
 
-        const back = document.createElement('span');
-        back.className = LEFT_FLIP_BACK_CLASS;
-        back.textContent = newCh;
+        const bottomFront = document.createElement('span');
+        bottomFront.className = LEFT_FLIP_FRONT_CLASS;
+        bottomFront.textContent = oldCh;
+        const bottomBack = document.createElement('span');
+        bottomBack.className = LEFT_FLIP_BACK_CLASS;
+        bottomBack.textContent = newCh;
 
-        card.appendChild(front);
-        card.appendChild(back);
-        cell.appendChild(card);
+        topHalf.appendChild(topFront);
+        topHalf.appendChild(topBack);
+        bottomHalf.appendChild(bottomFront);
+        bottomHalf.appendChild(bottomBack);
+
+        const linePx = parseFloat(getComputedStyle(digitsWrap).lineHeight) || 0;
+        if (linePx > 0) {
+            const halfPx = Math.round(linePx / 2);
+            topHalf.style.height = halfPx + 'px';
+            bottomHalf.style.height = halfPx + 'px';
+        }
+
+        cell.appendChild(topHalf);
+        cell.appendChild(bottomHalf);
+        const w3 = widthOfDigit(newCh);
+        if (w3 != null) cell.style.width = w3 + 'px';
         digitsWrap.appendChild(cell);
 
-        animatedCards.push({ card, cell, newCh });
+        animatedCards.push({ topHalf, bottomHalf, cell, newCh });
     }
 
     requestAnimationFrame(() => {
-        animatedCards.forEach(({ card, cell, newCh }) => {
-            card.classList.add(LEFT_FLIP_ANIM_CLASS);
-            card.addEventListener('animationend', () => {
-                cell.textContent = newCh;
+        animatedCards.forEach(({ topHalf, bottomHalf, cell, newCh }) => {
+            topHalf.classList.add(LEFT_FLIP_TOP_ANIM_CLASS);
+            topHalf.addEventListener('animationend', () => {
+                const tf = topHalf.querySelector('.' + LEFT_FLIP_FRONT_CLASS);
+                const tb = topHalf.querySelector('.' + LEFT_FLIP_BACK_CLASS);
+                if (tf && tb) tf.textContent = tb.textContent;
+                bottomHalf.classList.add(LEFT_FLIP_BOTTOM_ANIM_CLASS);
+                bottomHalf.addEventListener('animationend', () => {
+                    cell.textContent = newCh;
+                }, { once: true });
             }, { once: true });
         });
     });
@@ -760,6 +963,8 @@ function injectMapTexture() {
         '  white-space: pre;',
         '  color: #00e4ff !important;',
         '  -webkit-text-fill-color: #00e4ff !important;',
+        '  font-variant-numeric: tabular-nums;',
+        '  font-feature-settings: "tnum" 1, "lnum" 1;',
         '  text-shadow: 0 0 10px rgba(0, 228, 255, 0.55), 0 0 18px rgba(0, 228, 255, 0.25);',
         '}',
         '.' + LEFT_FLIP_UNIT_CLASS + ' {',
@@ -779,11 +984,13 @@ function injectMapTexture() {
         '  min-width: 0.62em;',
         '  text-align: center;',
         '  perspective: 800px;',
+        '  will-change: transform;',
         '}',
         '.' + LEFT_FLIP_CARD_CLASS + ' {',
         '  position: relative;',
         '  display: inline-block;',
         '  transform-style: preserve-3d;',
+        '  will-change: transform;',
         '}',
         '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ',',
         '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ' {',
@@ -805,6 +1012,73 @@ function injectMapTexture() {
         '@keyframes dsLeftFlipX {',
         '  0% { transform: rotateX(0deg); }',
         '  100% { transform: rotateX(-180deg); }',
+        '}',
+        '.' + LEFT_ROLL_CELL_CLASS + ' {',
+        '  position: relative;',
+        '  display: inline-block;',
+        '  overflow: hidden;',
+        '  vertical-align: baseline;',
+        '}',
+        '.' + LEFT_ROLL_LIST_CLASS + ' {',
+        '  display: block;',
+        '  transition: transform ' + LEFT_ROLL_DURATION_MS + 'ms cubic-bezier(0.22, 0.61, 0.36, 1);',
+        '  will-change: transform;',
+        '  backface-visibility: hidden;',
+        '  transform: translateZ(0);',
+        '}',
+        '.ds-roll-item {',
+        '  display: block;',
+        '  height: 1em;',
+        '  line-height: 1em;',
+        '}',
+        '.' + LEFT_FLIP_TOP_CLASS + ', .' + LEFT_FLIP_BOTTOM_CLASS + ' {',
+        '  display: block;',
+        '  overflow: hidden;',
+        '  position: relative;',
+        '  transform-style: preserve-3d;',
+        '}',
+        '.' + LEFT_FLIP_TOP_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ',',
+        '.' + LEFT_FLIP_TOP_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ',',
+        '.' + LEFT_FLIP_BOTTOM_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ',',
+        '.' + LEFT_FLIP_BOTTOM_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ' {',
+        '  display: block;',
+        '  backface-visibility: hidden;',
+        '  transform-origin: center;',
+        '}',
+        '.' + LEFT_FLIP_TOP_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ' {',
+        '  transform: rotateX(90deg);',
+        '}',
+        '.' + LEFT_FLIP_BOTTOM_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ' {',
+        '  transform: rotateX(-90deg);',
+        '}',
+        '.' + LEFT_FLIP_TOP_CLASS + '.' + LEFT_FLIP_TOP_ANIM_CLASS + ' {',
+        '  animation: dsFlipTop 220ms cubic-bezier(0.2, 0.75, 0.2, 1) forwards;',
+        '  transform-origin: center bottom;',
+        '}',
+        '.' + LEFT_FLIP_BOTTOM_CLASS + '.' + LEFT_FLIP_BOTTOM_ANIM_CLASS + ' {',
+        '  animation: dsFlipBottom 220ms cubic-bezier(0.2, 0.75, 0.2, 1) forwards;',
+        '  transform-origin: center top;',
+        '}',
+        '@keyframes dsFlipTop {',
+        '  0% { transform: rotateX(0deg); }',
+        '  100% { transform: rotateX(-90deg); }',
+        '}',
+        '@keyframes dsFlipBottom {',
+        '  0% { transform: rotateX(90deg); }',
+        '  100% { transform: rotateX(0deg); }',
+        '}',
+        '.' + TIME_WRAP_CLASS + ' {',
+        '  display: inline-flex;',
+        '  align-items: baseline;',
+        '  gap: 8px;',
+        '  white-space: nowrap;',
+        '}',
+        '.' + TIME_MAIN_CLASS + ' {',
+        '  font-variant-numeric: tabular-nums;',
+        '  font-feature-settings: "tnum" 1, "lnum" 1;',
+        '}',
+        '.' + TIME_WEEK_CLASS + ' {',
+        '  white-space: nowrap;',
         '}',
 
         // 4. 右侧菜单高亮 & 手型鼠标（精确控制）
@@ -1149,6 +1423,7 @@ console.log('[CustomData] marketId:', new URLSearchParams(window.location.search
 (function startCustomTimer() {
     let _cachedTimeEl = null; // 缓存时间显示元素
     let _cacheAttempts = 0;   // 缓存查找尝试次数
+    let _timeMainWidthPx = null; // 主时间固定宽度，避免数字变化引起抖动
 
     function findTimeElement() {
         const app = document.getElementById('app');
@@ -1182,18 +1457,15 @@ console.log('[CustomData] marketId:', new URLSearchParams(window.location.search
         
         const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
         const weekDay = weekDays[now.getDay()];
-        
-        const timeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${weekDay}`;
+        const mainStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         
         // 更新数据集
         if (window._DS_DATA && window._DS_DATA.dataSet) {
-            window._DS_DATA.dataSet['系统时间'] = timeStr;
-            window._DS_DATA.dataSet['custom_time_header'] = timeStr;
-            window._DS_DATA.dataSet['系统时间'] = { value: timeStr };
+            window._DS_DATA.dataSet['系统时间'] = mainStr + ' ' + weekDay;
+            window._DS_DATA.dataSet['custom_time_header'] = mainStr + ' ' + weekDay;
+            window._DS_DATA.dataSet['系统时间'] = { value: mainStr + ' ' + weekDay };
         }
          
-        // DOM 直接操作 (使用缓存元素)
-        // 如果缓存失效（元素被框架重渲染移除），重新查找（最多重试10次后放弃本轮）
         if (!_cachedTimeEl || !_cachedTimeEl.isConnected) {
             _cachedTimeEl = null;
             if (_cacheAttempts < 10) {
@@ -1203,12 +1475,43 @@ console.log('[CustomData] marketId:', new URLSearchParams(window.location.search
         }
 
         if (_cachedTimeEl) {
-            if (_cachedTimeEl.textContent !== timeStr) {
-                _cachedTimeEl.textContent = timeStr;
+            let wrap = _cachedTimeEl.querySelector('.' + TIME_WRAP_CLASS);
+            if (!wrap) {
+                _cachedTimeEl.textContent = '';
+                wrap = document.createElement('span');
+                wrap.className = TIME_WRAP_CLASS;
+                const mainSpan = document.createElement('span');
+                mainSpan.className = TIME_MAIN_CLASS;
+                const weekSpan = document.createElement('span');
+                weekSpan.className = TIME_WEEK_CLASS;
+                wrap.appendChild(mainSpan);
+                wrap.appendChild(weekSpan);
+                _cachedTimeEl.appendChild(wrap);
                 _cachedTimeEl.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
                 _cachedTimeEl.style.fontSize = '25px';
+                if (_timeMainWidthPx == null) {
+                    const measurer = document.createElement('span');
+                    measurer.style.position = 'absolute';
+                    measurer.style.visibility = 'hidden';
+                    measurer.style.left = '-99999px';
+                    measurer.style.top = '-99999px';
+                    measurer.style.fontFamily = _cachedTimeEl.style.fontFamily || 'AlimamaAgileVF-Thin, sans-serif';
+                    measurer.style.fontSize = _cachedTimeEl.style.fontSize || '25px';
+                    measurer.textContent = '8888-88-88 88:88:88';
+                    document.body.appendChild(measurer);
+                    _timeMainWidthPx = measurer.offsetWidth;
+                    document.body.removeChild(measurer);
+                }
+                mainSpan.style.display = 'inline-block';
+                if (_timeMainWidthPx) mainSpan.style.width = _timeMainWidthPx + 'px';
             }
-            _cacheAttempts = 0; // 找到后重置计数
+            const mainEl = wrap.querySelector('.' + TIME_MAIN_CLASS);
+            const weekEl = wrap.querySelector('.' + TIME_WEEK_CLASS);
+            if (mainEl && weekEl) {
+                if (mainEl.textContent !== mainStr) mainEl.textContent = mainStr;
+                if (weekEl.textContent !== weekDay) weekEl.textContent = weekDay;
+            }
+            _cacheAttempts = 0;
         }
     }
     
