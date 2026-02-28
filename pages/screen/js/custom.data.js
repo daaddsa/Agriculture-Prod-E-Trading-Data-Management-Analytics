@@ -243,8 +243,20 @@ async function getData() {
         // 3. 堆叠折线图 (activityData)
         if (rawResults.activityData) {
             const { xList, yList } = rawResults.activityData;
+            const titles = (xList || []).map(v => {
+                if (typeof v !== 'string') return v;
+                const s = v.trim();
+                const idx = s.indexOf(' ');
+                if (idx === -1) return s;
+                const datePart = s.slice(0, idx);
+                const timePart = s.slice(idx + 1);
+                if (datePart.length >= 10) {
+                    return datePart.slice(5, 10) + ' ' + timePart;
+                }
+                return s;
+            });
             const lineData = {
-                titles: xList || [],
+                titles: titles,
                 values: [{ data: yList || [], name: "销量1" }]
             };
             newDataSet['堆叠折线图'] = lineData;
@@ -263,11 +275,11 @@ async function getData() {
                     parseFloat(item.businessPrice).toFixed(2) + '元/公斤'
                 ]);
                 
-                // 列宽总和需 ≤ 表格组件宽度 568px，否则最后一列「交易单价」会被挤出看不见
+                // 列宽总和需 ≤ 表格组件宽度 560px，否则最后一列「交易单价」会被挤出看不见
                 const abnormalData = {
                     body: body,
                     header: ["交易时间", "货源省份", "流向地区", "交易单价"],
-                    columnWidth: [168, 110, 110, 180]
+                    columnWidth: [160, 110, 110, 180]
                 };
                 
                 newDataSet['异常交易数据'] = abnormalData;
@@ -496,6 +508,192 @@ const UNIT_LABELS = [
 
 const UNIT_MARKER_CLASS = 'ds-injected-unit';
 const NUM_LEFT_ALIGN_CLASS = 'ds-num-left-align';
+const LEFT_METRIC_FLIP_ENABLED = true;
+const LEFT_FLIP_OVERLAY_CLASS = 'ds-left-flip-overlay';
+const LEFT_FLIP_DIGITS_CLASS = 'ds-left-flip-digits';
+const LEFT_FLIP_UNIT_CLASS = 'ds-left-flip-unit';
+const LEFT_FLIP_CELL_CLASS = 'ds-left-flip-cell';
+const LEFT_FLIP_CARD_CLASS = 'ds-left-flip-card';
+const LEFT_FLIP_ANIM_CLASS = 'ds-left-flip-anim';
+const LEFT_FLIP_FRONT_CLASS = 'ds-left-flip-front';
+const LEFT_FLIP_BACK_CLASS = 'ds-left-flip-back';
+const LEFT_FLIP_DIGITS_FONT_SCALE = 1.70;
+
+function unwrapDataSetValue(v) {
+    if (v && typeof v === 'object' && Object.prototype.hasOwnProperty.call(v, 'value')) return v.value;
+    return v;
+}
+
+function formatLeftMetricValue(dataSetName, rawValue) {
+    const n = Number(rawValue);
+    if (!Number.isFinite(n)) return '0';
+    if (dataSetName === '屠宰场数量' || dataSetName === '采购商数量') return String(Math.round(n));
+    if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+    return n.toFixed(2);
+}
+
+function padLeft(text, len) {
+    const s = text == null ? '' : String(text);
+    if (s.length >= len) return s;
+    return ' '.repeat(len - s.length) + s;
+}
+
+function isDigitChar(ch) {
+    return ch >= '0' && ch <= '9';
+}
+
+function scaleComputedSize(value, scale) {
+    if (!value) return value;
+    if (value === 'normal') return value;
+    const n = parseFloat(value);
+    if (!Number.isFinite(n)) return value;
+    const unit = String(value).replace(String(n), '').trim();
+    const scaled = n * scale;
+    return unit ? String(scaled) + unit : String(scaled) + 'px';
+}
+
+function toNumericFontWeight(weight) {
+    if (weight == null) return NaN;
+    const w = String(weight).trim().toLowerCase();
+    if (!w) return NaN;
+    if (w === 'normal') return 400;
+    if (w === 'bold') return 700;
+    if (w === 'bolder') return 800;
+    if (w === 'lighter') return 300;
+    const n = parseInt(w, 10);
+    return Number.isFinite(n) ? n : NaN;
+}
+
+function snapshotTypography(el) {
+    const cs = window.getComputedStyle(el);
+    return {
+        fontFamily: cs.fontFamily,
+        fontSize: cs.fontSize,
+        fontWeight: cs.fontWeight,
+        fontStyle: cs.fontStyle,
+        lineHeight: cs.lineHeight,
+        letterSpacing: cs.letterSpacing,
+        fontVariantNumeric: cs.fontVariantNumeric,
+        fontFeatureSettings: cs.fontFeatureSettings,
+        fontKerning: cs.fontKerning,
+        textTransform: cs.textTransform
+    };
+}
+
+function ensureLeftFlipOverlay(containerEl) {
+    let overlay = containerEl.querySelector('.' + LEFT_FLIP_OVERLAY_CLASS);
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = LEFT_FLIP_OVERLAY_CLASS;
+        containerEl.appendChild(overlay);
+    }
+    return overlay;
+}
+
+function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
+    window._DS_LEFT_FLIP_LAST = window._DS_LEFT_FLIP_LAST || {};
+    const lastMap = window._DS_LEFT_FLIP_LAST;
+    const fromText = lastMap[key];
+
+    const to = String(toText == null ? '' : toText);
+    const unit = String(unitText == null ? '' : unitText);
+
+    overlayEl.innerHTML = '';
+
+    const digitsWrap = document.createElement('span');
+    digitsWrap.className = LEFT_FLIP_DIGITS_CLASS;
+    if (typography) {
+        digitsWrap.style.fontFamily = typography.fontFamily;
+        digitsWrap.style.fontSize = scaleComputedSize(typography.fontSize, LEFT_FLIP_DIGITS_FONT_SCALE);
+        const baseW = toNumericFontWeight(typography.fontWeight);
+        digitsWrap.style.fontWeight = String(Number.isFinite(baseW) ? Math.max(baseW, 800) : 800);
+        digitsWrap.style.fontStyle = typography.fontStyle;
+        digitsWrap.style.lineHeight = scaleComputedSize(typography.lineHeight, LEFT_FLIP_DIGITS_FONT_SCALE);
+        digitsWrap.style.letterSpacing = typography.letterSpacing;
+        digitsWrap.style.fontVariantNumeric = typography.fontVariantNumeric;
+        digitsWrap.style.fontFeatureSettings = typography.fontFeatureSettings;
+        digitsWrap.style.fontKerning = typography.fontKerning;
+        digitsWrap.style.textTransform = typography.textTransform;
+    }
+    overlayEl.appendChild(digitsWrap);
+
+    const unitSpan = document.createElement('span');
+    unitSpan.className = LEFT_FLIP_UNIT_CLASS;
+    unitSpan.textContent = unit;
+    if (typography) {
+        unitSpan.style.fontFamily = typography.fontFamily;
+        unitSpan.style.fontWeight = typography.fontWeight;
+        unitSpan.style.fontStyle = typography.fontStyle;
+        unitSpan.style.lineHeight = typography.lineHeight;
+        unitSpan.style.letterSpacing = typography.letterSpacing;
+        unitSpan.style.fontVariantNumeric = typography.fontVariantNumeric;
+        unitSpan.style.fontFeatureSettings = typography.fontFeatureSettings;
+        unitSpan.style.fontKerning = typography.fontKerning;
+        unitSpan.style.textTransform = typography.textTransform;
+    }
+    overlayEl.appendChild(unitSpan);
+
+    if (fromText == null) {
+        digitsWrap.textContent = to;
+        lastMap[key] = to;
+        return;
+    }
+
+    const from = String(fromText);
+    if (from === to) {
+        digitsWrap.textContent = to;
+        return;
+    }
+
+    const maxLen = Math.max(from.length, to.length);
+    const a = padLeft(from, maxLen);
+    const b = padLeft(to, maxLen);
+
+    const animatedCards = [];
+
+    for (let i = 0; i < maxLen; i++) {
+        const oldCh = a[i];
+        const newCh = b[i];
+
+        const cell = document.createElement('span');
+        cell.className = LEFT_FLIP_CELL_CLASS;
+
+        if (!isDigitChar(oldCh) || !isDigitChar(newCh) || oldCh === newCh) {
+            cell.textContent = newCh;
+            digitsWrap.appendChild(cell);
+            continue;
+        }
+
+        const card = document.createElement('span');
+        card.className = LEFT_FLIP_CARD_CLASS;
+
+        const front = document.createElement('span');
+        front.className = LEFT_FLIP_FRONT_CLASS;
+        front.textContent = oldCh;
+
+        const back = document.createElement('span');
+        back.className = LEFT_FLIP_BACK_CLASS;
+        back.textContent = newCh;
+
+        card.appendChild(front);
+        card.appendChild(back);
+        cell.appendChild(card);
+        digitsWrap.appendChild(cell);
+
+        animatedCards.push({ card, cell, newCh });
+    }
+
+    requestAnimationFrame(() => {
+        animatedCards.forEach(({ card, cell, newCh }) => {
+            card.classList.add(LEFT_FLIP_ANIM_CLASS);
+            card.addEventListener('animationend', () => {
+                cell.textContent = newCh;
+            }, { once: true });
+        });
+    });
+
+    lastMap[key] = to;
+}
 
 /** 地图容器 id（热力地图 含省市） */
 const MAP_CONTAINER_ID = 'cpmbd3a7549-e208-42e1-a158-fa080262956e';
@@ -547,6 +745,68 @@ function injectMapTexture() {
         '  top: -1px;',
         '}',
 
+        '.' + LEFT_FLIP_OVERLAY_CLASS + ' {',
+        '  position: absolute;',
+        '  inset: 0;',
+        '  display: flex;',
+        '  align-items: baseline;',
+        '  justify-content: flex-start;',
+        '  pointer-events: none;',
+        '  z-index: 2;',
+        '}',
+        '.' + LEFT_FLIP_DIGITS_CLASS + ' {',
+        '  display: inline-flex;',
+        '  align-items: baseline;',
+        '  white-space: pre;',
+        '  color: #00e4ff !important;',
+        '  -webkit-text-fill-color: #00e4ff !important;',
+        '  text-shadow: 0 0 10px rgba(0, 228, 255, 0.55), 0 0 18px rgba(0, 228, 255, 0.25);',
+        '}',
+        '.' + LEFT_FLIP_UNIT_CLASS + ' {',
+        '  font-size: 20px;',
+        '  color: #ffffff !important;',
+        '  -webkit-text-fill-color: #ffffff !important;',
+        '  font-weight: bold;',
+        '  font-family: AlimamaAgileVF-Thin, sans-serif;',
+        '  white-space: nowrap;',
+        '  margin-left: 8px;',
+        '  position: relative;',
+        '  top: -1px;',
+        '}',
+        '.' + LEFT_FLIP_CELL_CLASS + ' {',
+        '  position: relative;',
+        '  display: inline-block;',
+        '  min-width: 0.62em;',
+        '  text-align: center;',
+        '  perspective: 800px;',
+        '}',
+        '.' + LEFT_FLIP_CARD_CLASS + ' {',
+        '  position: relative;',
+        '  display: inline-block;',
+        '  transform-style: preserve-3d;',
+        '}',
+        '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ',',
+        '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ' {',
+        '  position: absolute;',
+        '  top: 0; left: 0;',
+        '  width: 100%;',
+        '  backface-visibility: hidden;',
+        '  transform-origin: 50% 55%;',
+        '}',
+        '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_FRONT_CLASS + ' {',
+        '  transform: rotateX(0deg);',
+        '}',
+        '.' + LEFT_FLIP_CARD_CLASS + ' .' + LEFT_FLIP_BACK_CLASS + ' {',
+        '  transform: rotateX(180deg);',
+        '}',
+        '.' + LEFT_FLIP_CARD_CLASS + '.' + LEFT_FLIP_ANIM_CLASS + ' {',
+        '  animation: dsLeftFlipX 420ms cubic-bezier(0.2, 0.75, 0.2, 1) forwards;',
+        '}',
+        '@keyframes dsLeftFlipX {',
+        '  0% { transform: rotateX(0deg); }',
+        '  100% { transform: rotateX(-180deg); }',
+        '}',
+
         // 4. 右侧菜单高亮 & 手型鼠标（精确控制）
         // 背景框：只给特定的背景框加手型
         '.ds-menu-active-card, .ds-menu-card-bg {',
@@ -565,6 +825,23 @@ function injectMapTexture() {
         '}',
         '.ds-menu-inactive-text {',
         '  opacity: 0.65 !important;',
+        '}',
+
+        '.dv-decoration-11 {',
+        '  overflow: hidden !important;',
+        '}',
+        '.dv-decoration-11 svg {',
+        '  display: block;',
+        '  width: 100% !important;',
+        '  height: 100% !important;',
+        '}',
+        '.dv-border-box-10 {',
+        '  overflow: hidden !important;',
+        '}',
+        '.dv-border-box-10 svg {',
+        '  display: block;',
+        '  width: 100% !important;',
+        '  height: 100% !important;',
         '}',
 
         // 5. 修复异常交易表格的表头对齐
@@ -647,10 +924,6 @@ function injectUnits() {
         // .val 是框架渲染数字的子元素
         const valEl = numEl.querySelector('.val') || numEl;
 
-        // 检查是否已存在正确的 unit span
-        let unitSpan = valEl.querySelector('.' + UNIT_MARKER_CLASS);
-        if (unitSpan && unitSpan.textContent === unit) return; // 已正确，无需重复操作
-
         // 通过 CSS class 强制左对齐 + 允许溢出（!important 保证不被框架覆盖）
         valEl.classList.add(NUM_LEFT_ALIGN_CLASS);
         numEl.classList.add(NUM_LEFT_ALIGN_CLASS);
@@ -661,13 +934,31 @@ function injectUnits() {
             numEl.parentElement.parentElement.classList.add(NUM_LEFT_ALIGN_CLASS);
         }
 
-        // 创建或更新 unit span
-        if (!unitSpan) {
-            unitSpan = document.createElement('span');
-            unitSpan.className = UNIT_MARKER_CLASS;
-            valEl.appendChild(unitSpan);
+        if (LEFT_METRIC_FLIP_ENABLED) {
+            const injectedUnit = valEl.querySelector('.' + UNIT_MARKER_CLASS);
+            if (injectedUnit) injectedUnit.remove();
+
+            const raw = unwrapDataSetValue(dataSet[dataSetName]);
+            const text = formatLeftMetricValue(dataSetName, raw);
+            const rawValEl = numEl.querySelector('.val') || valEl;
+            const typography = snapshotTypography(rawValEl);
+            rawValEl.style.position = 'relative';
+            rawValEl.style.color = 'transparent';
+            rawValEl.style.textShadow = 'none';
+            rawValEl.style.setProperty('-webkit-text-fill-color', 'transparent');
+
+            const overlay = ensureLeftFlipOverlay(rawValEl);
+            renderLeftFlip(overlay, dataSetName, text, unit, typography);
+
+        } else {
+            let unitSpan = valEl.querySelector('.' + UNIT_MARKER_CLASS);
+            if (!unitSpan) {
+                unitSpan = document.createElement('span');
+                unitSpan.className = UNIT_MARKER_CLASS;
+                valEl.appendChild(unitSpan);
+            }
+            unitSpan.textContent = unit;
         }
-        unitSpan.textContent = unit;
     });
 }
 
@@ -791,7 +1082,11 @@ function setupPageNavigation() {
 // =====================================================
 // 屠宰场出厂价日期：从 API factoryPriceDate 动态更新
 // 替换 app.data.readable.js 中写死的静态日期文本
+// [性能优化] 缓存日期 DOM 元素引用，避免每 1.5s 全量扫描 div/span/p
 // =====================================================
+let _cachedDateEl = null;
+let _lastFormattedDate = '';
+
 function updateFactoryPriceDate() {
     const dateStr = window._DS_FACTORY_PRICE_DATE;
     if (!dateStr) return;
@@ -801,18 +1096,28 @@ function updateFactoryPriceDate() {
     if (parts.length !== 3) return;
     const formatted = parseInt(parts[0]) + '年' + parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
 
-    const app = document.getElementById('app');
-    if (!app) return;
+    // 如果日期未变化且缓存元素仍有效，直接跳过
+    if (formatted === _lastFormattedDate && _cachedDateEl && _cachedDateEl.isConnected) return;
 
-    // 找到匹配 "XXXX年X月X日" 格式的叶子文本元素并替换
-    const els = app.querySelectorAll('div, span, p');
-    for (const el of els) {
-        if (el.children.length > 0) continue;
-        const text = el.textContent.trim();
-        if (/^\d{4}年\d{1,2}月\d{1,2}日$/.test(text) && text !== formatted) {
-            el.textContent = formatted;
-            return;
+    // 缓存失效时重新查找
+    if (!_cachedDateEl || !_cachedDateEl.isConnected) {
+        const app = document.getElementById('app');
+        if (!app) return;
+        _cachedDateEl = null;
+        const els = app.querySelectorAll('div, span, p');
+        for (const el of els) {
+            if (el.children.length > 0) continue;
+            const text = el.textContent.trim();
+            if (/^\d{4}年\d{1,2}月\d{1,2}日$/.test(text)) {
+                _cachedDateEl = el;
+                break;
+            }
         }
+    }
+
+    if (_cachedDateEl && _cachedDateEl.textContent.trim() !== formatted) {
+        _cachedDateEl.textContent = formatted;
+        _lastFormattedDate = formatted;
     }
 }
 
@@ -840,7 +1145,32 @@ console.log('[CustomData] marketId:', new URLSearchParams(window.location.search
 
 // --- 自定义时间更新逻辑 ---
 // 此部分代码用于更新右上角的自定义日期时间显示 (yyyy-MM-dd HH:mm:ss)
+// [性能优化] 缓存 DOM 元素引用，避免每秒全量扫描 DOM
 (function startCustomTimer() {
+    let _cachedTimeEl = null; // 缓存时间显示元素
+    let _cacheAttempts = 0;   // 缓存查找尝试次数
+
+    function findTimeElement() {
+        const app = document.getElementById('app');
+        if (!app) return null;
+        // 先在 .text-el 中查找
+        const textEls = app.querySelectorAll('.text-el');
+        for (const el of textEls) {
+            const text = el.textContent.trim();
+            if (text === 'Loading...' || /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/.test(text)) {
+                return el;
+            }
+        }
+        // fallback: 查找叶子 div
+        const allDivs = app.querySelectorAll('div');
+        for (const div of allDivs) {
+            if (div.textContent.trim() === 'Loading...' && div.children.length === 0) {
+                return div;
+            }
+        }
+        return null;
+    }
+
     function updateTime() {
         const now = new Date();
         const year = now.getFullYear();
@@ -856,52 +1186,31 @@ console.log('[CustomData] marketId:', new URLSearchParams(window.location.search
         const timeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${weekDay}`;
         
         // 更新数据集
-         if (window._DS_DATA && window._DS_DATA.dataSet) {
-             // 尝试多种绑定方式
-             window._DS_DATA.dataSet['系统时间'] = timeStr;
-             window._DS_DATA.dataSet['custom_time_header'] = timeStr;
-             // 部分组件可能需要对象格式
-             window._DS_DATA.dataSet['系统时间'] = { value: timeStr };
-         }
+        if (window._DS_DATA && window._DS_DATA.dataSet) {
+            window._DS_DATA.dataSet['系统时间'] = timeStr;
+            window._DS_DATA.dataSet['custom_time_header'] = timeStr;
+            window._DS_DATA.dataSet['系统时间'] = { value: timeStr };
+        }
          
-         // DOM 直接操作 (Fallback)
-         // 查找内容为 Loading... 或符合时间格式的 TextElement
-         const app = document.getElementById('app');
-         if (app) {
-             // 查找 text-el 类的元素
-             const textEls = app.querySelectorAll('.text-el');
-             let updated = false;
-             for (const el of textEls) {
-                 const text = el.textContent.trim();
-                 // 匹配 "Loading..." 或者 已经是时间格式 "2026-..." (包含可能的星期几)
-                 // 允许包含中文
-                 if (text === 'Loading...' || /^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/.test(text)) {
-                     // 只有当内容确实变化时才更新，避免闪烁
-                     if (el.textContent !== timeStr) {
-                         el.textContent = timeStr;
-                         // 强制样式 (参考 custom.data.js 中的其他 hacks)
-                         el.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
-                         el.style.fontSize = '25px';
-                     }
-                     updated = true;
-                     break; // 假设只有一个
-                 }
-             }
-             
-             // 如果没找到 .text-el，尝试查找所有包含 Loading... 的 div
-             if (!updated) {
-                 const allDivs = app.querySelectorAll('div');
-                 for (const div of allDivs) {
-                     if (div.textContent.trim() === 'Loading...' && div.children.length === 0) {
-                          div.textContent = timeStr;
-                          div.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
-                          div.style.fontSize = '25px';
-                          break;
-                     }
-                 }
-             }
-         }
-     }
+        // DOM 直接操作 (使用缓存元素)
+        // 如果缓存失效（元素被框架重渲染移除），重新查找（最多重试10次后放弃本轮）
+        if (!_cachedTimeEl || !_cachedTimeEl.isConnected) {
+            _cachedTimeEl = null;
+            if (_cacheAttempts < 10) {
+                _cachedTimeEl = findTimeElement();
+                _cacheAttempts++;
+            }
+        }
+
+        if (_cachedTimeEl) {
+            if (_cachedTimeEl.textContent !== timeStr) {
+                _cachedTimeEl.textContent = timeStr;
+                _cachedTimeEl.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
+                _cachedTimeEl.style.fontSize = '25px';
+            }
+            _cacheAttempts = 0; // 找到后重置计数
+        }
+    }
     
     // 立即执行一次
     updateTime();

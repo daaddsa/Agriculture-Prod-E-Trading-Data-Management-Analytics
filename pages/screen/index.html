@@ -67,33 +67,21 @@
   </style>
 <style>
   html, body { margin: 0; padding: 0; overflow: hidden; background: #090F27; }
-  #app {
-    width: 1920px !important;
-    height: 1080px !important;
-    position: fixed !important;
-    left: 0 !important;
-    top: 0 !important;
-    transform-origin: 0 0 !important;
-    transform: scale(var(--sx, 1), var(--sy, 1)) !important;
-  }
 </style>
+<link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div>
+<script src="./js/autofit.js"></script>
 <script>
-(function() {
-  function fit() {
-    var w = window.innerWidth, h = window.innerHeight;
-    if (!w || !h) return;
-    document.documentElement.style.setProperty('--sx', w / 1920);
-    document.documentElement.style.setProperty('--sy', h / 1080);
-  }
-  fit();
-  window.addEventListener('resize', fit);
-  document.addEventListener('fullscreenchange', function() { fit(); setTimeout(fit, 200); });
-  document.addEventListener('webkitfullscreenchange', function() { fit(); setTimeout(fit, 200); });
-  document.addEventListener('DOMContentLoaded', fit);
-  window.addEventListener('load', function() { fit(); setTimeout(fit, 300); });
-})();
+  autofit.init({
+    el: '#app',
+    dw: 1920,
+    dh: 1080,
+    resize: true,
+    limit: 0,
+    transition: 0,
+    delay: 100
+  });
 </script>
-<link rel="stylesheet" href="css/datashow.animation.css"><script src="./js/app.data.readable.js"></script><link href="css/app.b64cfd40.css" rel="preload" as="style"><link href="css/chunk-vendors.58b48c55.css" rel="preload" as="style"><link href="js/app.1d54c196.js" rel="preload" as="script"><link href="js/chunk-vendors.1330f906.js" rel="preload" as="script"><link href="css/chunk-vendors.58b48c55.css" rel="stylesheet"><link href="css/app.b64cfd40.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but datav doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/datashow.utils.js"></script><script src="../../shared/api/config.js"></script><script src="../../shared/api/modules/screen.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
+<script src="js/datashow.utils.js"></script><script src="../../shared/api/config.js"></script><script src="../../shared/api/modules/screen.js"></script><script src="js/custom.data.js"></script><script src="js/datashow.dataupdates.js"></script>
 <!-- 热力图依赖：先加载中国地图 GeoJSON 到 window.DS_GEO["100000"]，再启动应用 -->
 <script>
 (function() {

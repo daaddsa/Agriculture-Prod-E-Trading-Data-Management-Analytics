@@ -6,15 +6,25 @@
 
 html {
   height: 100%;
-  overflow-y: auto; /* Ensure browser native scrollbar appears automatically */
+  overflow: hidden;
 }
 
 body {
   font-family: "Microsoft YaHei", sans-serif;
   background: var(--color-bg);
-  min-height: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
   overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: hidden;
   position: relative;
+}
+
+:where(#app) {
+  min-height: 100dvh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 :root {
@@ -55,7 +65,7 @@ body {
   --block-height: 80px;
   --block-label-size: 13px;
   --block-value-size: 24px;
-  --top-card-height: 356px;
+  --top-card-height: clamp(320px, 42vh, 640px);
 
   --pattern-opacity: 0.18;
   --pattern-size: 28px;
@@ -143,22 +153,29 @@ body[data-pattern="off"] {
 }
 
 .main-content {
-  padding: 30px;
-  max-width: 1680px;
+  padding: clamp(16px, 2vw, 30px);
   margin: 0 auto;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  overflow: hidden;
 }
 
 .top-section {
   display: grid;
   grid-template-columns: 2.85fr 3.9fr 3.25fr;
   gap: 24px;
-  margin-bottom: 24px;
+  min-height: 0;
+  min-width: 0;
 }
 
 .top-equal {
-  height: var(--top-card-height) !important;
-  min-height: var(--top-card-height) !important;
-  max-height: var(--top-card-height) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
   overflow: hidden;
 }
 
@@ -167,10 +184,11 @@ body[data-pattern="off"] {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  height: clamp(340px, 48vh, 520px);
+  height: 100%;
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevent grid item from growing with content */
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -179,16 +197,18 @@ body[data-pattern="off"] {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  height: var(--top-card-height);
+  height: 100%;
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevent grid item from growing with content */
+  min-height: 0;
   overflow: hidden; /* Ensure content stays inside */
 }
 
 .price-list-container {
   flex: 1;
   overflow: auto;
+  min-height: 0;
 }
 
 .abnormal-card {
@@ -198,8 +218,9 @@ body[data-pattern="off"] {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  height: var(--top-card-height);
+  height: 100%;
   min-width: 0; /* Prevent grid item from growing with content */
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -213,6 +234,7 @@ body[data-pattern="off"] {
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
   padding-right: 2px;
+  min-height: 0;
 }
 
 .abnormal-table-scroll::-webkit-scrollbar {
@@ -471,18 +493,24 @@ body[data-pattern="off"] {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-rows: repeat(2, minmax(var(--block-height), max-content));
+  gap: clamp(12px, 1.6vh, 22px);
+  height: 100%;
+  align-content: center;
+  padding-top: clamp(0px, 0.4vh, 6px);
+  padding-bottom: clamp(14px, 2.2vh, 34px);
 }
 
 .stat-card {
   border-radius: var(--card-radius);
   padding: 12px 16px;
   box-shadow: var(--card-shadow);
-  height: 100%; /* Fill the grid cell */
+  height: auto;
+  min-height: var(--block-height);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: clamp(6px, 0.9vh, 12px);
   align-items: flex-start;
   position: relative;
   overflow: hidden;
@@ -533,14 +561,9 @@ body[data-pattern="off"] {
   opacity: 0.9;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--card-shadow-hover);
-}
-
 .stat-label {
   font-size: var(--block-label-size);
-  margin-bottom: 4px;
+  margin-bottom: 0;
   opacity: 0.95;
   line-height: 1.4;
   text-align: left;
@@ -550,7 +573,7 @@ body[data-pattern="off"] {
   font-weight: 500;
   width: 100%;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 8px;
+  padding-bottom: clamp(6px, 0.9vh, 12px);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #fff;
@@ -563,7 +586,7 @@ body[data-pattern="off"] {
   line-height: 1.1;
   text-align: left;
   width: 100%;
-  margin-top: auto;
+  margin-top: 0;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
   color: #fff;
@@ -572,7 +595,7 @@ body[data-pattern="off"] {
 .stat-unit {
   font-size: 13px;
   font-weight: 500;
-  margin-left: 2px;
+  margin-left: 1ch;
   opacity: 0.8;
   vertical-align: baseline;
 }
@@ -590,6 +613,8 @@ body[data-pattern="off"] {
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 24px;
+  min-height: 0;
+  min-width: 0;
 }
 
 .chart-card, .abnormal-card {
@@ -608,9 +633,10 @@ body[data-pattern="off"] {
   box-shadow: var(--card-shadow);
   border: 1px solid var(--color-border);
   transition: box-shadow 0.3s ease;
-  height: var(--top-card-height); /* Fixed height matching Activity Chart container + tabs + padding */
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 .price-list-container {
@@ -618,6 +644,7 @@ body[data-pattern="off"] {
   overflow-y: auto;
   margin-right: -8px; /* Offset scrollbar width */
   padding-right: 8px;
+  min-height: 0;
 }
 
 /* Slim scrollbar for price list */
@@ -636,10 +663,6 @@ body[data-pattern="off"] {
 
 .price-list-container::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.2);
-}
-
-.chart-card:hover, .price-card:hover, .abnormal-card:hover {
-  box-shadow: var(--card-shadow-hover);
 }
 
 .card-title {
@@ -763,15 +786,16 @@ body[data-pattern="off"] {
 
 #pieChart {
   width: 100%;
-  height: clamp(240px, 36vh, 360px);
+  height: 100%;
+  min-height: 0;
 }
 
 /* Fixed Table Layout for Daily Transaction Query */
 .query-card {
   display: flex;
   flex-direction: column;
-  height: clamp(340px, 48vh, 520px); /* Responsive height for 5 rows compact view */
-  min-height: 340px;
+  height: 100%;
+  min-height: 0;
   padding-bottom: 16px;
 }
 
@@ -783,7 +807,8 @@ body[data-pattern="off"] {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
+  min-height: 0;
 }
 
 .query-table {
@@ -1035,6 +1060,8 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .activity-info {
@@ -1073,14 +1100,51 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 320px;
+  flex: 1;
+  min-height: 0;
   position: relative;
 }
 
 .pie-chart-section {
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  html {
+    overflow: auto;
+  }
+
+  body {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+  }
+
+  :where(#app) {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .main-content {
+    display: block;
+    overflow: visible;
+  }
+
+  .top-section,
+  .bottom-section {
+    min-height: auto;
+  }
+
+  .top-equal,
+  .chart-card,
+  .price-card,
+  .abnormal-card,
+  .query-card {
+    height: auto !important;
+    max-height: none !important;
+  }
 }
 
 .pie-table-section {

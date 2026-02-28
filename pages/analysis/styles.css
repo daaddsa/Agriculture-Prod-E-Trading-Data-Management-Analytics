@@ -217,6 +217,8 @@ body[data-pattern="off"] {
 .legend-icon.avgprice-solid{color:#1f8a98}
 .legend-icon.avgprice-dashed{color:#fbbf24}
 .legend-icon.avgprice-dashed::before{background:currentColor}
+.legend-icon.volume{color:#1f8a98}
+.legend-icon.amount{color:#1f8a98}
 
 .insights {
   background: var(--color-surface-2);
@@ -234,15 +236,15 @@ body[data-pattern="off"] {
 .pager-btn{background:transparent;border:1px solid var(--color-border);color:var(--color-text);padding:6px 12px;border-radius:6px;cursor:pointer}
 .pager-btn:disabled{opacity:.5;cursor:not-allowed}
 .reports-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.report-card{border:1px solid var(--color-border);border-radius:8px;background:var(--color-surface);padding:12px;box-shadow:var(--card-shadow);min-height:220px}
+.report-card{border:1px solid var(--color-border);border-radius:8px;background:var(--color-surface);padding:12px;box-shadow:var(--card-shadow);min-height:220px;display:flex;flex-direction:column}
 .report-card.placeholder{border:1px dashed var(--color-border);background:var(--color-surface-2);color:var(--color-text-muted)}
-.placeholder-body{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:180px}
+.placeholder-body{display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:180px;flex:1}
 .placeholder-note{font-size:12px}
 .report-header{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto;gap:4px;margin-bottom:8px}
 .report-name{font-weight:600;color:var(--color-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .report-time{font-size:12px;color:var(--color-text-muted);justify-self:end}
-.report-summary{color:var(--color-text);font-size:13px;line-height:1.5;min-height:50px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:8px;padding:8px}
-.report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+.report-summary{color:var(--color-text);font-size:13px;line-height:1.5;min-height:50px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:8px;padding:8px;flex:1}
+.report-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:auto;padding-top:10px}
 .btn{border:1px solid rgba(255,255,255,.15);background:var(--grad-primary);color:#fff;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;box-shadow:var(--card-shadow)}
 .btn.outline{background:transparent;border:1px solid var(--color-primary-500);color:var(--color-primary-600)}
 .btn:hover{filter:brightness(1.05)}

@@ -46,20 +46,32 @@
         <main class="content">
           <div class="chart-card" v-if="activeMenu==='volume'">
             <h3 class="chart-title">交易量趋势图（近30天）</h3>
+            <div class="chart-toolbar">
+              <div></div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon volume"></span>交易量</div>
+              </div>
+            </div>
             <div id="trendChart"></div>
           </div>
           <div class="chart-card" v-if="activeMenu==='volume'">
             <h3 class="chart-title">解读</h3>
-            <div class="insights">暂无解读</div>
+            <div class="insights">{{insights}}</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='amount'">
             <h3 class="chart-title">交易额趋势图（近30天）</h3>
+            <div class="chart-toolbar">
+              <div></div>
+              <div class="chart-legend">
+                <div class="legend-item"><span class="legend-icon amount"></span>交易额</div>
+              </div>
+            </div>
             <div id="amountChart"></div>
           </div>
           <div class="chart-card" v-if="activeMenu==='amount'">
             <h3 class="chart-title">解读</h3>
-            <div class="insights">暂无解读</div>
+            <div class="insights">{{insights}}</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='avgprice'">
@@ -75,7 +87,7 @@
           </div>
           <div class="chart-card" v-if="activeMenu==='avgprice'">
             <h3 class="chart-title">解读</h3>
-            <div class="insights">暂无解读</div>
+            <div class="insights">{{insights}}</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='commission'">
@@ -91,7 +103,7 @@
           </div>
           <div class="chart-card" v-if="activeMenu==='commission'">
             <h3 class="chart-title">解读</h3>
-            <div class="insights">暂无解读</div>
+            <div class="insights">{{insights}}</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='province16'">
@@ -112,7 +124,7 @@
           </div>
           <div class="chart-card" v-if="activeMenu==='province16'">
             <h3 class="chart-title">解读</h3>
-            <div class="insights">暂无解读</div>
+            <div class="insights">{{insights}}</div>
           </div>
 
           <div class="chart-card" v-if="activeMenu==='reports'">
@@ -135,8 +147,7 @@
                   </div>
                   <div class="report-summary">{{ r.summary }}</div>
                   <div class="report-actions">
-                    <button class="btn" @click="preview(r)">预览</button>
-                    <button class="btn outline" @click="download(r)">下载</button>
+                    <button class="btn outline" @click="download(r)">打开PDF</button>
                   </div>
                 </template>
                 <div class="placeholder-body" v-else>
@@ -156,23 +167,6 @@
         </main>
       </div>
       
-      <div class="modal-mask" v-show="showPreview" @click.self="closePreview">
-        <div class="modal">
-          <div class="modal-header">
-            <div class="modal-title">{{ previewReport && previewReport.name }}</div>
-            <button class="modal-close" @click="closePreview">×</button>
-          </div>
-          <div class="modal-body">
-            <div class="modal-meta">上传时间：{{ previewReport && previewReport.uploadedAt }}</div>
-            <div class="modal-summary">{{ previewReport && previewReport.summary }}</div>
-            <div v-if="previewReport && previewReport.fileUrl" class="modal-pdf-actions">
-              <div class="modal-pdf-name">{{ previewReport.fileName }}</div>
-              <button class="btn" @click="download(previewReport)">打开 PDF 文件</button>
-            </div>
-            <div v-else class="modal-placeholder">暂无文件，已展示摘要内容。</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <script src="../../shared/api/config.js"></script>

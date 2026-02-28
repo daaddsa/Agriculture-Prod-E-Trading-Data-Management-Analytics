@@ -99,8 +99,6 @@
         totalCount: 0,
         pageSize: 6,
         currentPage: 1,
-        showPreview: false,
-        previewReport: null,
         activeMenu: "volume",
       };
     },
@@ -294,13 +292,39 @@
           var targetDates = this._lastNDates(this.date, 30);
           xAxisData = this._toMD(targetDates);
           aData = this._alignByDates(d.xList || [], d.yList || [], targetDates);
+          this.insights = d.interpret;
         } catch (e) {
           console.error("交易量走势加载失败:", e);
         }
 
         var hasData = aData.length > 0 && aData.some(function (v) { return Number.isFinite(v); });
         chart.setOption({
-          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "line" },
+            formatter: function (params) {
+              var list = Array.isArray(params) ? params : [];
+              var title = list.length > 0
+                ? (list[0].axisValueLabel != null ? String(list[0].axisValueLabel) : String(list[0].axisValue))
+                : "";
+
+              function fmt(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n)) return "-";
+                if (Number.isInteger(n)) return String(n);
+                return n.toFixed(2);
+              }
+
+              var unit = "公斤";
+              var lines = [title];
+              list.forEach(function (p) {
+                var marker = p && p.marker ? p.marker : "";
+                var name = p && p.seriesName ? p.seriesName : "";
+                lines.push(marker + name + ": " + fmt(p ? p.data : null) + " " + unit);
+              });
+              return lines.join("<br/>");
+            },
+          },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
@@ -348,13 +372,39 @@
           var targetDates = this._lastNDates(this.date, 30);
           xAxisData = this._toMD(targetDates);
           amtData = this._alignByDates(d.xList || [], d.yList || [], targetDates);
+          this.insights = d.interpret;
         } catch (e) {
           console.error("交易额走势加载失败:", e);
         }
 
         var hasData = amtData.length > 0 && amtData.some(function (v) { return Number.isFinite(v); });
         chart.setOption({
-          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "line" },
+            formatter: function (params) {
+              var list = Array.isArray(params) ? params : [];
+              var title = list.length > 0
+                ? (list[0].axisValueLabel != null ? String(list[0].axisValueLabel) : String(list[0].axisValue))
+                : "";
+
+              function fmt(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n)) return "-";
+                if (Number.isInteger(n)) return String(n);
+                return n.toFixed(2);
+              }
+
+              var unit = "元";
+              var lines = [title];
+              list.forEach(function (p) {
+                var marker = p && p.marker ? p.marker : "";
+                var name = p && p.seriesName ? p.seriesName : "";
+                lines.push(marker + name + ": " + fmt(p ? p.data : null) + " " + unit);
+              });
+              return lines.join("<br/>");
+            },
+          },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
@@ -420,7 +470,31 @@
         var hasData = (avgData.length > 0 && avgData.some(function (v) { return Number.isFinite(v); }))
                    || (avgCleanData.length > 0 && avgCleanData.some(function (v) { return Number.isFinite(v); }));  
         chart.setOption({
-          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "line" },
+            formatter: function (params) {
+              var list = Array.isArray(params) ? params : [];
+              var title = list.length > 0
+                ? (list[0].axisValueLabel != null ? String(list[0].axisValueLabel) : String(list[0].axisValue))
+                : "";
+
+              function fmt2(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n)) return "-";
+                return n.toFixed(2);
+              }
+
+              var unit = "元/公斤";
+              var lines = [title];
+              list.forEach(function (p) {
+                var marker = p && p.marker ? p.marker : "";
+                var name = p && p.seriesName ? p.seriesName : "";
+                lines.push(marker + name + ": " + fmt2(p ? p.data : null) + " " + unit);
+              });
+              return lines.join("<br/>");
+            },
+          },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
@@ -451,7 +525,7 @@
               data: avgData,
             },
             {
-              name: "交易均价剔除异常交易",
+              name: "交易均价（不含异常交易）",
               type: "line",
               smooth: true,
               showSymbol: false,
@@ -517,7 +591,31 @@
                    || (feeData.length > 0 && feeData.some(function (v) { return Number.isFinite(v); }));
 
         chart.setOption({
-          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "line" },
+            formatter: function (params) {
+              var list = Array.isArray(params) ? params : [];
+              var title = list.length > 0
+                ? (list[0].axisValueLabel != null ? String(list[0].axisValueLabel) : String(list[0].axisValue))
+                : "";
+
+              function fmt2(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n)) return "-";
+                return n.toFixed(2);
+              }
+
+              var lines = [title];
+              list.forEach(function (p) {
+                var unit = p && p.seriesName === "交易佣金费率" ? "‰" : "万元";
+                var marker = p && p.marker ? p.marker : "";
+                var name = p && p.seriesName ? p.seriesName : "";
+                lines.push(marker + name + ": " + fmt2(p ? p.data : null) + " " + unit);
+              });
+              return lines.join("<br/>");
+            },
+          },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
@@ -587,6 +685,7 @@
         try {
           var res = await AnalysisAPI.getPriceTrend(this.market, this.province16, this.date, { countDay: 30 });
           var d = (res && res.data) || {};
+          this.insights = d.interpret;
           var rawX = d.xList || [];
           var rawFactory  = d.provincePriceList || [];
           var rawMarket   = d.tradePriceList || [];
@@ -833,17 +932,7 @@
         }
       },
 
-      // ==================== 预览 & 下载 ====================
-
-      preview: function (r) {
-        this.previewReport = r;
-        this.showPreview = true;
-      },
-
-      closePreview: function () {
-        this.showPreview = false;
-        this.previewReport = null;
-      },
+      // ==================== 打开 PDF ====================
 
       download: function (r) {
         if (r.fileUrl) {
