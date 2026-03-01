@@ -5,23 +5,23 @@
 }
 
 html {
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  overflow: auto; /* Ensure browser native scrollbar appears automatically */
 }
 
 body {
   font-family: "Microsoft YaHei", sans-serif;
   background: var(--color-bg);
-  min-height: 100dvh;
-  height: 100dvh;
+  min-height: 100vh;
+  height: auto;
   overflow-x: hidden; /* Prevent horizontal overflow */
-  overflow-y: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
 :where(#app) {
-  min-height: 100dvh;
-  height: 100dvh;
+  min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -153,15 +153,14 @@ body[data-pattern="off"] {
 }
 
 .main-content {
-  padding: clamp(16px, 2vw, 30px);
+  padding: 30px;
+  max-width: 1680px;
   margin: 0 auto;
+  width: 100%;
   flex: 1;
-  min-height: 0;
-  min-width: 0;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 24px;
-  overflow: hidden;
 }
 
 .top-section {
@@ -173,10 +172,16 @@ body[data-pattern="off"] {
 }
 
 .top-equal {
-  height: 100% !important;
-  min-height: 0 !important;
+  height: 480px !important; /* Fixed height to accommodate 4 rows of cards */
+  min-height: 480px !important;
   max-height: none !important;
-  overflow: hidden;
+  overflow: hidden; /* Force internal scrolling for long lists */
+}
+
+.bottom-equal {
+  height: auto !important;
+  min-height: 320px !important;
+  overflow: visible;
 }
 
 .chart-card {
@@ -493,24 +498,24 @@ body[data-pattern="off"] {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, minmax(var(--block-height), max-content));
-  gap: clamp(12px, 1.6vh, 22px);
+  grid-auto-rows: 1fr; /* Allow rows to grow equally */
+  gap: 12px;
   height: 100%;
-  align-content: center;
-  padding-top: clamp(0px, 0.4vh, 6px);
-  padding-bottom: clamp(14px, 2.2vh, 34px);
+  align-content: stretch;
+  padding: 0;
+  min-height: 0;
 }
 
 .stat-card {
   border-radius: var(--card-radius);
-  padding: 12px 16px;
+  padding: 8px 16px;
   box-shadow: var(--card-shadow);
-  height: auto;
-  min-height: var(--block-height);
+  height: 100%; /* Fill grid cell */
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: clamp(6px, 0.9vh, 12px);
+  justify-content: center;
+  gap: 4px;
   align-items: flex-start;
   position: relative;
   overflow: hidden;
@@ -565,7 +570,7 @@ body[data-pattern="off"] {
   font-size: var(--block-label-size);
   margin-bottom: 0;
   opacity: 0.95;
-  line-height: 1.4;
+  line-height: 1.3; /* Tighter line height */
   text-align: left;
   padding: 0;
   word-break: break-word;
@@ -573,23 +578,33 @@ body[data-pattern="off"] {
   font-weight: 500;
   width: 100%;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: clamp(6px, 0.9vh, 12px);
+  padding-bottom: 4px; /* Fixed small padding */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #fff;
+  white-space: normal; /* Allow wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 .stat-value {
   font-size: var(--block-value-size);
   font-weight: 700;
   letter-spacing: -0.5px;
-  line-height: 1.1;
+  line-height: 1; /* Tighter line height */
   text-align: left;
   width: 100%;
   margin-top: 0;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
   color: #fff;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 2px; /* Slight separation from line */
 }
 
 .stat-unit {
@@ -809,6 +824,7 @@ body[data-pattern="off"] {
   flex-direction: column;
   overflow: auto;
   min-height: 0;
+  max-height: 240px; /* Limit height to approx 6 rows (header + 6 * 32px) */
 }
 
 .query-table {
@@ -816,7 +832,7 @@ body[data-pattern="off"] {
   font-size: 13px;
   border-collapse: collapse;
   table-layout: fixed; /* Fixed layout for consistent column widths */
-  height: 100%; /* Fill container */
+  height: auto; /* Allow height to be determined by content */
 }
 
 .query-table thead {
@@ -830,7 +846,7 @@ body[data-pattern="off"] {
 .query-table th {
   background: var(--color-surface-2);
   padding: 0 4px;
-  height: 26px; /* Ultra compact header height */
+  height: 32px; /* Standard header height */
   text-align: center;
   color: var(--color-text-muted);
   font-weight: 500;
@@ -838,11 +854,14 @@ body[data-pattern="off"] {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .query-table tr {
-  height: 28px; /* Compact row height for 6 rows */
+  height: 32px; /* Standard row height */
 }
 
 .query-table td {
@@ -1054,6 +1073,13 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   }
 }
 
+#activityChart {
+  flex: 1;
+  min-height: 0;
+  width: 100% !important;
+  height: auto !important; /* Override inline style */
+}
+
 /* Activity Chart Info */
 .chart-container-wrapper {
   width: 100%;
@@ -1065,15 +1091,18 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
 }
 
 .activity-info {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   background: var(--color-surface-2);
   margin-top: 5px;
   border-radius: 4px;
-  font-size: 15px;
-  padding: 4px;
+  font-size: 14px;
+  padding: 8px 4px;
+  gap: 8px;
+  min-height: 40px; /* Add minimum height to prevent collapse */
 }
 
 .info-label {
@@ -1095,6 +1124,12 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   margin-left: 8px;
 }
 
+@media (min-width: 1921px) {
+  .main-content {
+    max-width: 95%;
+  }
+}
+
 /* Pie Chart Grid Layout */
 .pie-container {
   display: block;
@@ -1107,8 +1142,8 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
 
 .pie-chart-section {
   width: 100%;
-  height: 100%;
-  min-height: 0;
+  height: clamp(260px, 40vh, 440px);
+  min-height: 260px;
 }
 
 @media (max-width: 1100px) {
@@ -1210,4 +1245,167 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
   border-width: 5px;
   border-style: solid;
   border-color: #ef4444 transparent transparent transparent;
+}
+
+/* =========================================
+   Responsive Zoom / Large Screen Adaptations
+   ========================================= */
+
+/* Level 1: ~90% Zoom (Viewport > 2100px) */
+@media (min-width: 2100px) {
+  :root {
+    --block-label-size: 15px;
+    --block-value-size: 26px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .top-equal {
+    height: 540px !important;
+    min-height: 540px !important;
+  }
+
+  .filter-label, .nav-tab, .card-title, .title-sub {
+    font-size: 16px;
+  }
+
+  .nav-select-header, .nav-datepicker-header, 
+  .nav-select, .nav-input, .search-btn, .reset-btn,
+  .page-btn, .page-info, .page-input, .page-jump,
+  .tab-btn {
+    font-size: 15px;
+  }
+
+  .query-table th, .query-table td,
+  .price-table th, .price-table td,
+  .abnormal-table th, .abnormal-table td {
+    font-size: 15px;
+  }
+
+  .query-table tr, .query-table th {
+    height: 36px;
+  }
+  .query-table-container {
+    max-height: 270px;
+  }
+
+  .stat-unit {
+    font-size: 15px;
+  }
+
+  .activity-info {
+    font-size: 16px;
+  }
+  
+  .info-value {
+    font-size: 17px;
+  }
+}
+
+/* Level 2: ~80% Zoom (Viewport > 2400px) */
+@media (min-width: 2400px) {
+  :root {
+    --block-label-size: 17px;
+    --block-value-size: 28px;
+  }
+
+  body {
+    font-size: 18px;
+  }
+
+  .top-equal {
+    height: 600px !important;
+    min-height: 600px !important;
+  }
+
+  .filter-label, .nav-tab, .card-title, .title-sub {
+    font-size: 18px;
+  }
+
+  .nav-select-header, .nav-datepicker-header, 
+  .nav-select, .nav-input, .search-btn, .reset-btn,
+  .page-btn, .page-info, .page-input, .page-jump,
+  .tab-btn {
+    font-size: 17px;
+  }
+
+  .query-table th, .query-table td,
+  .price-table th, .price-table td,
+  .abnormal-table th, .abnormal-table td {
+    font-size: 17px;
+  }
+
+  .query-table tr, .query-table th {
+    height: 40px;
+  }
+  .query-table-container {
+    max-height: 300px;
+  }
+
+  .stat-unit {
+    font-size: 17px;
+  }
+
+  .activity-info {
+    font-size: 18px;
+  }
+  
+  .info-value {
+    font-size: 19px;
+  }
+}
+
+/* Level 3: ~70% Zoom (Viewport > 2700px) */
+@media (min-width: 2700px) {
+  :root {
+    --block-label-size: 19px;
+    --block-value-size: 30px;
+  }
+
+  body {
+    font-size: 20px;
+  }
+
+  .top-equal {
+    height: 660px !important;
+    min-height: 660px !important;
+  }
+
+  .filter-label, .nav-tab, .card-title, .title-sub {
+    font-size: 20px;
+  }
+
+  .nav-select-header, .nav-datepicker-header, 
+  .nav-select, .nav-input, .search-btn, .reset-btn,
+  .page-btn, .page-info, .page-input, .page-jump,
+  .tab-btn {
+    font-size: 19px;
+  }
+
+  .query-table th, .query-table td,
+  .price-table th, .price-table td,
+  .abnormal-table th, .abnormal-table td {
+    font-size: 19px;
+  }
+
+  .query-table tr, .query-table th {
+    height: 44px;
+  }
+  .query-table-container {
+    max-height: 330px;
+  }
+
+  .stat-unit {
+    font-size: 19px;
+  }
+
+  .activity-info {
+    font-size: 20px;
+  }
+  
+  .info-value {
+    font-size: 21px;
+  }
 }
