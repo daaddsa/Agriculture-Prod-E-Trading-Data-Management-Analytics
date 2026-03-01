@@ -332,12 +332,13 @@
             data: xAxisData,
             axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
-            boundaryGap: true,
+            boundaryGap: false,
           },
           yAxis: {
             type: "value",
-            name: "单位：公斤",
+            name: "公斤",
             nameTextStyle: { color: "#64748b" },
+            nameGap: 16,
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
@@ -412,12 +413,13 @@
             data: xAxisData,
             axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
-            boundaryGap: true,
+            boundaryGap: false,
           },
           yAxis: {
             type: "value",
-            name: "单位：元",
+            name: "元",
             nameTextStyle: { color: "#64748b" },
+            nameGap: 16,
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
@@ -502,12 +504,13 @@
             data: xAxisData,
             axisLabel: { fontSize: 11, interval: 0 },
             axisTick: { alignWithLabel: true },
-            boundaryGap: true,
+            boundaryGap: false,
           },
           yAxis: {
             type: "value",
-            name: "单位：元/公斤",
+            name: "元/公斤",
             nameTextStyle: { color: "#64748b" },
+            nameGap: 16,
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
@@ -623,12 +626,14 @@
             data: xAxisData,
             axisLabel: { fontSize: 11 },
             axisTick: { alignWithLabel: true },
+            boundaryGap: false,
           },
           yAxis: [
             {
               type: "value",
-              name: "单位：‰",
+              name: "‰",
               nameTextStyle: { color: "#64748b" },
+              nameGap: 16,
               axisLine: { show: true },
               axisTick: { show: true },
               axisLabel: { show: hasData },
@@ -636,8 +641,9 @@
             },
             {
               type: "value",
-              name: "单位：万元",
+              name: "万元",
               nameTextStyle: { color: "#64748b" },
+              nameGap: 16,
               axisLine: { show: true },
               axisTick: { show: true },
               axisLabel: { show: hasData },
@@ -716,7 +722,29 @@
                    || (marketCleanData.some(function (v) { return v != null; }));
 
         chart.setOption({
-          tooltip: { trigger: "axis", axisPointer: { type: "line" } },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "line" },
+            formatter: function (params) {
+              var list = Array.isArray(params) ? params : [];
+              var title = list.length > 0
+                ? (list[0].axisValueLabel != null ? String(list[0].axisValueLabel) : String(list[0].axisValue))
+                : "";
+              function fmt2(v) {
+                var n = Number(v);
+                if (!Number.isFinite(n)) return "-";
+                return n.toFixed(2);
+              }
+              var unit = "元/公斤";
+              var lines = [title];
+              list.forEach(function (p) {
+                var marker = p && p.marker ? p.marker : "";
+                var name = p && p.seriesName ? p.seriesName : "";
+                lines.push(marker + name + ": " + fmt2(p ? p.data : null) + " " + unit);
+              });
+              return lines.join("<br/>");
+            },
+          },
           legend: { show: false },
           grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
           xAxis: {
@@ -725,11 +753,13 @@
             axisLabel: { show: hasData, fontSize: 11 },
             axisTick: { show: true, alignWithLabel: true },
             axisLine: { show: true },
+            boundaryGap: false,
           },
           yAxis: {
             type: "value",
-            name: "单位：元/公斤",
+            name: "元/公斤",
             nameTextStyle: { color: "#64748b" },
+            nameGap: 16,
             axisLine: { show: true },
             axisTick: { show: true },
             axisLabel: { show: hasData },
