@@ -578,6 +578,7 @@ function formatLeftMetricValue(dataSetName, rawValue) {
     const n = Number(rawValue);
     if (!Number.isFinite(n)) return '0';
     if (dataSetName === '屠宰场数量' || dataSetName === '采购商数量') return String(Math.round(n));
+    if (dataSetName === '交易总量' || dataSetName === '交易金额' || dataSetName === '交易均价' || dataSetName === '交易均价(不含异常)') return n.toFixed(2);
     if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
     return n.toFixed(2);
 }
@@ -792,10 +793,11 @@ function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
                 item.style.lineHeight = cellH + 'px';
                 list.appendChild(item);
             }
-            list.style.transform = 'translate3d(0,' + (-parseInt(oldCh, 10) * cellH) + 'px,0)';
             cell.style.height = cellH + 'px';
             cell.appendChild(list);
             digitsWrap.appendChild(cell);
+            list.style.transform = 'translate3d(0,' + (-parseInt(oldCh, 10) * cellH) + 'px,0)';
+            void list.offsetHeight;
             requestAnimationFrame(() => {
                 list.style.transform = 'translate3d(0,' + (-parseInt(newCh, 10) * cellH) + 'px,0)';
             });

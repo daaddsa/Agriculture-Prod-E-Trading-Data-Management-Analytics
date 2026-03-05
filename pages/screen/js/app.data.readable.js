@@ -1368,6 +1368,7 @@ const DS_CONFIG = {
         "grid.top": "config.gridT+%",
         "grid.left": "config.gridL+%",
         "grid.right": "config.gridR+%",
+        "grid.containLabel": "true",
         "title.show": "config.titleShow",
         "title.text": "config.title",
         "xAxis.show": "config.xAxisShow",
@@ -1376,6 +1377,7 @@ const DS_CONFIG = {
         "grid.bottom": "config.gridB+%",
         "legend.show": "config.legendShow",
         "legend.bottom": "config.legendB+%",
+        "xAxis.max": "FUN:(function(){try{var series=(data.default.values||[]);if(!series.length) return null;var arr=(series[0].data||[]).map(function(v){return Number(v)}).filter(function(v){return Number.isFinite(v)});if(!arr.length) return null;var m=Math.max.apply(Math,arr);return m>0?m*1.15:null;}catch(e){return null}})()",
         "series[x].data": "data.default.values[x].data",
         "series[x].name": "data.default.values[x].name",
         "series[x].type": "data.default.values[x].type={bar}",
@@ -1428,10 +1430,10 @@ const DS_CONFIG = {
       "styleConfig": null,
       "baseConfig": null
     },
-    "config": {
+      "config": {
       "gridB": 25,
       "gridL": 12,
-      "gridR": 12,
+        "gridR": 15,
       "gridT": 12,
       "title": "产地销售量排名TOP5",
       "colors": [
@@ -1466,8 +1468,8 @@ const DS_CONFIG = {
       "legendColor": "rgba(238, 238, 238, 1)",
       "legendWidth": 25,
       "legendHeight": 14,
-      "labelDistance": 12,
-      "labelPosition": "right",
+        "labelDistance": 8,
+        "labelPosition": "right",
       "xAxisTickShow": true,
       "yAxisTickShow": false,
       "showBackground": true,
@@ -2319,10 +2321,10 @@ const DS_CONFIG = {
       "styleConfig": null,
       "baseConfig": null
     },
-    "config": {
+      "config": {
       "gridB": 24,
       "gridL": 12,
-      "gridR": 12,
+        "gridR": 15,
       "gridT": 12,
       "title": "销地采购量排名TOP5",
       "colors": [
@@ -2357,8 +2359,8 @@ const DS_CONFIG = {
       "legendColor": "#eee",
       "legendWidth": 25,
       "legendHeight": 14,
-      "labelDistance": 12,
-      "labelPosition": "right",
+        "labelDistance": 8,
+        "labelPosition": "right",
       "xAxisTickShow": true,
       "yAxisTickShow": false,
       "showBackground": true,
