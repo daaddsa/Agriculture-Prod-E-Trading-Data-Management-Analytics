@@ -100,6 +100,7 @@
         pageSize: 6,
         currentPage: 1,
         activeMenu: "volume",
+		insights:""
       };
     },
 
@@ -465,6 +466,7 @@
           xAxisData    = this._toMD(targetDates);
           avgData      = this._alignByDates(avgD.xList || [], avgD.yList || [], targetDates);
           avgCleanData = this._alignByDates(avgCleanD.xList || [], avgCleanD.yList || [], targetDates);
+		  this.insights = avgD.interpret;
         } catch (e) {
           console.error("交易均价走势加载失败:", e);
         }
@@ -560,6 +562,7 @@
           ]);
           var rateD = (results[0] && results[0].data) || {};
           var feeD  = (results[1] && results[1].data) || {};
+		  this.insights = feeD.interpret;
           var rawX = rateD.xList || feeD.xList || [];
           var rawRateY = rateD.yList || [];
           var rawFeeY  = feeD.yList || [];
@@ -983,8 +986,23 @@
           URL.revokeObjectURL(url);
         }
       },
+	  downloadPdf: async function (r) {
+	        const url = r.fileUrl // 替换为实际 PDF 地址
+	        const fileName = r.name+'.pdf' // 自定义文件名
+		fetch(url)
+	          .then(response => response.blob())
+	          .then(blob => {
+	              const link = document.createElement('a');
+	              link.href = window.URL.createObjectURL(blob);
+	              link.download = fileName;
+	              document.body.appendChild(link);
+	              link.click();
+	              document.body.removeChild(link);
+	              window.URL.revokeObjectURL(link.href); // 释放内存
+	          })
+	          .catch(err => console.error('下载失败:', err));
+	  },
     },
-
     computed: {
       totalPages: function () {
         return Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));

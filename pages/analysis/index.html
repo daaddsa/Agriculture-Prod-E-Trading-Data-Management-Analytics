@@ -148,6 +148,7 @@
                   <div class="report-summary">{{ r.summary }}</div>
                   <div class="report-actions">
                     <button class="btn outline" @click="download(r)">打开PDF</button>
+					<button class="btn outline" @click="downloadPdf(r)">下载PDF</button>
                   </div>
                 </template>
                 <div class="placeholder-body" v-else>
