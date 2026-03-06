@@ -970,7 +970,14 @@
       download: function (r) {
         if (r.fileUrl) {
           // 跨域 PDF 直接用 window.open 打开新标签页下载
-          window.open(r.fileUrl, "_blank");
+          const win = window.open(r.fileUrl, "_blank");
+		  const loop = setInterval(() => {
+		  	if (win.closed) {
+		  		clearInterval(loop)
+		  	} else {
+		  		win.document.title = r.fileName
+		  	}
+		  }, 1000)
         } else {
           var blob = new Blob(
             ["报告名称: " + r.name + "\n上传时间: " + r.uploadedAt + "\n\n摘要:\n" + r.summary + "\n"],
@@ -988,7 +995,7 @@
       },
 	  downloadPdf: async function (r) {
 	        const url = r.fileUrl // 替换为实际 PDF 地址
-	        const fileName = r.name+'.pdf' // 自定义文件名
+	        const fileName = r.fileName // 自定义文件名
 		fetch(url)
 	          .then(response => response.blob())
 	          .then(blob => {
