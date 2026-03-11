@@ -128,7 +128,7 @@ async function getData() {
         newDataSet['交易金额'] = 0;
         newDataSet['交易均价'] = 0;
         newDataSet['交易均价(不含异常)'] = 0;
-        newDataSet['屠宰场数量'] = 0;
+        newDataSet['货源企业数量'] = 0;
         newDataSet['采购商数量'] = 0;
 
         if (rawResults.visualData) {
@@ -149,7 +149,7 @@ async function getData() {
                 newDataSet['交易均价(不含异常)'] = parseFloat(visualData.averageNoCheck);
             }
             if (visualData.abattoirNum != null) {
-                newDataSet['屠宰场数量'] = parseInt(visualData.abattoirNum);
+                newDataSet['货源企业数量'] = parseInt(visualData.abattoirNum);
             }
             if (visualData.purchaserNum != null) {
                 newDataSet['采购商数量'] = parseInt(visualData.purchaserNum);
@@ -158,7 +158,7 @@ async function getData() {
                 交易总量: newDataSet['交易总量'],
                 交易金额: newDataSet['交易金额'],
                 交易均价: newDataSet['交易均价'],
-                屠宰场数量: newDataSet['屠宰场数量'],
+                货源企业数量: newDataSet['货源企业数量'],
                 采购商数量: newDataSet['采购商数量']
             });
         }
@@ -540,7 +540,7 @@ const UNIT_LABELS = [
     { dataSetName: '交易金额',          unit: ' 万元' },
     { dataSetName: '交易均价',          unit: ' 元/公斤' },
     { dataSetName: '交易均价(不含异常)',  unit: ' 元/公斤' },
-    { dataSetName: '屠宰场数量',        unit: ' 家' },
+    { dataSetName: '货源企业数量',        unit: ' 家' },
     { dataSetName: '采购商数量',        unit: ' 家' },
 ];
 
@@ -577,7 +577,7 @@ function unwrapDataSetValue(v) {
 function formatLeftMetricValue(dataSetName, rawValue) {
     const n = Number(rawValue);
     if (!Number.isFinite(n)) return '0';
-    if (dataSetName === '屠宰场数量' || dataSetName === '采购商数量') return String(Math.round(n));
+    if (dataSetName === '货源企业数量' || dataSetName === '采购商数量') return String(Math.round(n));
     if (dataSetName === '交易总量' || dataSetName === '交易金额' || dataSetName === '交易均价' || dataSetName === '交易均价(不含异常)') return n.toFixed(2);
     if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
     return n.toFixed(2);

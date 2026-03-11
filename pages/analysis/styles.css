@@ -5,6 +5,7 @@
 }
 
 body {
+	overflow: hidden;
   font-family: "Microsoft YaHei", sans-serif;
   background: var(--color-bg);
 }
