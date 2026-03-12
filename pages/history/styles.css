@@ -63,8 +63,8 @@ body {
   --card-shadow-hover: 0 10px 15px -3px var(--color-shadow-light), 0 4px 6px -2px var(--color-shadow-light);
 
   --block-height: 80px;
-  --block-label-size: 16px;
-  --block-value-size: 24px;
+  --block-label-size: 13px;
+  --block-value-size: 21px;
   --top-card-height: clamp(320px, 38vh, 560px);
 
   --pattern-opacity: 0.18;
