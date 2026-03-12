@@ -12,10 +12,20 @@ html {
 body {
   font-family: "Microsoft YaHei", sans-serif;
   background: var(--color-bg);
-  overflow: hidden;
+  min-height: 100vh;
+  height: auto;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: auto;
+  position: relative;
 }
 
-:where(#app) {height:100vh;display:grid;grid-template-rows:auto 1fr;min-width:0}
+:where(#app) {
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 
 :root {
   --color-primary-700: #0f6c7a;
@@ -55,7 +65,7 @@ body {
   --block-height: 80px;
   --block-label-size: 16px;
   --block-value-size: 24px;
-  --top-card-height: clamp(320px, 42vh, 640px);
+  --top-card-height: clamp(320px, 38vh, 560px);
 
   --pattern-opacity: 0.18;
   --pattern-size: 28px;
@@ -151,26 +161,19 @@ body[data-pattern="off"] {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  height: 100%;
-  padding-bottom: 16px;
-  overflow-x: hidden;
-  overflow-x: hidden;
 }
 
 .top-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: 2.85fr 3.9fr 3.25fr;
   gap: 24px;
   min-height: 0;
   min-width: 0;
-  grid-auto-rows: minmax(0, auto);
 }
 
 .top-equal {
-  height: 480px !important; /* Fixed height to accommodate 4 rows of cards */
-  min-height: 480px !important;
+  height: var(--top-card-height) !important;
+  min-height: var(--top-card-height) !important;
   max-height: none !important;
   overflow: hidden; /* Force internal scrolling for long lists */
 }
@@ -565,7 +568,7 @@ body[data-pattern="off"] {
 
 .stat-label {
   font-size: var(--block-label-size);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   opacity: 0.95;
   line-height: 1.3; /* Tighter line height */
   text-align: left;
@@ -575,7 +578,7 @@ body[data-pattern="off"] {
   font-weight: 500;
   width: 100%;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 8px; /* Increased padding for better spacing */
+  padding-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #fff;
@@ -594,14 +597,14 @@ body[data-pattern="off"] {
   line-height: 1; /* Tighter line height */
   text-align: left;
   width: 100%;
-  margin-top: 2px;
+  margin-top: 0;
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
   color: #fff;
   white-space: nowrap; 
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-top: 6px; /* Increased separation from label */
+  padding-top: 2px;
 }
 
 .stat-unit {
