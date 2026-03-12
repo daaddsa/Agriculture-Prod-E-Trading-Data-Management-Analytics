@@ -1362,6 +1362,7 @@ function setupPageNavigation() {
 // =====================================================
 let _cachedDateEl = null;
 let _lastFormattedDate = '';
+let _cachedFactoryPriceLabelEl = null;
 
 function updateFactoryPriceDate() {
     const dateStr = window._DS_FACTORY_PRICE_DATE;
@@ -1397,6 +1398,184 @@ function updateFactoryPriceDate() {
     }
 }
 
+function injectFactoryPriceHelpIcon() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    // 尽量复用已命中的标题元素（大屏会频繁重渲染，需校验 isConnected）
+    let target = (_cachedFactoryPriceLabelEl && _cachedFactoryPriceLabelEl.isConnected)
+      ? _cachedFactoryPriceLabelEl
+      : null;
+
+    if (!target) {
+        // 兼容实际渲染文本可能包含：空格/换行/单位/冒号等情况
+        const WANT = '屠宰场平均出厂价';
+        const normalize = (s) => String(s || '').replace(/\s+/g, '').replace(/[：:]/g, '');
+        const wantN = normalize(WANT);
+
+        // 优先在 .text-el 中找；找不到再 fallback 到所有叶子节点（避免误匹配大面积容器）
+        const candidates = [];
+        app.querySelectorAll('.text-el').forEach((el) => candidates.push(el));
+        if (candidates.length === 0) {
+            app.querySelectorAll('span, p, div').forEach((el) => candidates.push(el));
+        }
+
+        for (const el of candidates) {
+            // 避免选到容器：只选“叶子”或近似叶子（子元素很少）
+            if (el.children && el.children.length > 2) continue;
+            const raw = (el.textContent || '').trim();
+            if (!raw) continue;
+            const n = normalize(raw);
+            if (n === wantN || n.includes(wantN)) {
+                target = el;
+                _cachedFactoryPriceLabelEl = el;
+                break;
+            }
+        }
+    }
+
+    if (!target) return;
+    let icon = target.querySelector('.factory-price-help');
+    if (!icon) {
+        icon = document.createElement('span');
+        icon.className = 'factory-price-help';
+        target.appendChild(icon);
+    }
+    icon.textContent = '?';
+    icon.title = '数据来源于中国农业农村信息网';
+    icon.style.marginLeft = '7px';
+    icon.style.cursor = 'help';
+    icon.style.display = 'inline-flex';
+    icon.style.alignItems = 'center';
+    icon.style.justifyContent = 'center';
+    icon.style.width = '17px';
+    icon.style.height = '17px';
+    icon.style.border = '1px solid rgba(255,255,255,0.7)';
+    icon.style.borderRadius = '50%';
+    icon.style.fontSize = '13px';
+    icon.style.fontWeight = '100';
+    icon.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
+    icon.style.lineHeight = '1';
+    icon.style.color = '#fff';
+    icon.style.transform = 'translateY(-2px)';
+    icon.style.verticalAlign = 'middle';
+    icon.style.position = 'relative';
+    icon.style.pointerEvents = 'auto';
+    icon.style.zIndex = '9999';
+    try { target.style.pointerEvents = 'auto'; } catch (e) {}
+    // 暴露引用给全局 hover watcher（用于绕过透明遮罩导致的 hover 事件不触发）
+    window._dsFactoryPriceHelpIcon = icon;
+    if (!icon._dsTooltipBind) {
+        icon._dsTooltipBind = true;
+        const ensureGlobalTip = function () {
+            let g = document.getElementById('ds-global-tooltip');
+            if (!g) {
+                g = document.createElement('div');
+                g.id = 'ds-global-tooltip';
+                // tooltip 挂到 body：避免被 #app(Vue) 重渲染移除、也避免被容器 overflow 裁剪
+                // 坐标用 getBoundingClientRect() 的视口坐标，fixed 定位最稳定
+                g.style.position = 'fixed';
+                g.style.background = 'rgba(60, 60, 60, 0.9)';
+                g.style.color = '#fff';
+                g.style.padding = '6px 10px';
+                g.style.borderRadius = '4px';
+                g.style.fontSize = '12px';
+                g.style.whiteSpace = 'nowrap';
+                g.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+                g.style.zIndex = '999999';
+                g.style.pointerEvents = 'none';
+                g.style.display = 'none';
+                g.style.left = '0px';
+                g.style.top = '0px';
+                g.style.maxWidth = '420px';
+                g.style.overflow = 'hidden';
+                g.style.textOverflow = 'ellipsis';
+                g.style.transform = 'translateZ(0)';
+                document.body.appendChild(g);
+            }
+            return g;
+        };
+        const showTip = function () {
+            const tip = ensureGlobalTip();
+            tip.textContent = '数据来源于中国农业农村信息网';
+            const r = icon.getBoundingClientRect();
+            // fixed + 视口坐标
+            let top = r.bottom + 6;
+            let left = r.left;
+            // 轻微防越界（右侧/下侧）
+            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            const maxLeft = Math.max(4, vw - 430); // 420 + padding buffer
+            left = Math.min(Math.max(4, left), maxLeft);
+            top = Math.min(Math.max(4, top), Math.max(4, vh - 40));
+            tip.style.top = Math.round(top) + 'px';
+            tip.style.left = Math.round(left) + 'px';
+            tip.style.display = 'block';
+        };
+        const hideTip = function () {
+            const tip = document.getElementById('ds-global-tooltip');
+            if (tip) tip.style.display = 'none';
+        };
+        icon.addEventListener('mouseenter', showTip);
+        icon.addEventListener('mousemove', showTip);
+        icon.addEventListener('mouseleave', hideTip);
+    }
+
+    if (!window._dsHoverTipWatcher) {
+        window._dsHoverTipWatcher = true;
+        const onMove = function (e) {
+            let tip = document.getElementById('ds-global-tooltip');
+            const ic = window._dsFactoryPriceHelpIcon || app.querySelector('.factory-price-help');
+            if (!ic) return;
+
+            // 如果 tip 还没创建（因为 icon 的 mouseenter 没触发），这里主动创建
+            if (!tip) {
+                tip = document.createElement('div');
+                tip.id = 'ds-global-tooltip';
+                tip.style.position = 'fixed';
+                tip.style.background = 'rgba(109, 108, 108, 0.9)';
+                tip.style.color = '#fff';
+                tip.style.padding = '6px 10px';
+                tip.style.borderRadius = '4px';
+                tip.style.fontSize = '12px';
+                tip.style.whiteSpace = 'nowrap';
+                tip.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+                tip.style.zIndex = '2147483647'; // 尽量置顶
+                tip.style.pointerEvents = 'none';
+                tip.style.display = 'none';
+                tip.style.left = '0px';
+                tip.style.top = '0px';
+                tip.style.maxWidth = '420px';
+                tip.style.overflow = 'hidden';
+                tip.style.textOverflow = 'ellipsis';
+                tip.style.transform = 'translateZ(0)';
+                document.body.appendChild(tip);
+            }
+
+            const r = ic.getBoundingClientRect();
+            const x = e.clientX, y = e.clientY;
+            const inside = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+            if (inside) {
+                tip.textContent = '数据来源于中国农业农村信息网';
+                let top = r.bottom + 6;
+                let left = r.left;
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+                const maxLeft = Math.max(4, vw - 430);
+                left = Math.min(Math.max(4, left), maxLeft);
+                top = Math.min(Math.max(4, top), Math.max(4, vh - 40));
+                tip.style.top = Math.round(top) + 'px';
+                tip.style.left = Math.round(left) + 'px';
+                tip.style.display = 'block';
+            } else {
+                tip.style.display = 'none';
+            }
+        };
+        document.addEventListener('mousemove', onMove, true);
+        window.addEventListener('mousemove', onMove, true);
+    }
+}
+
 // 立即调用一次
 setTimeout(getData, 100);
 
@@ -1404,10 +1583,10 @@ setTimeout(getData, 100);
 setInterval(getData, 10000);
 
 // 持续注入单位文本 + 日期更新 + 菜单高亮 + 地图纹理（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
-setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 1500);
+setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectFactoryPriceHelpIcon(); injectMapTexture(); }, 1500);
 
 // 首次延迟注入（等 Vue 渲染 + 首次数据加载完成）
-setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 500);
+setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectFactoryPriceHelpIcon(); injectMapTexture(); }, 500);
 
 // 启动市场切换监听（等 DOM 渲染后）
 setTimeout(setupMarketSwitcher, 2000);

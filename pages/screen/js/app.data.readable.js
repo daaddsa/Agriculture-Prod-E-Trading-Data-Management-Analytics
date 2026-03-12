@@ -4357,7 +4357,7 @@ const DS_CONFIG = {
     "name": "文本 Copy",
     "isLocal": true,
     "style": {
-      "text": "屠宰场数量",
+      "text": "货源企业数量",
       "fontSize": 20,
       "url": "",
       "localFilePath": "",

@@ -173,5 +173,17 @@
     <script src="../../shared/api/config.js"></script>
     <script src="../../shared/api/modules/analysis.js"></script>
     <script src="./app.js"></script>
+    <script>
+      (function(){
+        function u(){
+          var h=document.querySelector('.header');
+          if(!h)return;
+          var n=Math.round(h.getBoundingClientRect().height);
+          document.documentElement.style.setProperty('--header-offset',n+'px');
+        }
+        u();
+        window.addEventListener('resize',u);
+      })();
+    </script>
   </body>
 </html>

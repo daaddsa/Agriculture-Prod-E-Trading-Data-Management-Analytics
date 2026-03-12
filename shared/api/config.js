@@ -4,7 +4,7 @@
 // =====================================================
 ;(function () {
   // ---------- 常量 ----------
-  var BASE_URL = "http://xu9sp2bdxt3d.guyubao.com";
+  var BASE_URL = "https://apet.taidhub.com/stage-api/";
   var TIMEOUT  = 15000;
 
   // ---------- Token ----------

@@ -945,7 +945,7 @@
       // ==================== 分页 ====================
 
       calcPageSize: function () {
-        this.pageSize = 6;
+        this.pageSize = 9;
         var maxPage = Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));
         this.currentPage = Math.min(this.currentPage, maxPage);
       },
