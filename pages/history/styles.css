@@ -780,7 +780,7 @@ body[data-pattern="off"] {
 }
 
 /* Medium screens: two columns to avoid cramped layout */
-@media (max-width: 1400px) {
+@media (max-width: 1280px) {
   .top-section {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
