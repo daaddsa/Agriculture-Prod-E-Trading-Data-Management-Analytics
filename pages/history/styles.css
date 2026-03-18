@@ -160,13 +160,13 @@ body[data-pattern="off"] {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .top-section {
   display: grid;
-  grid-template-columns: 2.85fr 3.9fr 3.25fr;
-  gap: 24px;
+  grid-template-columns: 2.05fr 2.2fr 2.75fr;
+  gap: 15px;
   min-height: 0;
   min-width: 0;
 }
@@ -281,12 +281,20 @@ body[data-pattern="off"] {
   font-size: 12px;
   border-bottom: 1px solid #eee;
   white-space: nowrap;
+  height: 32px;
+  box-sizing: border-box;
 }
 
-/* Allow wrapping for Time and Province as requested */
+/* Keep time on one line while allowing province wrapping */
 .abnormal-table th:nth-child(1),
+.abnormal-table td:nth-child(1) {
+  white-space: nowrap;
+  min-width: 170px;
+}
+
 .abnormal-table th:nth-child(2) {
-  white-space: normal;
+  white-space: nowrap;
+  min-width: 110px;
 }
 
 .abnormal-table td {
@@ -296,6 +304,8 @@ body[data-pattern="off"] {
   font-weight: 500;
   text-align: center;
   vertical-align: middle;
+  height: 32px;
+  box-sizing: border-box;
 }
 
 /* Ensure single line for content other than Time and Province */
@@ -499,7 +509,7 @@ body[data-pattern="off"] {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 1fr; /* Allow rows to grow equally */
-  gap: 12px;
+  gap: 10px;
   height: 100%;
   align-content: stretch;
   padding: 0;
@@ -508,9 +518,10 @@ body[data-pattern="off"] {
 
 .stat-card {
   border-radius: var(--card-radius);
-  padding: 8px 16px;
+  padding: 8px 10px;
   box-shadow: var(--card-shadow);
-  width: calc(100% - 8px);
+  width: 100%;
+  box-sizing: border-box;
   height: 100%; /* Fill grid cell */
   min-height: 0;
   display: flex;
@@ -522,7 +533,7 @@ body[data-pattern="off"] {
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid transparent;
-  justify-self: center;
+  justify-self: stretch;
 }
 
 .stat-card::before {
@@ -582,14 +593,12 @@ body[data-pattern="off"] {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   padding-bottom: 4px; /* Fixed small padding */
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   color: #fff;
-  white-space: normal; /* Allow wrapping */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
-  -webkit-box-orient: vertical;
+  display: block;
 }
 
 .stat-value {
@@ -629,7 +638,7 @@ body[data-pattern="off"] {
 .bottom-section {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 24px;
+  gap: 12px;
   min-height: 0;
   min-width: 0;
 }
@@ -637,7 +646,7 @@ body[data-pattern="off"] {
 .chart-card, .abnormal-card {
   background: var(--color-surface);
   border-radius: var(--card-radius);
-  padding: 24px;
+  padding: 20px;
   box-shadow: var(--card-shadow);
   border: 1px solid var(--color-border);
   transition: box-shadow 0.3s ease;
@@ -860,10 +869,11 @@ body[data-pattern="off"] {
   position: sticky;
   top: 0;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .query-table tr {
-  height: 32px; /* Standard row height */
+  height: auto;
 }
 
 .query-table td {
@@ -876,6 +886,8 @@ body[data-pattern="off"] {
   line-height: 1.1;
   font-size: 12px;
   text-align: center;
+  height: 36px;
+  box-sizing: border-box;
 }
 
 /* Empty row placeholder styling */
@@ -1287,8 +1299,13 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
     font-size: 15px;
   }
 
-  .query-table tr, .query-table th {
+  .query-table th,
+  .abnormal-table th {
     height: 36px;
+  }
+  .query-table td,
+  .abnormal-table td {
+    height: 38px;
   }
   .query-table-container {
     max-height: 270px;
@@ -1340,8 +1357,13 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
     font-size: 17px;
   }
 
-  .query-table tr, .query-table th {
+  .query-table th,
+  .abnormal-table th {
     height: 40px;
+  }
+  .query-table td,
+  .abnormal-table td {
+    height: 42px;
   }
   .query-table-container {
     max-height: 300px;
@@ -1393,9 +1415,33 @@ body[data-stat-skin="b"] .stat-card.secondary .stat-value {
     font-size: 19px;
   }
 
-  .query-table tr, .query-table th {
+  .query-table th,
+  .abnormal-table th {
     height: 44px;
   }
+  .query-table td,
+  .abnormal-table td {
+    height: 46px;
+  }
+
+  .stat-card {
+    width: 100%;
+  }
+
+  .query-table th:first-child,
+  .query-table td:first-child {
+    min-width: 240px;
+  }
+
+  .abnormal-table th:nth-child(1),
+  .abnormal-table td:nth-child(1) {
+    min-width: 220px;
+  }
+
+  .abnormal-table th:nth-child(2) {
+    min-width: 150px;
+  }
+
   .query-table-container {
     max-height: 330px;
   }
