@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>批发市场白条猪系统</title>
+    <link rel="icon" href="../../shared/assets/logo/logo.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="../../shared/vendor/vue.global.js"></script>
+    <script src="../../shared/vendor/echarts.min.js"></script>
+  </head>
+  <body data-stat-skin="a" data-pattern="on">
+    <div id="app">
+      <header class="header">
+        <h1>批发市场子系统—白条猪</h1>
+        
+        <div class="nav-filters">
+          <div class="filter-group">
+            <span class="filter-label">市场</span>
+            <select class="nav-select-header" v-model="market" @change="handleMarketChange">
+              <option v-for="m in markets" :key="m.value" :value="m.value">{{ m.label }}</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <span class="filter-label">日期</span>
+            <input type="date" class="nav-datepicker-header" v-model="date" @change="handleDateChange" :min="minDate" :max="maxDate" />
+          </div>
+        </div>
+
+        <nav class="nav-tabs" aria-label="顶部导航">
+          <a :href="'../screen/index.html?marketId=' + market" class="nav-tab">实时交易</a>
+          <a href="#" class="nav-tab active">历史查询</a>
+          <a :href="'../analysis/index.html?marketId=' + market" class="nav-tab">数据分析</a>
+        </nav>
+      </header>
+
+      <div class="main-content">
+        <div class="top-section">
+          <div class="price-card top-equal" style="position: relative;">
+            <div class="card-tabs">
+              <button 
+                class="tab-btn" 
+                :class="{ active: viewMode === 'price' }" 
+                @click="switchView('price')"
+              >
+                出厂价/批发价
+              </button>
+              <button 
+                class="tab-btn" 
+                :class="{ active: viewMode === 'activity' }" 
+                @click="switchView('activity')"
+              >
+                日交易活跃度走势图
+              </button>
+            </div>
+            
+            <div v-show="viewMode === 'price'" class="price-list-container">
+              <table class="price-table" v-if="priceData.length > 0">
+                <thead>
+                  <tr>
+                    <th>地区</th>
+                    <th>屠宰场平均出厂价 (t-1日)</th>
+                    <th>批发市场交易均价 (t日)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in priceData" :key="index">
+                    <td>{{ item.region }}</td>
+                    <td>{{ item.factory }}</td>
+                    <td>{{ item.wholesale }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="no-data" v-else-if="!priceLoading">
+                暂无数据
+              </div>
+            </div>
+
+            <div v-show="viewMode === 'activity'" class="chart-container-wrapper">
+              <div id="activityChart"></div>
+              <div class="activity-info">
+                <span class="info-label">最活跃时段:</span><span class="info-value">{{ maxActivityPeriod }}</span><span class="info-label"> 交易量:</span><span class="info-value">{{ maxActivityVolume }}公斤</span>
+              </div>
+            </div>
+
+            <!-- Loading Overlay for Price Card -->
+            <div class="loading-overlay" v-if="priceLoading">
+              <div class="spinner"></div>
+              <div class="loading-text">数据加载中...</div>
+            </div>
+          </div>
+
+          <div class="stats-grid top-equal">
+            <template v-for="item in stats.data" :key="item.id">
+              <div class="stat-card" :class="item.color" @click="stats.error ? retryStats() : null">
+                <div class="stat-label">{{ item.label }}</div>
+                
+                <div v-if="stats.error" class="stat-error">
+                  <span>!</span>
+                </div>
+                
+                <div v-else class="stat-value">
+                  {{ item.value }}<span class="stat-unit">{{ item.unit }}</span>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class="abnormal-card top-equal" style="position: relative;">
+            <h3 class="card-title">
+              <span class="title-icon"></span>
+              异常交易信息
+            </h3>
+            <div class="abnormal-table-scroll" ref="abnormalScrollContainer">
+        <table class="abnormal-table">
+          <thead>
+            <tr>
+              <th>交易时间</th>
+              <th>货源省份</th>
+              <th>流向地区</th>
+              <th>交易单价</th>
+              <th>复核情况</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in abnormalData" :key="index">
+              <td>{{ item.time }}</td>
+              <td>{{ item.origin }}</td>
+              <td>{{ item.dest }}</td>
+              <td>{{ item.price }}</td>
+              <td>
+                <span class="status-badge" :class="item.reviewStatus === '已复核' ? 'success' : 'warning'">
+                  {{ item.reviewStatus }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+            
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" v-if="abnormalLoading">
+              <div class="spinner"></div>
+              <div class="loading-text">数据加载中...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <div class="chart-card pie-card bottom-equal">
+            <div class="card-tabs small-tabs">
+              <button 
+                class="tab-btn" 
+                :class="{ active: pieViewMode === 'volume' }" 
+                @click="switchPieView('volume')"
+              >
+                货源交易量占比
+              </button>
+              <button 
+                class="tab-btn" 
+                :class="{ active: pieViewMode === 'flow' }" 
+                @click="switchPieView('flow')"
+              >
+                货源流向占比
+              </button>
+            </div>
+            
+            <div class="pie-container" role="region" aria-label="货源数据分析">
+              <!-- Loading State -->
+              <div v-if="pieLoading" class="pie-overlay loading">
+                <div class="spinner"></div>
+                <span>数据加载中...</span>
+              </div>
+              
+              <!-- Error State -->
+              <div v-if="pieError" class="pie-overlay error">
+                <span>{{ pieError }}</span>
+                <button @click="updatePieChart" class="retry-btn">重试</button>
+              </div>
+
+              <!-- Content (Always Rendered) -->
+              <div id="pieChart" class="pie-chart-section" role="img" aria-label="货源占比饼图"></div>
+            </div>
+          </div>
+
+          <div class="chart-card query-card bottom-equal">
+            <div class="card-header">
+              <h3 class="card-title">日交易信息查询</h3>
+              <div class="query-filters">
+                <div class="filter-item">
+                  <label for="origin-select">产地：</label>
+                  <select 
+                    id="origin-select" 
+                    v-model="query.origin" 
+                    class="nav-select" 
+                    @change="handleFilterChange"
+                  >
+                    <option value="">全部产地</option>
+                    <option v-for="opt in originOptions" :key="opt.value" :value="opt.value">
+                      {{ opt.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="filter-item">
+                  <label for="dest-select">销地：</label>
+                  <select 
+                    id="dest-select" 
+                    v-model="query.dest" 
+                    class="nav-select" 
+                    @change="handleFilterChange"
+                  >
+                    <option value="">全部销地</option>
+                    <option v-for="opt in destOptions" :key="opt.value" :value="opt.value">
+                      {{ opt.label }}
+                    </option>
+                  </select>
+                </div>
+                <button class="search-btn" @click="handleSearch">查询</button>
+                <button class="reset-btn" @click="resetQuery">重置</button>
+              </div>
+            </div>
+            <div class="query-table-container">
+              <table class="query-table">
+                <thead>
+                  <tr>
+                    <th style="width: 18%">交易时间</th>
+                    <th style="width: 12%">交易单价</th>
+                    <th style="width: 12%">交易量</th>
+                    <th style="width: 12%">交易额</th>
+                    <th style="width: 23%">产地</th>
+                    <th style="width: 23%">销地</th>
+                  </tr>
+                </thead>
+                <tbody :key="transactionTableKey">
+                  <tr 
+                    v-for="item in displayTransactions" 
+                    :key="item.id" 
+                    :class="{ 'empty-row': item.isEmpty }"
+                  >
+                    <template v-if="!item.isEmpty">
+                      <td>{{ item.time }}</td>
+                      <td>{{ item.price }}</td>
+                      <td>{{ item.volume }}</td>
+                      <td>{{ item.amount }}</td>
+                      <td :title="item.origin">{{ item.origin }}</td>
+                      <td :title="item.destination">{{ item.destination }}</td>
+                    </template>
+                    <template v-else>
+                      <td>&nbsp;</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer pagination">
+              <button class="page-btn" :disabled="query.page === 1" @click="goToPage(1)">首页</button>
+              <button class="page-btn" :disabled="query.page === 1" @click="changePage(-1)">上一页</button>
+              
+              <!-- Smart Pagination -->
+              <template v-for="(item, index) in paginationItems" :key="index">
+                <!-- Page Number -->
+                <button 
+                  v-if="item.type === 'page'"
+                  class="page-btn"
+                  :class="{ active: query.page === item.value }"
+                  @click="goToPage(item.value)"
+                >
+                  {{ item.value }}
+                </button>
+
+                <!-- Ellipsis / Input -->
+                <div v-else-if="item.type === 'ellipsis'" class="pagination-input-wrapper">
+                  <button 
+                    v-if="!ellipsisState[item.pos].active"
+                    class="page-btn pagination-ellipsis-btn"
+                    @click="handleEllipsisClick(item.pos)"
+                    title="点击输入页码快速跳转"
+                  >
+                    ...
+                  </button>
+                  <div v-else class="input-container">
+                    <input 
+                      :id="'ellipsis-input-' + item.pos"
+                      type="text" 
+                      class="page-input pagination-mini-input"
+                      v-model="ellipsisState[item.pos].value"
+                      @blur="handleEllipsisBlur(item.pos)"
+                      @keydown="handleEllipsisKeydown(item.pos, $event)"
+                      autocomplete="off"
+                    />
+                    <div v-if="ellipsisState[item.pos].error" class="tooltip-error">
+                      请输入 1~{{ totalPages }} 之间的页码
+                    </div>
+                  </div>
+                </div>
+              </template>
+              
+              <button class="page-btn" :disabled="query.page === totalPages" @click="changePage(1)">下一页</button>
+              <button class="page-btn" :disabled="query.page === totalPages" @click="goToPage(totalPages)">末页</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../shared/api/config.js"></script>
+    <script src="../../shared/api/modules/history.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
