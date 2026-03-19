@@ -100,6 +100,7 @@
         pageSize: 6,
         currentPage: 1,
         activeMenu: "volume",
+		insights:""
       };
     },
 
@@ -459,6 +460,7 @@
 
           var avgD      = (results[0] && results[0].data) || {};
           var avgCleanD = (results[1] && results[1].data) || {};
+		  this.insights = avgD.interpret;
           var targetDates = this._lastNDates(this.date, 30);
           xAxisData    = this._toMD(targetDates);
           avgData      = this._alignByDates(avgD.xList || [], avgD.yList || [], targetDates);
@@ -557,6 +559,7 @@
           ]);
           var rateD = (results[0] && results[0].data) || {};
           var feeD  = (results[1] && results[1].data) || {};
+		  this.insights = feeD.interpret;
           var rawX = rateD.xList || feeD.xList || [];
           var rawRateY = rateD.yList || [];
           var rawFeeY  = feeD.yList || [];

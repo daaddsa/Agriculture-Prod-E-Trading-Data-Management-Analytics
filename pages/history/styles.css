@@ -172,8 +172,8 @@ body[data-pattern="off"] {
 }
 
 .top-equal {
-  height: 480px !important; /* Fixed height to accommodate 4 rows of cards */
-  min-height: 480px !important;
+  height: 335px !important; /* Fixed height to accommodate 4 rows of cards */
+  min-height: 335px !important;
   max-height: none !important;
   overflow: hidden; /* Force internal scrolling for long lists */
 }
@@ -289,12 +289,12 @@ body[data-pattern="off"] {
 .abnormal-table th:nth-child(1),
 .abnormal-table td:nth-child(1) {
   white-space: nowrap;
-  min-width: 170px;
+  min-width: 155px;
 }
 
 .abnormal-table th:nth-child(2) {
   white-space: nowrap;
-  min-width: 110px;
+  min-width: 100px;
 }
 
 .abnormal-table td {

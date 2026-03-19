@@ -2833,7 +2833,7 @@ const DS_CONFIG = {
         "interval": 10,
         "dataFormatter": "{\"code\":200,\"data\":9999,\"message\":\"成功\"}"
       },
-      "dataSetName": "屠宰场数量"
+      "dataSetName": "货源企业数量"
     },
     "style": {
       "fontSize": 40,
@@ -4357,7 +4357,7 @@ const DS_CONFIG = {
     "name": "文本 Copy",
     "isLocal": true,
     "style": {
-      "text": "屠宰场数量",
+      "text": "货源企业数量",
       "fontSize": 20,
       "url": "",
       "localFilePath": "",
