@@ -1,6 +1,6 @@
 
 window._DS_DATA = {
-    enable: true, // 是否开启数据自定义,如果要自定义请设置为true
+    enable: true, // 是否开启数据自定义
     dataSet: {} // 数据集: 大屏中每个组件的数据，key为编辑器中设置的数据集名称，value为组件数据必须和编辑器中静态数据格式一致
 }
 // window._DS_DATA.dataSet对象里的数据发生变化时，会自动触发大屏数据更新
@@ -128,7 +128,7 @@ async function getData() {
         newDataSet['交易金额'] = 0;
         newDataSet['交易均价'] = 0;
         newDataSet['交易均价(不含异常)'] = 0;
-        newDataSet['屠宰场数量'] = 0;
+        newDataSet['货源企业数量'] = 0;
         newDataSet['采购商数量'] = 0;
 
         if (rawResults.visualData) {
@@ -149,7 +149,7 @@ async function getData() {
                 newDataSet['交易均价(不含异常)'] = parseFloat(visualData.averageNoCheck);
             }
             if (visualData.abattoirNum != null) {
-                newDataSet['屠宰场数量'] = parseInt(visualData.abattoirNum);
+                newDataSet['货源企业数量'] = parseInt(visualData.abattoirNum);
             }
             if (visualData.purchaserNum != null) {
                 newDataSet['采购商数量'] = parseInt(visualData.purchaserNum);
@@ -158,7 +158,7 @@ async function getData() {
                 交易总量: newDataSet['交易总量'],
                 交易金额: newDataSet['交易金额'],
                 交易均价: newDataSet['交易均价'],
-                屠宰场数量: newDataSet['屠宰场数量'],
+                货源企业数量: newDataSet['货源企业数量'],
                 采购商数量: newDataSet['采购商数量']
             });
         }
@@ -398,7 +398,7 @@ async function getData() {
 
         // 6. 交易市场数据 - 更新下拉框显示当前市场名称 + 补充名称映射
         if (rawResults.tradeMarketData) {
-            const markets = rawResults.tradeMarketData;
+            const markets = normalizeMarketList(rawResults.tradeMarketData);
             window._DS_MARKET_LIST = markets;
             console.log('[CustomData] 市场列表:', markets.map(m => m.marketId + '-' + m.marketName));
             
@@ -407,11 +407,15 @@ async function getData() {
                 MARKET_NAME_MAP[m.marketName] = m.marketId;
             });
             
+            // 把 API 市场列表注入框架 selectLink 组件配置，让原生下拉框自动更新
+            syncFrameworkSelectOptions(markets);
+
             // 根据当前 marketId 更新下拉框显示文本
             const currentMarket = markets.find(m => String(m.marketId) === String(marketId));
             if (currentMarket) {
                 updateMarketDropdownText(currentMarket.marketName);
             }
+            refreshMarketDropdownMenu(marketId);
         }
 
         if (Object.keys(newDataSet).length > 0) {
@@ -481,18 +485,512 @@ const SELECT_COMPONENT_ID = 'cpme41cb160-0568-4114-90c8-c847a9d8aa0b';
 const MARKET_NAME_MAP = {
     '上海西郊国际农产品交易中心': 1,
     '上海农产品中心批发市场': 2,
-    '上海农产品中心批发市场经营管理有限公司': 2,
     '江苏无锡朝阳农产品大市场': 3,
     '江苏苏州农产品大市场': 4
 };
 
 // =====================================================
-// 下拉框文本：已在 app.data.readable.js 的导出前根据 URL marketId
-// 动态设置 DS_CONFIG[selectKey].style.text，框架渲染时自带正确文本
-// 此处只需保留市场切换的点击拦截（将框架的路由跳转改为整页刷新）
+// 将 API 返回的市场列表注入到框架 selectLink 组件的 config 中，
+// 让框架原生下拉框自动显示 API 返回的市场名称（而非写死的静态选项）
 // =====================================================
-function updateMarketDropdownText() {
-    // 文本已由 app.data.readable.js 中的预处理逻辑设置，无需额外操作
+let _frameworkSelectSyncVersion = 0;
+let _marketSelectObserver = null;
+let _marketSelectObserverTimer = null;
+let _marketSelectObservedEl = null;
+let _marketDomSyncObserver = null;
+let _marketDomSyncTimer = null;
+let _marketDomSyncInterval = null;
+let _marketDomSyncStopTimer = null;
+
+function _getCurrentMarketId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return String(urlParams.get('marketId') || '1');
+}
+
+function _sortMarketList(a, b) {
+    const aNum = Number(a.marketId);
+    const bNum = Number(b.marketId);
+    const aIsNum = Number.isFinite(aNum);
+    const bIsNum = Number.isFinite(bNum);
+    if (aIsNum && bIsNum) return aNum - bNum;
+    return String(a.marketId).localeCompare(String(b.marketId), 'zh-CN');
+}
+
+function normalizeMarketList(markets) {
+    if (!Array.isArray(markets)) return [];
+    const map = new Map();
+    markets.forEach(item => {
+        const marketId = String(item && item.marketId != null ? item.marketId : '').trim();
+        const marketName = String(item && item.marketName != null ? item.marketName : '').replace(/\s+/g, ' ').trim();
+        if (!marketId || !marketName) return;
+        if (!map.has(marketId)) {
+            map.set(marketId, { marketId, marketName });
+        }
+    });
+    return Array.from(map.values()).sort(_sortMarketList);
+}
+
+function _buildFrameworkSelectOptions(markets) {
+    return markets.map(m => {
+        const link = '?marketId=' + m.marketId;
+        return {
+            label: m.marketName,
+            text: m.marketName,
+            name: m.marketName,
+            value: link,
+            path: link,
+            url: link,
+            isLocal: true
+        };
+    });
+}
+
+function _replaceArrayContents(target, nextItems) {
+    if (!Array.isArray(target)) return false;
+    target.length = 0;
+    nextItems.forEach(item => target.push(Object.assign({}, item)));
+    return true;
+}
+
+function _setTextLikeValue(el, text) {
+    if (!el || !text) return;
+    if (el.getAttribute && el.getAttribute('data-ds-market-name') === text) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'OPTION') {
+        if (el.value !== text) el.value = text;
+        el.setAttribute('value', text);
+    }
+    if (typeof el.textContent === 'string' && el.textContent.trim() !== text) {
+        el.textContent = text;
+    }
+    el.setAttribute('title', text);
+    el.setAttribute('aria-label', text);
+    el.setAttribute('data-ds-market-name', text);
+}
+
+function _extractMarketIdFromLinkValue(raw) {
+    const text = String(raw || '').trim();
+    if (!text) return '';
+    const match = text.match(/[?&]marketId=([^&#]+)/i);
+    return match ? String(match[1]).trim() : '';
+}
+
+function _syncFrameworkSelectSerializedConfig() {
+    try {
+        if (window.DS_DATA && window.DS_CONFIG) {
+            window.DS_DATA.config = JSON.stringify(window.DS_CONFIG);
+        }
+    } catch (e) {}
+}
+
+function _setFrameworkSelectText(target, text) {
+    if (!target || !text) return;
+    if (target.style) target.style.text = text;
+    if (target.config && target.config.style) target.config.style.text = text;
+    if (target.option && target.option.style) target.option.style.text = text;
+    if (target.$data) {
+        if (typeof target.$data.text === 'string' || typeof target.$data.text === 'undefined') target.$data.text = text;
+        if (target.$data.config && target.$data.config.style) target.$data.config.style.text = text;
+    }
+}
+
+function _setFrameworkSelectOptions(target, options) {
+    if (!target || !options) return;
+    if (target.style && Array.isArray(target.style.options)) _replaceArrayContents(target.style.options, options);
+    if (target.config && target.config.style && Array.isArray(target.config.style.options)) _replaceArrayContents(target.config.style.options, options);
+    if (target.option && target.option.style && Array.isArray(target.option.style.options)) _replaceArrayContents(target.option.style.options, options);
+    if (target.$data) {
+        if (Array.isArray(target.$data.options)) target.$data.options = options.map(item => Object.assign({}, item));
+        if (target.$data.config && target.$data.config.style && Array.isArray(target.$data.config.style.options)) {
+            _replaceArrayContents(target.$data.config.style.options, options);
+        }
+    }
+}
+
+function _walkForVueInstance(node) {
+    if (!node) return null;
+    if (node.__vue__) return node.__vue__;
+    for (let i = 0; i < (node.children || []).length; i++) {
+        const vm = _walkForVueInstance(node.children[i]);
+        if (vm) return vm;
+    }
+    return null;
+}
+
+function _getCurrentMarketNameFromList(markets) {
+    const currentId = _getCurrentMarketId();
+    const current = markets.find(m => String(m.marketId) === currentId);
+    return current ? current.marketName : '';
+}
+
+function _syncRenderedMarketLabelsFromCache() {
+    const markets = normalizeMarketList(window._DS_MARKET_LIST || []);
+    if (!markets.length) return;
+    _syncFrameworkSelectDomOptions(null, markets, _getCurrentMarketNameFromList(markets));
+}
+
+function _ensureMarketDomSyncObserver() {
+    if (!document || !document.body) return;
+    if (_marketDomSyncObserver) return;
+    _marketDomSyncObserver = new MutationObserver(function () {
+        clearTimeout(_marketDomSyncTimer);
+        _marketDomSyncTimer = setTimeout(_syncRenderedMarketLabelsFromCache, 50);
+    });
+    _marketDomSyncObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['href', 'value', 'data-value', 'data-path', 'data-url', 'title', 'aria-label']
+    });
+}
+
+function _scheduleMarketDomSyncRetries() {
+    clearInterval(_marketDomSyncInterval);
+    clearTimeout(_marketDomSyncStopTimer);
+    _marketDomSyncInterval = setInterval(_syncRenderedMarketLabelsFromCache, 300);
+    _marketDomSyncStopTimer = setTimeout(function () {
+        clearInterval(_marketDomSyncInterval);
+        _marketDomSyncInterval = null;
+    }, 10000);
+}
+
+function _syncFrameworkSelectDomOptions(wrap, markets, currentName) {
+    if ((!wrap && !document) || !markets || !markets.length) return;
+
+    const marketById = {};
+    const allKnownNames = new Set(Object.keys(MARKET_NAME_MAP).concat(markets.map(m => m.marketName)));
+    markets.forEach(m => {
+        marketById[String(m.marketId)] = m.marketName;
+    });
+
+    const roots = [];
+    if (wrap) roots.push(wrap);
+    if (document && document.body && (!wrap || document.body !== wrap)) roots.push(document.body);
+
+    const optionCandidates = [];
+    roots.forEach(root => {
+        Array.from(root.querySelectorAll('a[href*="marketId="], [href*="marketId="], option, li, [role="option"], [data-value], [data-path], [data-url], .option, .options *'))
+            .forEach(el => {
+                if (optionCandidates.indexOf(el) === -1) optionCandidates.push(el);
+            });
+    });
+    optionCandidates.forEach(el => {
+        const attrs = [
+            el.getAttribute && el.getAttribute('href'),
+            el.getAttribute && el.getAttribute('value'),
+            el.getAttribute && el.getAttribute('data-value'),
+            el.getAttribute && el.getAttribute('data-path'),
+            el.getAttribute && el.getAttribute('data-url'),
+            el.value
+        ];
+        let matchedName = '';
+        for (const raw of attrs) {
+            const marketId = _extractMarketIdFromLinkValue(raw);
+            if (marketId && marketById[marketId]) {
+                matchedName = marketById[marketId];
+                break;
+            }
+        }
+        if (!matchedName) return;
+        _setTextLikeValue(el, matchedName);
+    });
+
+    const leafCandidates = [];
+    roots.forEach(root => {
+        Array.from(root.querySelectorAll('a, span, div, p, button, li, option'))
+            .forEach(el => {
+                if (leafCandidates.indexOf(el) === -1) leafCandidates.push(el);
+            });
+    });
+    const normalizedLeafCandidates = leafCandidates.filter(el => el && el.isConnected && (!el.children || el.children.length === 0));
+    const marketTextNodes = normalizedLeafCandidates.filter(el => {
+        const txt = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') ? String(el.value || '').trim() : String(el.textContent || '').trim();
+        return txt && allKnownNames.has(txt);
+    });
+
+    if (marketTextNodes.length === markets.length) {
+        marketTextNodes.forEach((el, index) => {
+            if (markets[index]) _setTextLikeValue(el, markets[index].marketName);
+        });
+    } else if (marketTextNodes.length === markets.length + 1 && currentName) {
+        _setTextLikeValue(marketTextNodes[0], currentName);
+        marketTextNodes.slice(1).forEach((el, index) => {
+            if (markets[index]) _setTextLikeValue(el, markets[index].marketName);
+        });
+    }
+}
+
+function _applyFrameworkSelectOptions(markets) {
+    const normalizedMarkets = normalizeMarketList(markets);
+    if (!normalizedMarkets.length) return false;
+
+    const cfg = window.DS_CONFIG && window.DS_CONFIG[SELECT_COMPONENT_ID];
+    const currentName = _getCurrentMarketNameFromList(normalizedMarkets) || normalizedMarkets[0].marketName;
+    const newOptions = _buildFrameworkSelectOptions(normalizedMarkets);
+
+    if (cfg) {
+        _setFrameworkSelectOptions(cfg, newOptions);
+        _setFrameworkSelectText(cfg, currentName);
+    }
+    _syncFrameworkSelectSerializedConfig();
+    _ensureMarketDomSyncObserver();
+
+    const el = document.getElementById(SELECT_COMPONENT_ID);
+    if (el) {
+        const vm = _walkForVueInstance(el);
+        if (vm) {
+            _setFrameworkSelectOptions(vm, newOptions);
+            _setFrameworkSelectText(vm, currentName);
+            if (vm.$forceUpdate) vm.$forceUpdate();
+        }
+        _syncFrameworkSelectDomOptions(el, normalizedMarkets, currentName);
+    }
+    _syncFrameworkSelectDomOptions(null, normalizedMarkets, currentName);
+    _scheduleMarketDomSyncRetries();
+
+    if (currentName) updateMarketDropdownText(currentName);
+    return true;
+}
+
+function _observeMarketSelectText() {
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+    if (_marketSelectObserver && _marketSelectObservedEl === wrap) return;
+    if (_marketSelectObserver) {
+        _marketSelectObserver.disconnect();
+        _marketSelectObserver = null;
+    }
+    _marketSelectObservedEl = wrap;
+
+    _marketSelectObserver = new MutationObserver(function () {
+        clearTimeout(_marketSelectObserverTimer);
+        _marketSelectObserverTimer = setTimeout(function () {
+            const currentName = _getCurrentMarketNameFromList(normalizeMarketList(window._DS_MARKET_LIST || []));
+            if (currentName) updateMarketDropdownText(currentName);
+        }, 60);
+    });
+    _marketSelectObserver.observe(wrap, {
+        childList: true,
+        subtree: true,
+        characterData: true
+    });
+}
+
+function syncFrameworkSelectOptions(markets) {
+    const normalizedMarkets = normalizeMarketList(markets);
+    if (!normalizedMarkets.length) {
+        console.warn('[CustomData] 未同步下拉框: API 市场列表为空或格式不合法');
+        return;
+    }
+
+    const syncVersion = ++_frameworkSelectSyncVersion;
+    const applySync = function () {
+        if (syncVersion !== _frameworkSelectSyncVersion) return;
+        _applyFrameworkSelectOptions(normalizedMarkets);
+        _observeMarketSelectText();
+    };
+
+    applySync();
+    [120, 500, 1200].forEach(delay => setTimeout(applySync, delay));
+
+    console.log('[CustomData] 框架下拉选项已同步 API 数据:', normalizedMarkets.map(m => m.marketName));
+}
+
+// =====================================================
+let _cachedSelectValueEl = null;
+let _lastMarketName = '';
+let _dsMarketMenuEl = null;
+let _dsMarketMenuOpen = false;
+
+function _getMarketListForMenu() {
+    const list = Array.isArray(window._DS_MARKET_LIST) ? window._DS_MARKET_LIST.slice() : [];
+    if (list.length > 0) {
+        list.sort((a, b) => Number(a.marketId) - Number(b.marketId));
+        return list.map(m => ({ marketId: String(m.marketId), marketName: String(m.marketName || '').trim() })).filter(m => m.marketId && m.marketName);
+    }
+    const fallback = Object.keys(MARKET_NAME_MAP).map(name => ({ marketId: String(MARKET_NAME_MAP[name]), marketName: name }));
+    fallback.sort((a, b) => Number(a.marketId) - Number(b.marketId));
+    return fallback;
+}
+
+function _ensureMarketMenuEl() {
+    if (_dsMarketMenuEl && _dsMarketMenuEl.isConnected) return _dsMarketMenuEl;
+    const el = document.createElement('div');
+    el.id = 'ds-market-menu';
+    el.style.position = 'fixed';
+    el.style.zIndex = '2147483647';
+    el.style.background = 'rgba(31, 147, 255, 0.96)';
+    el.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+    el.style.boxShadow = '0 10px 24px rgba(0,0,0,0.35)';
+    el.style.display = 'none';
+    el.style.maxHeight = '340px';
+    el.style.overflow = 'auto';
+    el.style.padding = '6px 0';
+    el.style.minWidth = '240px';
+    el.style.backdropFilter = 'blur(2px)';
+    document.body.appendChild(el);
+    _dsMarketMenuEl = el;
+    return el;
+}
+
+function _renderMarketMenu(currentId) {
+    const el = _ensureMarketMenuEl();
+    const list = _getMarketListForMenu();
+    el.innerHTML = '';
+    list.forEach(m => {
+        const item = document.createElement('div');
+        item.setAttribute('data-market-id', m.marketId);
+        item.setAttribute('data-market-name', m.marketName);
+        item.textContent = m.marketName;
+        item.style.padding = '10px 14px';
+        item.style.cursor = 'pointer';
+        item.style.whiteSpace = 'nowrap';
+        item.style.overflow = 'hidden';
+        item.style.textOverflow = 'ellipsis';
+        item.style.color = 'rgba(255,255,255,1)';
+        item.style.fontSize = '16px';
+        item.style.lineHeight = '20px';
+        item.style.borderBottom = '1px dotted rgba(255,255,255,0.2)';
+        if (String(m.marketId) === String(currentId)) {
+            item.style.background = 'rgba(0, 61, 174, 0.55)';
+        }
+        item.addEventListener('mouseenter', function () {
+            item.style.background = String(m.marketId) === String(currentId) ? 'rgba(0, 61, 174, 0.65)' : 'rgba(0, 61, 174, 0.35)';
+        });
+        item.addEventListener('mouseleave', function () {
+            item.style.background = String(m.marketId) === String(currentId) ? 'rgba(0, 61, 174, 0.55)' : 'transparent';
+        });
+        el.appendChild(item);
+    });
+    return el;
+}
+
+function _positionMarketMenu(anchorRect) {
+    const el = _ensureMarketMenuEl();
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const minW = Math.max(220, Math.round(anchorRect.width || 0));
+    el.style.minWidth = minW + 'px';
+    el.style.left = '0px';
+    el.style.top = '0px';
+    el.style.display = 'block';
+    const mw = el.offsetWidth || minW;
+    const mh = el.offsetHeight || 200;
+    let left = Math.round(anchorRect.left);
+    let top = Math.round(anchorRect.bottom + 2);
+    left = Math.min(Math.max(6, left), Math.max(6, vw - mw - 6));
+    if (top + mh > vh - 6) {
+        const upTop = Math.round(anchorRect.top - mh - 2);
+        if (upTop >= 6) top = upTop;
+    }
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+}
+
+function _openMarketMenu(currentId) {
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    _renderMarketMenu(currentId);
+    _positionMarketMenu(rect);
+    _dsMarketMenuOpen = true;
+}
+
+function _closeMarketMenu() {
+    if (_dsMarketMenuEl) _dsMarketMenuEl.style.display = 'none';
+    _dsMarketMenuOpen = false;
+}
+
+function refreshMarketDropdownMenu(currentId) {
+    if (!_dsMarketMenuOpen) return;
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+    _renderMarketMenu(currentId);
+    _positionMarketMenu(wrap.getBoundingClientRect());
+}
+
+function updateMarketDropdownText(marketName) {
+    const name = String(marketName || '').trim();
+    if (!name) return;
+    if (name === _lastMarketName && _cachedSelectValueEl && _cachedSelectValueEl.isConnected) return;
+
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+
+    const setText = function (el) {
+        if (!el) return false;
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+            if (el.value !== name) el.value = name;
+            el.setAttribute('value', name);
+        } else {
+            if (el.textContent.trim() !== name) el.textContent = name;
+        }
+        el.setAttribute('title', name);
+        _cachedSelectValueEl = el;
+        _lastMarketName = name;
+        return true;
+    };
+
+    if (_cachedSelectValueEl && _cachedSelectValueEl.isConnected && wrap.contains(_cachedSelectValueEl)) {
+        if (setText(_cachedSelectValueEl)) return;
+    }
+
+    const isVisible = function (el) {
+        if (!el || !el.isConnected) return false;
+        const cs = getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
+        return el.offsetWidth > 0 || el.offsetHeight > 0;
+    };
+
+    const scoreCandidate = function (el) {
+        let score = 0;
+        const txt = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') ? String(el.value || '').trim() : el.textContent.trim();
+        const classText = [el.className, el.id, el.getAttribute('data-role'), el.getAttribute('name')].filter(Boolean).join(' ');
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') score += 100;
+        if (/(value|text|label|selected|current|title|content|inner)/i.test(classText)) score += 40;
+        if (txt === name) score += 80;
+        if (MARKET_NAME_MAP[txt] != null) score += 60;
+        if (!txt) score -= 10;
+        if (txt && txt.length > 32) score -= 20;
+        return score;
+    };
+
+    const candidates = Array.from(wrap.querySelectorAll('input, textarea, span, div, p, button'))
+        .filter(el => isVisible(el))
+        .sort((a, b) => scoreCandidate(b) - scoreCandidate(a));
+
+    for (const el of candidates) {
+        if (el.children && el.children.length > 0 && el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') continue;
+        const txt = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') ? String(el.value || '').trim() : el.textContent.trim();
+        if (txt === name) {
+            setText(el);
+            return;
+        }
+        if (MARKET_NAME_MAP[txt] != null) {
+            setText(el);
+            return;
+        }
+        if (!txt && scoreCandidate(el) >= 40) {
+            setText(el);
+            return;
+        }
+    }
+
+    if (candidates.length > 0) setText(candidates[0]);
+}
+
+function _killNativeSelectEvents() {
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+    const inner = wrap.querySelector('.select-el') || wrap.firstElementChild;
+    if (!inner || inner._dsKilled) return;
+    inner._dsKilled = true;
+    ['click', 'mousedown', 'mouseup', 'pointerdown', 'pointerup'].forEach(evt => {
+        inner.addEventListener(evt, function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        }, true);
+    });
 }
 
 function setupMarketSwitcher() {
@@ -502,16 +1000,48 @@ function setupMarketSwitcher() {
     if (flipDemoParam === '1' || flipDemoParam === 'true') {
         try { startLeftFlipDemoOnce(); } catch(e){}
     }
-    // 动画模式改为代码内配置 LEFT_ANIM_MODE
+
+    _killNativeSelectEvents();
+    setTimeout(_killNativeSelectEvents, 1000);
+    setTimeout(_killNativeSelectEvents, 3000);
 
     document.addEventListener('click', function (e) {
+        const wrap = document.getElementById(SELECT_COMPONENT_ID);
+        const menu = _dsMarketMenuEl;
+        const inWrap = wrap && (wrap === e.target || wrap.contains(e.target));
+        const inMenu = menu && menu.style.display !== 'none' && (menu === e.target || menu.contains(e.target));
+
+        if (inMenu) {
+            const item = e.target.closest('[data-market-id]');
+            if (!item) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const targetId = String(item.getAttribute('data-market-id') || '');
+            const targetName = String(item.getAttribute('data-market-name') || '').trim();
+            _closeMarketMenu();
+            if (targetName) updateMarketDropdownText(targetName);
+            if (targetId && targetId !== currentId) {
+                console.log('[CustomData] 切换市场:', currentId, '→', targetId);
+                window.location.href = window.location.pathname + '?marketId=' + targetId;
+            }
+            return;
+        }
+
+        if (inWrap) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (_dsMarketMenuOpen) _closeMarketMenu();
+            else _openMarketMenu(currentId);
+            return;
+        }
+
+        if (_dsMarketMenuOpen) _closeMarketMenu();
+
         const clickedText = e.target.textContent.trim();
         if (!clickedText || clickedText.length < 4) return;
 
-        // 精确匹配：静态映射表
         let targetId = MARKET_NAME_MAP[clickedText] || null;
 
-        // 精确匹配：API 动态列表
         if (!targetId && window._DS_MARKET_LIST) {
             const m = window._DS_MARKET_LIST.find(m => m.marketName === clickedText);
             if (m) targetId = m.marketId;
@@ -519,9 +1049,16 @@ function setupMarketSwitcher() {
 
         if (targetId && String(targetId) !== currentId) {
             e.preventDefault();
-            e.stopPropagation();
+            e.stopImmediatePropagation();
             console.log('[CustomData] 切换市场:', currentId, '→', targetId);
             window.location.href = window.location.pathname + '?marketId=' + targetId;
+        }
+    }, true);
+
+    document.addEventListener('mousedown', function (e) {
+        const wrap = document.getElementById(SELECT_COMPONENT_ID);
+        if (wrap && (wrap === e.target || wrap.contains(e.target))) {
+            e.stopImmediatePropagation();
         }
     }, true);
 
@@ -529,7 +1066,7 @@ function setupMarketSwitcher() {
 }
 
 // =====================================================
-// 方案3（最终版）：直接在数字 DOM 元素内部注入单位 <span>
+// 直接在数字 DOM 元素内部注入单位 <span>
 // 原理：在 DOM 中找到包含数字值的叶子元素，在其内部追加单位文字
 //       单位自然排在数字后面（inline 流式布局），无需计算坐标
 //       用 setInterval 持续注入，对抗框架的周期性重渲染
@@ -540,7 +1077,7 @@ const UNIT_LABELS = [
     { dataSetName: '交易金额',          unit: ' 万元' },
     { dataSetName: '交易均价',          unit: ' 元/公斤' },
     { dataSetName: '交易均价(不含异常)',  unit: ' 元/公斤' },
-    { dataSetName: '屠宰场数量',        unit: ' 家' },
+    { dataSetName: '货源企业数量',        unit: ' 家' },
     { dataSetName: '采购商数量',        unit: ' 家' },
 ];
 
@@ -577,7 +1114,8 @@ function unwrapDataSetValue(v) {
 function formatLeftMetricValue(dataSetName, rawValue) {
     const n = Number(rawValue);
     if (!Number.isFinite(n)) return '0';
-    if (dataSetName === '屠宰场数量' || dataSetName === '采购商数量') return String(Math.round(n));
+    if (dataSetName === '货源企业数量' || dataSetName === '采购商数量') return String(Math.round(n));
+    if (dataSetName === '交易总量' || dataSetName === '交易金额' || dataSetName === '交易均价' || dataSetName === '交易均价(不含异常)') return n.toFixed(2);
     if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
     return n.toFixed(2);
 }
@@ -792,10 +1330,11 @@ function renderLeftFlip(overlayEl, key, toText, unitText, typography) {
                 item.style.lineHeight = cellH + 'px';
                 list.appendChild(item);
             }
-            list.style.transform = 'translate3d(0,' + (-parseInt(oldCh, 10) * cellH) + 'px,0)';
             cell.style.height = cellH + 'px';
             cell.appendChild(list);
             digitsWrap.appendChild(cell);
+            list.style.transform = 'translate3d(0,' + (-parseInt(oldCh, 10) * cellH) + 'px,0)';
+            void list.offsetHeight;
             requestAnimationFrame(() => {
                 list.style.transform = 'translate3d(0,' + (-parseInt(newCh, 10) * cellH) + 'px,0)';
             });
@@ -1134,6 +1673,21 @@ function injectMapTexture() {
         '[id="cpme41cb160-0568-4114-90c8-c847a9d8aa0b"] {', // 下拉框
         '  cursor: pointer !important;',
         '}',
+        // 6b. 禁用框架原生 selectLink 内部的下拉菜单：
+        //     让所有子元素不响应点击，由外层 wrapper 的自定义事件统一处理
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el,',
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el * {',
+        '  pointer-events: none !important;',
+        '}',
+        // 隐藏框架自带的下拉选项面板（如果有渲染）
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el .options,',
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el .option-list,',
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el ul,',
+        '[id="' + SELECT_COMPONENT_ID + '"] .select-el select {',
+        '  display: none !important;',
+        '  visibility: hidden !important;',
+        '  pointer-events: none !important;',
+        '}',
         // 7. 地图 2.5D：整图投影，加强可见度（深色阴影 + 大模糊 + box-shadow 兜底）
         '[id="cpmbd3a7549-e208-42e1-a158-fa080262956e"] {',
         '  position: relative !important;',
@@ -1360,6 +1914,7 @@ function setupPageNavigation() {
 // =====================================================
 let _cachedDateEl = null;
 let _lastFormattedDate = '';
+let _cachedFactoryPriceLabelEl = null;
 
 function updateFactoryPriceDate() {
     const dateStr = window._DS_FACTORY_PRICE_DATE;
@@ -1395,6 +1950,184 @@ function updateFactoryPriceDate() {
     }
 }
 
+function injectFactoryPriceHelpIcon() {
+    const app = document.getElementById('app');
+    if (!app) return;
+
+    // 尽量复用已命中的标题元素（大屏会频繁重渲染，需校验 isConnected）
+    let target = (_cachedFactoryPriceLabelEl && _cachedFactoryPriceLabelEl.isConnected)
+      ? _cachedFactoryPriceLabelEl
+      : null;
+
+    if (!target) {
+        // 兼容实际渲染文本可能包含：空格/换行/单位/冒号等情况
+        const WANT = '屠宰场平均出厂价';
+        const normalize = (s) => String(s || '').replace(/\s+/g, '').replace(/[：:]/g, '');
+        const wantN = normalize(WANT);
+
+        // 优先在 .text-el 中找；找不到再 fallback 到所有叶子节点（避免误匹配大面积容器）
+        const candidates = [];
+        app.querySelectorAll('.text-el').forEach((el) => candidates.push(el));
+        if (candidates.length === 0) {
+            app.querySelectorAll('span, p, div').forEach((el) => candidates.push(el));
+        }
+
+        for (const el of candidates) {
+            // 避免选到容器：只选“叶子”或近似叶子（子元素很少）
+            if (el.children && el.children.length > 2) continue;
+            const raw = (el.textContent || '').trim();
+            if (!raw) continue;
+            const n = normalize(raw);
+            if (n === wantN || n.includes(wantN)) {
+                target = el;
+                _cachedFactoryPriceLabelEl = el;
+                break;
+            }
+        }
+    }
+
+    if (!target) return;
+    let icon = target.querySelector('.factory-price-help');
+    if (!icon) {
+        icon = document.createElement('span');
+        icon.className = 'factory-price-help';
+        target.appendChild(icon);
+    }
+    icon.textContent = '?';
+    icon.title = '数据来源于中国农业农村信息网';
+    icon.style.marginLeft = '7px';
+    icon.style.cursor = 'help';
+    icon.style.display = 'inline-flex';
+    icon.style.alignItems = 'center';
+    icon.style.justifyContent = 'center';
+    icon.style.width = '17px';
+    icon.style.height = '17px';
+    icon.style.border = '1px solid rgba(255,255,255,0.7)';
+    icon.style.borderRadius = '50%';
+    icon.style.fontSize = '13px';
+    icon.style.fontWeight = '100';
+    icon.style.fontFamily = 'AlimamaAgileVF-Thin, sans-serif';
+    icon.style.lineHeight = '1';
+    icon.style.color = '#fff';
+    icon.style.transform = 'translateY(-2px)';
+    icon.style.verticalAlign = 'middle';
+    icon.style.position = 'relative';
+    icon.style.pointerEvents = 'auto';
+    icon.style.zIndex = '9999';
+    try { target.style.pointerEvents = 'auto'; } catch (e) {}
+    // 暴露引用给全局 hover watcher（用于绕过透明遮罩导致的 hover 事件不触发）
+    window._dsFactoryPriceHelpIcon = icon;
+    if (!icon._dsTooltipBind) {
+        icon._dsTooltipBind = true;
+        const ensureGlobalTip = function () {
+            let g = document.getElementById('ds-global-tooltip');
+            if (!g) {
+                g = document.createElement('div');
+                g.id = 'ds-global-tooltip';
+                // tooltip 挂到 body：避免被 #app(Vue) 重渲染移除、也避免被容器 overflow 裁剪
+                // 坐标用 getBoundingClientRect() 的视口坐标，fixed 定位最稳定
+                g.style.position = 'fixed';
+                g.style.background = 'rgba(60, 60, 60, 0.9)';
+                g.style.color = '#fff';
+                g.style.padding = '6px 10px';
+                g.style.borderRadius = '4px';
+                g.style.fontSize = '12px';
+                g.style.whiteSpace = 'nowrap';
+                g.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+                g.style.zIndex = '999999';
+                g.style.pointerEvents = 'none';
+                g.style.display = 'none';
+                g.style.left = '0px';
+                g.style.top = '0px';
+                g.style.maxWidth = '420px';
+                g.style.overflow = 'hidden';
+                g.style.textOverflow = 'ellipsis';
+                g.style.transform = 'translateZ(0)';
+                document.body.appendChild(g);
+            }
+            return g;
+        };
+        const showTip = function () {
+            const tip = ensureGlobalTip();
+            tip.textContent = '数据来源于中国农业农村信息网';
+            const r = icon.getBoundingClientRect();
+            // fixed + 视口坐标
+            let top = r.bottom + 6;
+            let left = r.left;
+            // 轻微防越界（右侧/下侧）
+            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            const maxLeft = Math.max(4, vw - 430); // 420 + padding buffer
+            left = Math.min(Math.max(4, left), maxLeft);
+            top = Math.min(Math.max(4, top), Math.max(4, vh - 40));
+            tip.style.top = Math.round(top) + 'px';
+            tip.style.left = Math.round(left) + 'px';
+            tip.style.display = 'block';
+        };
+        const hideTip = function () {
+            const tip = document.getElementById('ds-global-tooltip');
+            if (tip) tip.style.display = 'none';
+        };
+        icon.addEventListener('mouseenter', showTip);
+        icon.addEventListener('mousemove', showTip);
+        icon.addEventListener('mouseleave', hideTip);
+    }
+
+    if (!window._dsHoverTipWatcher) {
+        window._dsHoverTipWatcher = true;
+        const onMove = function (e) {
+            let tip = document.getElementById('ds-global-tooltip');
+            const ic = window._dsFactoryPriceHelpIcon || app.querySelector('.factory-price-help');
+            if (!ic) return;
+
+            // 如果 tip 还没创建（因为 icon 的 mouseenter 没触发），这里主动创建
+            if (!tip) {
+                tip = document.createElement('div');
+                tip.id = 'ds-global-tooltip';
+                tip.style.position = 'fixed';
+                tip.style.background = 'rgba(109, 108, 108, 0.9)';
+                tip.style.color = '#fff';
+                tip.style.padding = '6px 10px';
+                tip.style.borderRadius = '4px';
+                tip.style.fontSize = '12px';
+                tip.style.whiteSpace = 'nowrap';
+                tip.style.boxShadow = '0 6px 16px rgba(0,0,0,0.3)';
+                tip.style.zIndex = '2147483647'; // 尽量置顶
+                tip.style.pointerEvents = 'none';
+                tip.style.display = 'none';
+                tip.style.left = '0px';
+                tip.style.top = '0px';
+                tip.style.maxWidth = '420px';
+                tip.style.overflow = 'hidden';
+                tip.style.textOverflow = 'ellipsis';
+                tip.style.transform = 'translateZ(0)';
+                document.body.appendChild(tip);
+            }
+
+            const r = ic.getBoundingClientRect();
+            const x = e.clientX, y = e.clientY;
+            const inside = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+            if (inside) {
+                tip.textContent = '数据来源于中国农业农村信息网';
+                let top = r.bottom + 6;
+                let left = r.left;
+                const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+                const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+                const maxLeft = Math.max(4, vw - 430);
+                left = Math.min(Math.max(4, left), maxLeft);
+                top = Math.min(Math.max(4, top), Math.max(4, vh - 40));
+                tip.style.top = Math.round(top) + 'px';
+                tip.style.left = Math.round(left) + 'px';
+                tip.style.display = 'block';
+            } else {
+                tip.style.display = 'none';
+            }
+        };
+        document.addEventListener('mousemove', onMove, true);
+        window.addEventListener('mousemove', onMove, true);
+    }
+}
+
 // 立即调用一次
 setTimeout(getData, 100);
 
@@ -1402,10 +2135,10 @@ setTimeout(getData, 100);
 setInterval(getData, 10000);
 
 // 持续注入单位文本 + 日期更新 + 菜单高亮 + 地图纹理（框架每 ~1s 重渲染，注入会被覆盖，需持续补回）
-setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 1500);
+setInterval(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectFactoryPriceHelpIcon(); injectMapTexture(); }, 1500);
 
 // 首次延迟注入（等 Vue 渲染 + 首次数据加载完成）
-setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectMapTexture(); }, 500);
+setTimeout(function () { injectUnits(); updateFactoryPriceDate(); highlightActiveMenu(); injectFactoryPriceHelpIcon(); injectMapTexture(); }, 500);
 
 // 启动市场切换监听（等 DOM 渲染后）
 setTimeout(setupMarketSwitcher, 2000);

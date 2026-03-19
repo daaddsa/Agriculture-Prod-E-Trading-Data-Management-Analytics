@@ -501,19 +501,18 @@
           label: {
             show: true,
             position: "outside",
-            alignTo: "edge",
-            edgeDistance: edgePadding,
+            alignTo: "labelLine",
             bleedMargin: 4,
-            distanceToLabelLine: 4,
+            distanceToLabelLine: 8,
             formatter: (params) => `${params.name || "-"}\n${this.formatPieLabelPercent(params.percent)}`,
             fontSize,
             lineHeight,
           },
           labelLine: {
             show: true,
-            length: guideLength,
-            length2: guideLength2,
-            smooth: 0.2,
+            length: Math.max(guideLength, 20),
+            length2: Math.max(guideLength2, 28),
+            smooth: 0.1,
           },
           labelLayout: (params) => {
             const width = this.pieChart ? this.pieChart.getWidth() : 0;
@@ -523,8 +522,16 @@
             const minX = edgePadding;
             const maxX = Math.max(minX, width - params.labelRect.width - edgePadding);
             const nextX = Number.isFinite(params.x) ? params.x : params.labelRect.x;
+            const labelWidth = Number(params.labelRect.width) || 0;
+            const linePoints = Array.isArray(params.labelLinePoints) ? params.labelLinePoints : null;
+            const outerPoint = linePoints && linePoints[1];
+            const side = nextX + labelWidth / 2 >= width / 2 ? 1 : -1;
+            const outwardOffset = Math.max(28, Math.round(labelWidth * 0.18));
+            const preferredX = outerPoint && Number.isFinite(outerPoint[0])
+              ? outerPoint[0] + side * outwardOffset
+              : nextX;
             return {
-              x: Math.max(minX, Math.min(maxX, nextX)),
+              x: Math.max(minX, Math.min(maxX, preferredX)),
               moveOverlap: "shiftY",
               hideOverlap: true,
             };
