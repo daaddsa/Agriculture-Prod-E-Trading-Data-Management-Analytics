@@ -708,6 +708,41 @@ function _scheduleMarketDomSyncRetries() {
     }, 10000);
 }
 
+function _setMarketDropdownDomDisabledState(wrap, disabled) {
+    if (!wrap) return;
+    wrap.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    wrap.setAttribute('data-ds-market-dropdown-disabled', disabled ? '1' : '0');
+
+    if (disabled) {
+        wrap.setAttribute('tabindex', '-1');
+    } else if (wrap.getAttribute('tabindex') === '-1') {
+        wrap.removeAttribute('tabindex');
+    }
+
+    const interactiveEls = wrap.querySelectorAll('input, textarea, select, button, option, [role="button"], [role="option"], [tabindex]');
+    interactiveEls.forEach(function (el) {
+        if (disabled) {
+            el.setAttribute('aria-disabled', 'true');
+            if (typeof el.disabled === 'boolean') el.disabled = true;
+            if (el.hasAttribute('tabindex')) {
+                el.setAttribute('data-ds-prev-tabindex', el.getAttribute('tabindex') || '');
+            }
+            el.setAttribute('tabindex', '-1');
+        } else {
+            el.setAttribute('aria-disabled', 'false');
+            if (typeof el.disabled === 'boolean') el.disabled = false;
+            if (el.hasAttribute('data-ds-prev-tabindex')) {
+                const prevTabindex = el.getAttribute('data-ds-prev-tabindex');
+                if (prevTabindex === '') el.removeAttribute('tabindex');
+                else el.setAttribute('tabindex', prevTabindex);
+                el.removeAttribute('data-ds-prev-tabindex');
+            } else if (el.getAttribute('tabindex') === '-1') {
+                el.removeAttribute('tabindex');
+            }
+        }
+    });
+}
+
 function _applyMarketDropdownState(markets) {
     const normalizedMarkets = normalizeMarketList(markets);
     _marketDropdownEnabled = _shouldEnableMarketDropdown(normalizedMarkets);
@@ -715,6 +750,7 @@ function _applyMarketDropdownState(markets) {
     if (!wrap) return;
     wrap.setAttribute('data-ds-market-dropdown-enabled', _marketDropdownEnabled ? '1' : '0');
     wrap.setAttribute('data-ds-market-count', String(normalizedMarkets.length));
+    _setMarketDropdownDomDisabledState(wrap, !_marketDropdownEnabled);
     if (!_marketDropdownEnabled) _closeMarketMenu();
 }
 
@@ -1747,6 +1783,13 @@ function injectMapTexture() {
         '}',
         '[id="' + SELECT_COMPONENT_ID + '"][data-ds-market-dropdown-enabled="0"] {',
         '  cursor: default !important;',
+        '  pointer-events: none !important;',
+        '  user-select: none !important;',
+        '}',
+        '[id="' + SELECT_COMPONENT_ID + '"][data-ds-market-dropdown-enabled="0"] *,',
+        '[id="' + SELECT_COMPONENT_ID + '"][data-ds-market-dropdown-disabled="1"] *,',
+        '[id="' + SELECT_COMPONENT_ID + '"][aria-disabled="true"] * {',
+        '  pointer-events: none !important;',
         '}',
         // 6b. 禁用框架原生 selectLink 内部的下拉菜单：
         //     让所有子元素不响应点击，由外层 wrapper 的自定义事件统一处理
@@ -2219,7 +2262,7 @@ setTimeout(setupMarketSwitcher, 2000);
 setTimeout(setupPageNavigation, 2000);
 
 // 调试：打印当前 marketId
-_hideMarketIdFromAddressBar();
+//_hideMarketIdFromAddressBar();
 console.log('[CustomData] 页面 URL:', window.location.href);
 console.log('[CustomData] marketId:', _getCurrentMarketId());
 

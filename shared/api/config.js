@@ -12,6 +12,7 @@
 	// ---------- Token ----------
 	function getToken() {
 		const token = Cookies.get('Admin-Token') // 返回 token
+		//const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJrZXQwMDIiLCJsb2dpbl91c2VyX2tleSI6ImY0MjYxYmFmLTA3ODEtNDAyMC05ZWI2LWEzNzI4YWM5YjM4MSJ9.9M4cNKiL9vqt9YKoN8ttsZ4hxBqbvGivYa8tkDXyLfkQ0_TCAPw-38vQczyBtRgY0tigfxX5a4xZOvt49Ec8Iw'
 		return token;
 	}
 
