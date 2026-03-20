@@ -6,7 +6,8 @@
 (function() {
 	// ---------- 常量 ----------
 	//var BASE_URL = "https://apet.taidhub.com/stage-api/";
-	var BASE_URL = "http://25no0uzrt2ib.guyubao.com/stage-api/";
+	//var BASE_URL = "http://25no0uzrt2ib.guyubao.com/stage-api/";
+	var BASE_URL = "http://127.0.0.1:18080/stage-api/";
 	var TIMEOUT = 15000;
 
 	// ---------- Token ----------

@@ -416,7 +416,7 @@ async function getData() {
             if (currentMarket) {
                 updateMarketDropdownText(currentMarket.marketName);
             }
-            refreshMarketDropdownMenu(marketId);
+            // refreshMarketDropdownMenu(marketId);
         }
 
         if (Object.keys(newDataSet).length > 0) {
@@ -497,6 +497,8 @@ let _marketDomSyncObserver = null;
 let _marketDomSyncTimer = null;
 let _marketDomSyncInterval = null;
 let _marketDomSyncStopTimer = null;
+let _frameworkSelectMountObserver = null;
+let _frameworkSelectMountStopTimer = null;
 let _marketDropdownEnabled = true;
 
 function _getCurrentMarketId() {
@@ -625,8 +627,8 @@ function _extractMarketIdFromLinkValue(raw) {
 
 function _syncFrameworkSelectSerializedConfig() {
     try {
-        if (window.DS_DATA && window.DS_CONFIG) {
-            window.DS_DATA.config = JSON.stringify(window.DS_CONFIG);
+        if (window.DS_DATA) {
+            window.DS_DATA.config = JSON.stringify(DS_CONFIG);
         }
     } catch (e) {}
 }
@@ -819,7 +821,7 @@ function _applyFrameworkSelectOptions(markets) {
     const normalizedMarkets = normalizeMarketList(markets);
     if (!normalizedMarkets.length) return false;
 
-    const cfg = window.DS_CONFIG && window.DS_CONFIG[SELECT_COMPONENT_ID];
+    const cfg = DS_CONFIG[SELECT_COMPONENT_ID];
     const currentName = _getCurrentMarketNameFromList(normalizedMarkets) || normalizedMarkets[0].marketName;
     const newOptions = _buildFrameworkSelectOptions(normalizedMarkets);
 
@@ -846,6 +848,49 @@ function _applyFrameworkSelectOptions(markets) {
 
     if (currentName) updateMarketDropdownText(currentName);
     return true;
+}
+
+function _scheduleFrameworkSelectMountSync(markets, syncVersion) {
+    if (!document || !document.body) return;
+    if (_frameworkSelectMountObserver) {
+        _frameworkSelectMountObserver.disconnect();
+        _frameworkSelectMountObserver = null;
+    }
+    clearTimeout(_frameworkSelectMountStopTimer);
+
+    const normalizedMarkets = normalizeMarketList(markets);
+    if (!normalizedMarkets.length) return;
+
+    const tryApply = function () {
+        if (syncVersion !== _frameworkSelectSyncVersion) return true;
+        const wrap = document.getElementById(SELECT_COMPONENT_ID);
+        const cfg = DS_CONFIG[SELECT_COMPONENT_ID];
+        if (!wrap && !cfg) return false;
+        _applyFrameworkSelectOptions(normalizedMarkets);
+        _observeMarketSelectText();
+        return true;
+    };
+
+    if (tryApply()) return;
+
+    _frameworkSelectMountObserver = new MutationObserver(function () {
+        if (!tryApply()) return;
+        if (_frameworkSelectMountObserver) {
+            _frameworkSelectMountObserver.disconnect();
+            _frameworkSelectMountObserver = null;
+        }
+        clearTimeout(_frameworkSelectMountStopTimer);
+    });
+    _frameworkSelectMountObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    _frameworkSelectMountStopTimer = setTimeout(function () {
+        if (_frameworkSelectMountObserver) {
+            _frameworkSelectMountObserver.disconnect();
+            _frameworkSelectMountObserver = null;
+        }
+    }, 15000);
 }
 
 function _observeMarketSelectText() {
@@ -887,7 +932,8 @@ function syncFrameworkSelectOptions(markets) {
     };
 
     applySync();
-    [120, 500, 1200].forEach(delay => setTimeout(applySync, delay));
+    [120, 500, 1200, 2500, 5000].forEach(delay => setTimeout(applySync, delay));
+    _scheduleFrameworkSelectMountSync(normalizedMarkets, syncVersion);
 
     console.log('[CustomData] 框架下拉选项已同步 API 数据:', normalizedMarkets.map(m => m.marketName));
 }
@@ -1009,6 +1055,7 @@ function refreshMarketDropdownMenu(currentId) {
     _renderMarketMenu(currentId);
     _positionMarketMenu(wrap.getBoundingClientRect());
 }
+*/
 
 function updateMarketDropdownText(marketName) {
     const name = String(marketName || '').trim();
@@ -1081,17 +1128,7 @@ function updateMarketDropdownText(marketName) {
 }
 
 function _killNativeSelectEvents() {
-    const wrap = document.getElementById(SELECT_COMPONENT_ID);
-    if (!wrap) return;
-    const inner = wrap.querySelector('.select-el') || wrap.firstElementChild;
-    if (!inner || inner._dsKilled) return;
-    inner._dsKilled = true;
-    ['click', 'mousedown', 'mouseup', 'pointerdown', 'pointerup'].forEach(evt => {
-        inner.addEventListener(evt, function (e) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-        }, true);
-    });
+    // 保留框架原生下拉，这里不再拦截 selectLink 的原生事件。
 }
 
 function setupMarketSwitcher() {
@@ -1100,72 +1137,8 @@ function setupMarketSwitcher() {
     if (flipDemoParam === '1' || flipDemoParam === 'true') {
         try { startLeftFlipDemoOnce(); } catch(e){}
     }
-
-    _killNativeSelectEvents();
-    setTimeout(_killNativeSelectEvents, 1000);
-    setTimeout(_killNativeSelectEvents, 3000);
-
-    document.addEventListener('click', function (e) {
-        const wrap = document.getElementById(SELECT_COMPONENT_ID);
-        const menu = _dsMarketMenuEl;
-        const inWrap = wrap && (wrap === e.target || wrap.contains(e.target));
-        const inMenu = menu && menu.style.display !== 'none' && (menu === e.target || menu.contains(e.target));
-
-        if (inMenu) {
-            const item = e.target.closest('[data-market-id]');
-            if (!item) return;
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            const currentId = _getCurrentMarketId();
-            const targetId = String(item.getAttribute('data-market-id') || '');
-            const targetName = String(item.getAttribute('data-market-name') || '').trim();
-            _closeMarketMenu();
-            if (targetName) updateMarketDropdownText(targetName);
-            if (targetId && targetId !== currentId) {
-                console.log('[CustomData] 切换市场:', currentId, '→', targetId);
-                window.location.href = _buildHiddenMarketUrl(window.location.pathname, targetId);
-            }
-            return;
-        }
-
-        if (inWrap) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (!_marketDropdownEnabled) return;
-            if (_dsMarketMenuOpen) _closeMarketMenu();
-            else _openMarketMenu(_getCurrentMarketId());
-            return;
-        }
-
-        if (_dsMarketMenuOpen) _closeMarketMenu();
-
-        const clickedText = e.target.textContent.trim();
-        if (!clickedText || clickedText.length < 4) return;
-
-        let targetId = MARKET_NAME_MAP[clickedText] || null;
-
-        if (!targetId && window._DS_MARKET_LIST) {
-            const m = window._DS_MARKET_LIST.find(m => m.marketName === clickedText);
-            if (m) targetId = m.marketId;
-        }
-
-        const currentId = _getCurrentMarketId();
-        if (targetId && String(targetId) !== currentId) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            console.log('[CustomData] 切换市场:', currentId, '→', targetId);
-            window.location.href = _buildHiddenMarketUrl(window.location.pathname, targetId);
-        }
-    }, true);
-
-    document.addEventListener('mousedown', function (e) {
-        const wrap = document.getElementById(SELECT_COMPONENT_ID);
-        if (wrap && (wrap === e.target || wrap.contains(e.target))) {
-            e.stopImmediatePropagation();
-        }
-    }, true);
-
-    console.log('[CustomData] 市场切换监听已启动, 当前 marketId:', currentId);
+    // 保留框架原生下拉，停用自定义菜单的 click/mousedown 接管逻辑。
+    console.log('[CustomData] 已停用自定义下拉接管，保留框架原生下拉');
 }
 
 // =====================================================
@@ -1786,21 +1759,7 @@ function injectMapTexture() {
         '[id="' + SELECT_COMPONENT_ID + '"][aria-disabled="true"] * {',
         '  pointer-events: none !important;',
         '}',
-        // 6b. 禁用框架原生 selectLink 内部的下拉菜单：
-        //     让所有子元素不响应点击，由外层 wrapper 的自定义事件统一处理
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el,',
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el * {',
-        '  pointer-events: none !important;',
-        '}',
-        // 隐藏框架自带的下拉选项面板（如果有渲染）
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el .options,',
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el .option-list,',
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el ul,',
-        '[id="' + SELECT_COMPONENT_ID + '"] .select-el select {',
-        '  display: none !important;',
-        '  visibility: hidden !important;',
-        '  pointer-events: none !important;',
-        '}',
+        // 6b. 保留框架原生 selectLink，下拉面板不再由自定义样式强制隐藏
         // 7. 地图 2.5D：整图投影，加强可见度（深色阴影 + 大模糊 + box-shadow 兜底）
         '[id="cpmbd3a7549-e208-42e1-a158-fa080262956e"] {',
         '  position: relative !important;',

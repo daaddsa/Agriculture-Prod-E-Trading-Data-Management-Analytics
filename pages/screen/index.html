@@ -125,6 +125,10 @@
 		<!-- 热力图依赖：先加载中国地图 GeoJSON 到 window.DS_GEO["100000"]，再启动应用 -->
 		<script>
 			(function() {
+				var selectKey = 'cpme41cb160-0568-4114-90c8-c847a9d8aa0b';
+				var storageKey = 'ds-screen-market-id';
+				var persistStorageKey = 'ds-screen-market-id-persist';
+
 				function loadScript(src) {
 					return new Promise(function(resolve, reject) {
 						var s = document.createElement('script');
@@ -134,7 +138,74 @@
 						document.body.appendChild(s);
 					});
 				}
-				fetch('./js/china.json')
+
+				function getCurrentMarketId() {
+					var params = new URLSearchParams(window.location.search);
+					var marketId = String(params.get('marketId') || '').trim();
+					if (marketId) return marketId;
+					try {
+						marketId = String(sessionStorage.getItem(storageKey) || '').trim();
+						if (marketId) return marketId;
+					} catch (e) {}
+					try {
+						marketId = String(localStorage.getItem(persistStorageKey) || '').trim();
+						if (marketId) return marketId;
+					} catch (e) {}
+					return '1';
+				}
+
+				function normalizeMarketList(markets) {
+					if (!Array.isArray(markets)) return [];
+					var map = new Map();
+					markets.forEach(function(item) {
+						var marketId = String(item && item.marketId != null ? item.marketId : '').trim();
+						var marketName = String(item && item.marketName != null ? item.marketName : '').replace(/\s+/g, ' ').trim();
+						if (!marketId || !marketName || map.has(marketId)) return;
+						map.set(marketId, {
+							marketId: marketId,
+							marketName: marketName
+						});
+					});
+					return Array.from(map.values()).sort(function(a, b) {
+						return Number(a.marketId) - Number(b.marketId);
+					});
+				}
+
+				function buildFrameworkSelectOptions(markets) {
+					return markets.map(function(m) {
+						var link = '?marketId=' + m.marketId;
+						return {
+							label: m.marketName,
+							text: m.marketName,
+							name: m.marketName,
+							value: link,
+							path: link,
+							url: link,
+							isLocal: true
+						};
+					});
+				}
+
+				function applyInitialMarketSelectConfig(markets) {
+					var normalizedMarkets = normalizeMarketList(markets);
+					if (!normalizedMarkets.length) return;
+					var selectCfg = DS_CONFIG && DS_CONFIG[selectKey];
+					if (!selectCfg || !selectCfg.style) return;
+
+					var currentId = getCurrentMarketId();
+					var currentMarket = normalizedMarkets.find(function(m) {
+						return String(m.marketId) === currentId;
+					}) || normalizedMarkets[0];
+
+					selectCfg.style.options = buildFrameworkSelectOptions(normalizedMarkets);
+					selectCfg.style.text = currentMarket ? currentMarket.marketName : normalizedMarkets[0].marketName;
+					window._DS_MARKET_LIST = normalizedMarkets;
+					if (window.DS_DATA) {
+						window.DS_DATA.config = JSON.stringify(DS_CONFIG);
+					}
+				}
+
+				var geoPromise = fetch('./js/china.json')
 					.then(function(r) {
 						return r.json();
 					})
@@ -143,12 +214,19 @@
 						window.DS_GEO['100000'] = geo;
 						window.DS_GEO['china'] = geo;
 					})
-					.catch(function() {})
-					.finally(function() {
-						loadScript('js/chunk-vendors.1330f906.js').then(function() {
-							loadScript('js/app.1d54c196.js');
-						});
+					.catch(function() {});
+
+				var marketPromise = window.screenApi && window.screenApi.getTradeMarkets
+					? window.screenApi.getTradeMarkets().then(function(markets) {
+						applyInitialMarketSelectConfig(markets);
+					}).catch(function() {})
+					: Promise.resolve();
+
+				Promise.allSettled([geoPromise, marketPromise]).finally(function() {
+					loadScript('js/chunk-vendors.1330f906.js').then(function() {
+						loadScript('js/app.1d54c196.js');
 					});
+				});
 			})();
 		</script>
 	</body>
