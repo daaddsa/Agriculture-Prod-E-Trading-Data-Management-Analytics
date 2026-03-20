@@ -13,6 +13,8 @@ const DS_RANK_READY_ATTR = 'data-ds-rank-ready';
 const DS_FACTORY_READY_ATTR = 'data-ds-factory-ready';
 const DS_ABNORMAL_READY_ATTR = 'data-ds-abnormal-ready';
 const DS_PENDING_STYLE_ID = 'ds-pending-visual-style';
+const DS_MARKET_STORAGE_KEY = 'ds-screen-market-id';
+const DS_MARKET_STORAGE_KEY_PERSIST = 'ds-screen-market-id-persist';
 const DS_PROVINCE_MAP_COMPONENT_KEY = 'cpmbd3a7549-e208-42e1-a158-fa080262956e';
 const DS_PROVINCE_HIGHLIGHT_FILL_FALLBACK = 9.49;
 const DS_PENDING_HIDE_IDS = [
@@ -78,10 +80,8 @@ setAttrFlag(DS_FACTORY_READY_ATTR, false);
 setAttrFlag(DS_ABNORMAL_READY_ATTR, false);
 
 async function getData() {
-    // 优先从 URL 参数中获取 marketId，如果没有则默认为 1
-    // 例如: index.html?marketId=2 将会加载市场 2 的数据
-    const urlParams = new URLSearchParams(window.location.search);
-    const marketId = urlParams.get('marketId') || 1;
+    // 优先读取 URL 中的 marketId 并写入 sessionStorage，随后清理地址栏参数
+    const marketId = _getCurrentMarketId();
     
     console.log(`[CustomData] Starting update... MarketID: ${marketId}`);
 
@@ -401,6 +401,7 @@ async function getData() {
             const markets = normalizeMarketList(rawResults.tradeMarketData);
             window._DS_MARKET_LIST = markets;
             console.log('[CustomData] 市场列表:', markets.map(m => m.marketId + '-' + m.marketName));
+            _applyMarketDropdownState(markets);
             
             // 将 API 返回的市场名称补充到映射表中
             markets.forEach(m => {
@@ -501,10 +502,63 @@ let _marketDomSyncObserver = null;
 let _marketDomSyncTimer = null;
 let _marketDomSyncInterval = null;
 let _marketDomSyncStopTimer = null;
+let _marketDropdownEnabled = true;
 
 function _getCurrentMarketId() {
     const urlParams = new URLSearchParams(window.location.search);
-    return String(urlParams.get('marketId') || '1');
+    const urlMarketId = String(urlParams.get('marketId') || '').trim();
+    if (urlMarketId) {
+        _persistMarketId(urlMarketId);
+        _hideMarketIdFromAddressBar();
+        return urlMarketId;
+    }
+    try {
+        const storedMarketId = String(sessionStorage.getItem(DS_MARKET_STORAGE_KEY) || '').trim();
+        if (storedMarketId) return storedMarketId;
+    } catch (e) {}
+    try {
+        const persistedMarketId = String(localStorage.getItem(DS_MARKET_STORAGE_KEY_PERSIST) || '').trim();
+        if (persistedMarketId) return persistedMarketId;
+    } catch (e) {}
+    return '1';
+}
+
+function _persistMarketId(marketId) {
+    const normalizedId = String(marketId || '').trim();
+    if (!normalizedId) return;
+    try {
+        sessionStorage.setItem(DS_MARKET_STORAGE_KEY, normalizedId);
+    } catch (e) {}
+    try {
+        localStorage.setItem(DS_MARKET_STORAGE_KEY_PERSIST, normalizedId);
+    } catch (e) {}
+}
+
+function _hideMarketIdFromAddressBar() {
+    try {
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has('marketId')) return;
+        url.searchParams.delete('marketId');
+        const nextUrl = url.pathname + (url.search ? url.search : '') + (url.hash || '');
+        window.history.replaceState(window.history.state, document.title, nextUrl);
+    } catch (e) {}
+}
+
+function _buildHiddenMarketUrl(targetPath, marketId) {
+    const normalizedId = String(marketId || '').trim() || '1';
+    _persistMarketId(normalizedId);
+    const nextUrl = new URL(targetPath, window.location.href);
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.delete('marketId');
+    currentParams.forEach((value, key) => {
+        if (!nextUrl.searchParams.has(key)) nextUrl.searchParams.set(key, value);
+    });
+    nextUrl.searchParams.delete('marketId');
+    return nextUrl.pathname + (nextUrl.search ? nextUrl.search : '') + (nextUrl.hash || '');
+}
+
+function _shouldEnableMarketDropdown(markets) {
+    return normalizeMarketList(markets).length > 1;
 }
 
 function _sortMarketList(a, b) {
@@ -654,6 +708,16 @@ function _scheduleMarketDomSyncRetries() {
     }, 10000);
 }
 
+function _applyMarketDropdownState(markets) {
+    const normalizedMarkets = normalizeMarketList(markets);
+    _marketDropdownEnabled = _shouldEnableMarketDropdown(normalizedMarkets);
+    const wrap = document.getElementById(SELECT_COMPONENT_ID);
+    if (!wrap) return;
+    wrap.setAttribute('data-ds-market-dropdown-enabled', _marketDropdownEnabled ? '1' : '0');
+    wrap.setAttribute('data-ds-market-count', String(normalizedMarkets.length));
+    if (!_marketDropdownEnabled) _closeMarketMenu();
+}
+
 function _syncFrameworkSelectDomOptions(wrap, markets, currentName) {
     if ((!wrap && !document) || !markets || !markets.length) return;
 
@@ -745,6 +809,7 @@ function _applyFrameworkSelectOptions(markets) {
         }
         _syncFrameworkSelectDomOptions(el, normalizedMarkets, currentName);
     }
+    _applyMarketDropdownState(normalizedMarkets);
     _syncFrameworkSelectDomOptions(null, normalizedMarkets, currentName);
     _scheduleMarketDomSyncRetries();
 
@@ -888,6 +953,7 @@ function _positionMarketMenu(anchorRect) {
 }
 
 function _openMarketMenu(currentId) {
+    if (!_marketDropdownEnabled) return;
     const wrap = document.getElementById(SELECT_COMPONENT_ID);
     if (!wrap) return;
     const rect = wrap.getBoundingClientRect();
@@ -902,6 +968,10 @@ function _closeMarketMenu() {
 }
 
 function refreshMarketDropdownMenu(currentId) {
+    if (!_marketDropdownEnabled) {
+        _closeMarketMenu();
+        return;
+    }
     if (!_dsMarketMenuOpen) return;
     const wrap = document.getElementById(SELECT_COMPONENT_ID);
     if (!wrap) return;
@@ -995,7 +1065,6 @@ function _killNativeSelectEvents() {
 
 function setupMarketSwitcher() {
     const urlParams = new URLSearchParams(window.location.search);
-    const currentId = String(urlParams.get('marketId') || '1');
     const flipDemoParam = urlParams.get('flipdemo') || urlParams.get('demo');
     if (flipDemoParam === '1' || flipDemoParam === 'true') {
         try { startLeftFlipDemoOnce(); } catch(e){}
@@ -1016,13 +1085,14 @@ function setupMarketSwitcher() {
             if (!item) return;
             e.preventDefault();
             e.stopImmediatePropagation();
+            const currentId = _getCurrentMarketId();
             const targetId = String(item.getAttribute('data-market-id') || '');
             const targetName = String(item.getAttribute('data-market-name') || '').trim();
             _closeMarketMenu();
             if (targetName) updateMarketDropdownText(targetName);
             if (targetId && targetId !== currentId) {
                 console.log('[CustomData] 切换市场:', currentId, '→', targetId);
-                window.location.href = window.location.pathname + '?marketId=' + targetId;
+                window.location.href = _buildHiddenMarketUrl(window.location.pathname, targetId);
             }
             return;
         }
@@ -1030,8 +1100,9 @@ function setupMarketSwitcher() {
         if (inWrap) {
             e.preventDefault();
             e.stopImmediatePropagation();
+            if (!_marketDropdownEnabled) return;
             if (_dsMarketMenuOpen) _closeMarketMenu();
-            else _openMarketMenu(currentId);
+            else _openMarketMenu(_getCurrentMarketId());
             return;
         }
 
@@ -1047,11 +1118,12 @@ function setupMarketSwitcher() {
             if (m) targetId = m.marketId;
         }
 
+        const currentId = _getCurrentMarketId();
         if (targetId && String(targetId) !== currentId) {
             e.preventDefault();
             e.stopImmediatePropagation();
             console.log('[CustomData] 切换市场:', currentId, '→', targetId);
-            window.location.href = window.location.pathname + '?marketId=' + targetId;
+            window.location.href = _buildHiddenMarketUrl(window.location.pathname, targetId);
         }
     }, true);
 
@@ -1673,6 +1745,9 @@ function injectMapTexture() {
         '[id="cpme41cb160-0568-4114-90c8-c847a9d8aa0b"] {', // 下拉框
         '  cursor: pointer !important;',
         '}',
+        '[id="' + SELECT_COMPONENT_ID + '"][data-ds-market-dropdown-enabled="0"] {',
+        '  cursor: default !important;',
+        '}',
         // 6b. 禁用框架原生 selectLink 内部的下拉菜单：
         //     让所有子元素不响应点击，由外层 wrapper 的自定义事件统一处理
         '[id="' + SELECT_COMPONENT_ID + '"] .select-el,',
@@ -1869,7 +1944,7 @@ function highlightActiveMenu() {
 // 页面导航：点击右上角卡片跳转到对应页面
 // "历史查询" → ../history/index.html
 // "分析报告" → ../analysis/index.html
-// 跳转时自动携带当前 marketId 参数
+// 跳转时自动继承当前市场，但不暴露 marketId 参数
 // =====================================================
 const PAGE_NAV_MAP = {
     '历史查询': '../history/index.html',
@@ -1878,9 +1953,6 @@ const PAGE_NAV_MAP = {
 };
 
 function setupPageNavigation() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const marketId = urlParams.get('marketId') || '1';
-
     document.addEventListener('click', function (e) {
         // 向上查找最近的文本内容（兼容点击到子元素的情况）
         let target = e.target;
@@ -1898,8 +1970,8 @@ function setupPageNavigation() {
         e.preventDefault();
         e.stopPropagation();
 
-        // 携带当前 marketId 跳转
-        const targetUrl = targetPath + '?marketId=' + marketId;
+        const marketId = _getCurrentMarketId();
+        const targetUrl = _buildHiddenMarketUrl(targetPath, marketId);
         console.log('[CustomData] 页面跳转:', clickedText, '→', targetUrl);
         window.location.href = targetUrl;
     }, true);
@@ -2147,8 +2219,9 @@ setTimeout(setupMarketSwitcher, 2000);
 setTimeout(setupPageNavigation, 2000);
 
 // 调试：打印当前 marketId
+_hideMarketIdFromAddressBar();
 console.log('[CustomData] 页面 URL:', window.location.href);
-console.log('[CustomData] marketId:', new URLSearchParams(window.location.search).get('marketId') || '1(默认)');
+console.log('[CustomData] marketId:', _getCurrentMarketId());
 
 // --- 自定义时间更新逻辑 ---
 // 此部分代码用于更新右上角的自定义日期时间显示 (yyyy-MM-dd HH:mm:ss)

@@ -6785,9 +6785,20 @@ const DS_CONFIG = {
 (function () {
   var selectKey = 'cpme41cb160-0568-4114-90c8-c847a9d8aa0b';
   var selectCfg = DS_CONFIG[selectKey];
+  var storageKey = 'ds-screen-market-id';
+  var persistStorageKey = 'ds-screen-market-id-persist';
   if (selectCfg && selectCfg.style && selectCfg.style.options) {
     var params = new URLSearchParams(window.location.search);
-    var marketId = params.get('marketId') || '1';
+    var marketId = params.get('marketId') || '';
+    if (!marketId) {
+      try { marketId = sessionStorage.getItem(storageKey) || ''; } catch (e) {}
+    }
+    if (!marketId) {
+      try { marketId = localStorage.getItem(persistStorageKey) || ''; } catch (e) {}
+    }
+    if (!marketId) {
+      marketId = '1';
+    }
     var matched = selectCfg.style.options.find(function (opt) {
       return opt.value === '?marketId=' + marketId;
     });
