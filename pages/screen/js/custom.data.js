@@ -483,12 +483,7 @@ function startLeftFlipDemoOnce() {
 const SELECT_COMPONENT_ID = 'cpme41cb160-0568-4114-90c8-c847a9d8aa0b';
 
 // 市场名称 → marketId 映射（静态兜底 + 动态API补充）
-const MARKET_NAME_MAP = {
-    '上海西郊国际农产品交易中心': 1,
-    '上海农产品中心批发市场': 2,
-    '江苏无锡朝阳农产品大市场': 3,
-    '江苏苏州农产品大市场': 4
-};
+const MARKET_NAME_MAP = {};
 
 // =====================================================
 // 将 API 返回的市场列表注入到框架 selectLink 组件的 config 中，
