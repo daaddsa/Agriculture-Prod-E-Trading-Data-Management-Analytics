@@ -3901,32 +3901,8 @@ const DS_CONFIG = {
     "name": "下拉链接 Copy",
     "isLocal": true,
     "style": {
-      "text": "上海西郊国际农产品交易中心",
+      "text": "",
       "options": [
-        {
-          "label": "上海西郊国际农产品交易中心",
-          "value": "?marketId=1",
-          "path": "?marketId=1",
-          "isLocal": true
-        },
-        {
-          "label": "上海农产品中心批发市场",
-          "value": "?marketId=2",
-          "path": "?marketId=2",
-          "isLocal": true
-        },
-        {
-          "label": "江苏无锡朝阳农产品大市场",
-          "value": "?marketId=3",
-          "path": "?marketId=3",
-          "isLocal": true
-        },
-        {
-          "label": "江苏苏州农产品大市场",
-          "value": "?marketId=4",
-          "path": "?marketId=4",
-          "isLocal": true
-        }
       ],
       "fontSize": 14,
       "url": "",
