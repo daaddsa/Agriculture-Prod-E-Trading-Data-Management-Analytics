@@ -1055,7 +1055,7 @@ function refreshMarketDropdownMenu(currentId) {
     _renderMarketMenu(currentId);
     _positionMarketMenu(wrap.getBoundingClientRect());
 }
-*/
+
 
 function updateMarketDropdownText(marketName) {
     const name = String(marketName || '').trim();

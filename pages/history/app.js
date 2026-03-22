@@ -10,7 +10,7 @@
 
   /** 从 URL query 解析 marketId，兼容数字和旧版 A/B/C 格式 */
   function parseUrlMarketId() {
-    return sessionStorage.getItem("ds-screen-market-id");
+    return Number(sessionStorage.getItem("ds-screen-market-id"));
   }
 
   createApp({
