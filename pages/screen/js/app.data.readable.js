@@ -3888,7 +3888,7 @@ const DS_CONFIG = {
     "_key": "cpme41cb160-0568-4114-90c8-c847a9d8aa0b",
     "creater": "SelectElement",
     "render": "SelectEl",
-    "width": 300,
+    "width": 320,
     "height": 38,
     "active": false,
     "locked": false,

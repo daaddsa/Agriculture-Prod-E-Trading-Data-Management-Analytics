@@ -520,7 +520,7 @@
 								return n.toFixed(2);
 							}
 
-							var unit = "元";
+							var unit = "万元";
 							var lines = [title];
 							list.forEach(function(p) {
 								var marker = p && p.marker ? p.marker : "";
@@ -554,7 +554,7 @@
 					},
 					yAxis: {
 						type: "value",
-						name: "单位：元",
+						name: "单位：万元",
 						nameTextStyle: {
 							color: "#64748b"
 						},
@@ -1267,7 +1267,7 @@
 			// ==================== 分页 ====================
 
 			calcPageSize: function() {
-				this.pageSize = 6;
+				this.pageSize = 9;
 				var maxPage = Math.max(1, Math.ceil((this.totalCount || 0) / this.pageSize));
 				this.currentPage = Math.min(this.currentPage, maxPage);
 			},
