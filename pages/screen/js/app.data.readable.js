@@ -1431,7 +1431,7 @@ const DS_CONFIG = {
     },
     "config": {
       "gridB": 25,
-      "gridL": 12,
+      "gridL": 15,
       "gridR": 12,
       "gridT": 12,
       "title": "产地销售量排名TOP5",
@@ -2322,7 +2322,7 @@ const DS_CONFIG = {
       "baseConfig": null
     },
     "config": {
-      "gridB": 24,
+      "gridB": 25,
       "gridL": 12,
       "gridR": 12,
       "gridT": 12,
@@ -3671,7 +3671,7 @@ const DS_CONFIG = {
     },
     "config": {
       "gridB": 10,
-      "gridL": 10,
+      "gridL": 11,
       "gridR": 5,
       "gridT": 10,
       "title": "                                   实时交易活跃度",

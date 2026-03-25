@@ -1236,7 +1236,7 @@ function truncateRightKeepHead(text, maxUnits) {
     return out;
 }
 
-const RANK_LABEL_MAX_UNITS = 12;
+const RANK_LABEL_MAX_UNITS = 20;
 
 function scaleComputedSize(value, scale) {
     if (!value) return value;

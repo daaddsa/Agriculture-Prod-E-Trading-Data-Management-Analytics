@@ -218,10 +218,11 @@ body[data-pattern="off"] {
 /* .menu-item.active::after{content:">";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#fff;font-weight:700} */
 
 .content {
+	height: 100vh;
 	flex: 1;
 	padding: 30px;
 	background: var(--color-bg);
-	overflow: visible
+	overflow: auto
 }
 
 /* Card Styles matching History */

@@ -770,7 +770,8 @@
 					var rawRateY = rateD.yList || [];
 					var rawFeeY = feeD.yList || [];
 					var trimmed = this._lastNMulti(rawX, [rawRateY, rawFeeY], 30);
-					xAxisData = this._toMD(trimmed.xList);
+					var targetDates = this._lastNDates(this.date, 30);
+					xAxisData = this._toMD(targetDates);
 					rateData = this._toNums(trimmed.yLists[0]);
 					feeData = this._toNums(trimmed.yLists[1]).map(function(v) {
 						return Number(v) / 10000;
@@ -794,14 +795,14 @@
 							}
 						}
 					})();
-					(function() {
+					/* (function() {
 						var l = Math.min(xAxisData.length, rateData.length, feeData.length);
 						if (l > 0) {
 							xAxisData = xAxisData.slice(-l);
 							rateData = rateData.slice(-l);
 							feeData = feeData.slice(-l);
 						}
-					})();
+					})(); */
 				} catch (e) {
 					console.error("佣金费走势加载失败:", e);
 				}
@@ -959,10 +960,11 @@
 					var rawFactory = d.provincePriceList || [];
 					var rawMarket = d.tradePriceList || [];
 					var trimmed = this._lastNMulti(rawX, [rawFactory, rawMarket], 30);
-					xAxisData = this._toMD(trimmed.xList);
+					var targetDates = this._lastNDates(this.date, 30);
+					xAxisData = this._toMD(targetDates);
 					factoryData = this._toNumsNullable(trimmed.yLists[0]);
 					marketCleanData = this._toNumsNullable(trimmed.yLists[1]);
-					(function() {
+					/* (function() {
 						var len = Math.min(xAxisData.length, factoryData.length, marketCleanData
 							.length);
 						var end = len - 1;
@@ -981,7 +983,7 @@
 							factoryData = factoryData.slice(0, l);
 							marketCleanData = marketCleanData.slice(0, l);
 						}
-					})();
+					})(); */
 				} catch (e) {
 					console.error("省份价格走势加载失败:", e);
 				}
